@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { Logger } = require("../libs/logger");
 const asyncHandler = require("express-async-handler");
 const { HTTPErrors } = require("../utils/errorUtils");
@@ -17,14 +18,14 @@ const CreateNewUserRole = asyncHandler(async (req, res, next) => {
   const { encryptedData } = req.body;
 
   //? Decrypt the encryptedData
-  const decryptedNewRole = decrypt(
+  const decryptedNewUserRole = decrypt(
     encryptedData,
     process.env.ENCRYPTION_KEY,
     process.env.ENCRYPTION_IV
   );
 
-  //? Destructure decryptedNewRole data
-  const { roleName } = decryptedNewRole;
+  //? Destructure decryptedNewUserRole data
+  const { roleName } = decryptedNewUserRole;
 
   try {
     Logger.info("Creating New User Role: Status success!");

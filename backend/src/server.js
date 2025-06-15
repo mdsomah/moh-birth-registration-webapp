@@ -97,7 +97,7 @@ async function main() {
   app.use("/api/v1/user/roles", userRolesRoute);
 
   //? Catch All Unregistered APIs Routes
-  app.all("*", (req, res) => {
+  app.all("/*splat", (req, res) => {
     res.status(404).json({
       statusCode: 404,
       method: `${req.method}`,

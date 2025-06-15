@@ -17,6 +17,7 @@
     "generate": "npx prisma generate",
     "migrate-reset": "npx prisma migrate reset",
     "reset-dev": "npx prisma migrate reset",
+    "studio": "npx prisma studio",
     "debug": "cross-env DEBUG=ROMMTech-eSales-POS-Backend npm run start-dev",
     "lint:fix": "npx eslint --fix ./*.js",
     "test": "mocha"

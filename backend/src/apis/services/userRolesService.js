@@ -8,6 +8,7 @@ const createNewUserRole = async (roleName) => {
     },
     include: { users: true },
   });
+
   return newUserRole;
 };
 
@@ -19,6 +20,7 @@ const getAllUsersRoles = async () => {
   if (!usersRoles) {
     throw new Error("Users roles not found!");
   }
+
   return usersRoles;
 };
 
@@ -31,6 +33,7 @@ const getUserRoleById = async (id) => {
   if (!userRole) {
     throw new Error(`User role with this id: ${id} not found!`);
   }
+
   return userRole;
 };
 
@@ -46,6 +49,7 @@ const updateUserRoleById = async (id, roleName) => {
   if (!updateUserRole) {
     throw new Error(`User role with this id: ${id} not found!`);
   }
+
   return updateUserRole;
 };
 
@@ -58,6 +62,7 @@ const deleteUserRoleById = async (id) => {
   if (!deleteUserRole) {
     throw new Error(`User role with this id: ${id} not found!`);
   }
+
   return deleteUserRole;
 };
 

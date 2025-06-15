@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { HTTPErrors } = require("../utils/errorUtils");
+const { decrypt } = require("../utils/decryptUtils");
 
 const validateInputs = (schema) =>
   asyncHandler(async (req, _res, next) => {

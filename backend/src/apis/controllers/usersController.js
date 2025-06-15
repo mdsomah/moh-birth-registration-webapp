@@ -15,6 +15,8 @@ const {
   updateUserById,
   deleteUserById,
 } = require("../services/usersService");
+const { encrypt } = require("../utils/encryptUtils");
+const { decrypt } = require("../utils/decryptUtils");
 
 //? Delete User Photo
 const deleteUserPhoto = (fullPath) => {
@@ -28,6 +30,16 @@ const deleteUserPhoto = (fullPath) => {
 //? Create New User
 const CreateNewUser = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
+  const { encryptedData } = req.body;
+
+  //? Decrypt the encryptedData
+  const decryptedNewUser = decrypt(
+    encryptedData,
+    process.env.ENCRYPTION_KEY,
+    process.env.ENCRYPTION_IV
+  );
+
+  //? Destructure decryptedNewUser data
   const {
     lastName,
     firstName,
@@ -41,7 +53,8 @@ const CreateNewUser = asyncHandler(async (req, res, next) => {
     password,
     confirmPassword,
     userRoleId,
-  } = req.body;
+  } = decryptedNewUser;
+
   try {
     //? Define photo
     const photo = req.file?.filename;
@@ -62,12 +75,18 @@ const CreateNewUser = asyncHandler(async (req, res, next) => {
       photo,
       userRoleId
     );
+    //? Encrypt the newUser data
+    const encryptedNewUser = encrypt(
+      newUser,
+      process.env.ENCRYPTION_KEY,
+      process.env.ENCRYPTION_IV
+    );
     return res.status(201).json({
       success: true,
       isAuthenticated: true,
       method: req.method,
       message: "User created successfully!",
-      newUser: newUser,
+      encryptedNewUser: encryptedNewUser,
     });
   } catch (err) {
     Logger.info("Creating New User: Status failed!");
@@ -83,7 +102,13 @@ const GetUserProfile = asyncHandler(async (req, res, next) => {
   try {
     Logger.info("Getting User Profile: Status success!");
     const userProfile = await getUserProfile(id);
-    return res.status(200).json(userProfile);
+    //? Encrypt the userProfile data
+    const encryptedUserProfile = encrypt(
+      userProfile,
+      process.env.ENCRYPTION_KEY,
+      process.env.ENCRYPTION_IV
+    );
+    return res.status(200).json(encryptedUserProfile);
   } catch (err) {
     Logger.info("Getting User Profile: Status failed!");
     return next(HTTPErrors(404, `${err}`));
@@ -92,11 +117,21 @@ const GetUserProfile = asyncHandler(async (req, res, next) => {
 
 //? Update User Profile Password
 const UpdateUserProfilePassword = asyncHandler(async (req, res, next) => {
+  //? Destructure req.body
+  const { encryptedData } = req.body;
+
+  //? Decrypt the encryptedData
+  const decryptedProfilePassword = decrypt(
+    encryptedData,
+    process.env.ENCRYPTION_KEY,
+    process.env.ENCRYPTION_IV
+  );
+
+  //? Destructure decryptedUpdateRole data
+  const { password, confirmPassword } = decryptedProfilePassword;
+
   //? Destructure id from req.user
   const { id } = req.user;
-
-  //? Destructure req.body
-  const { password, confirmPassword } = req.body;
 
   try {
     Logger.info("Updating User Profile Password: Status success!");
@@ -105,12 +140,18 @@ const UpdateUserProfilePassword = asyncHandler(async (req, res, next) => {
       password,
       confirmPassword
     );
+    //? Encrypt the updatedProfilePassword data
+    const encryptedProfilePassword = encrypt(
+      updateProfilePassword,
+      process.env.ENCRYPTION_KEY,
+      process.env.ENCRYPTION_IV
+    );
     return res.status(200).json({
       success: true,
       isAuthenticated: true,
       method: req.method,
       message: "Password updated successfully!",
-      updateProfilePassword: updateProfilePassword,
+      encryptedProfilePassword: encryptedProfilePassword,
     });
   } catch (err) {
     Logger.info("Updating User Profile Password: Status failed!");

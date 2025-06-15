@@ -14,6 +14,8 @@
     "backend-frontend": "concurrently \"npm run start-dev\" \"cd ../frontend && npm start\" ",
     "migrate-dev": "npx prisma migrate dev",
     "migrate-prod": "npx prisma migrate deploy",
+    "generate": "npx prisma generate",
+    "migrate-reset": "npx prisma migrate reset",
     "reset-dev": "npx prisma migrate reset",
     "debug": "cross-env DEBUG=ROMMTech-eSales-POS-Backend npm run start-dev",
     "lint:fix": "npx eslint --fix ./*.js",

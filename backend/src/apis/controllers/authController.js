@@ -48,10 +48,7 @@ const Login = asyncHandler(async (req, res, next) => {
     secondaryPhoneNumber,
     email,
     photo,
-    uiLanguage,
-    uiLanguageCode,
     userRole,
-    myAccountId,
   } = req.user;
 
   try {
@@ -84,10 +81,7 @@ const Login = asyncHandler(async (req, res, next) => {
         secondaryPhoneNumber: secondaryPhoneNumber,
         email: email,
         photo: photo,
-        uiLanguage: uiLanguage,
-        uiLanguageCode: uiLanguageCode,
         userRole: userRole,
-        myAccountId: myAccountId,
         accessToken: accessToken,
       };
       //? Encrypt user object
@@ -140,7 +134,6 @@ const Logout = asyncHandler(async (req, res, next) => {
           userName: "",
           role: "",
           userRole: "",
-          myAccountId: "",
           accessToken: "",
         },
       });
@@ -172,10 +165,7 @@ const GetAuthenticatedUser = asyncHandler(async (req, res, next) => {
       secondaryPhoneNumber,
       email,
       photo,
-      uiLanguage,
-      uiLanguageCode,
       userRole,
-      myAccountId,
     } = req.user;
 
     if (req.isAuthenticated()) {
@@ -193,10 +183,7 @@ const GetAuthenticatedUser = asyncHandler(async (req, res, next) => {
         secondaryPhoneNumber: secondaryPhoneNumber,
         email: email,
         photo: photo,
-        uiLanguage: uiLanguage,
-        uiLanguageCode: uiLanguageCode,
         userRole: userRole,
-        myAccountId: myAccountId,
       };
       //? Encrypt user object
       const encryptedAuthUser = encrypt(

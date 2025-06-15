@@ -2,7 +2,7 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 const asyncHandler = require("express-async-handler");
 
-const logoURL = "http://localhost:5000/api/v1/images/logo/NSA-LOGO.png";
+const logoURL = "http://localhost:5000/api/v1/images/logo/MOH-LOGO.png";
 
 const passwordResetEmail = asyncHandler(async (option) => {
   try {
@@ -11,27 +11,22 @@ const passwordResetEmail = asyncHandler(async (option) => {
       service: `${process.env.EMAIL_SERVICE}`,
       port: process.env.EMAIL_PORT,
       secure: false,
-      // requireTLS: true,
       auth: {
         user: `${process.env.EMAIL_ID}`,
         pass: `${process.env.EMAIL_APP_PASSWORD}`,
       },
-      // tls: {
-      //   rejectUnauthorized: true,
-      // },
     });
     const mailOptions = {
-      // from: process.env.EMAIL_ID,
-      from: `"NSA QUERIES SYSTEM" <${process.env.EMAIL_ID}>`,
+      from: `"MOH Birth Registration System" <${process.env.EMAIL_ID}>`,
       to: option.email,
       subject: option.subject,
       text: option.message,
       html: option.message,
       attachments: [
         {
-          filename: "NSA-LOGO.png",
+          filename: "MOH-LOGO.png",
           path: `${logoURL}`,
-          cid: "nsaLogo",
+          cid: "mohLogo",
         },
       ],
     };
@@ -57,7 +52,7 @@ const mailTemplate = (displayName, content, buttonUrl, buttonText) => {
       "
     >
       <div style="margin-bottom: 15px;">
-        <img src="cid:nsaLogo" style="width: 100px; height: 100px;" />
+        <img src="cid:mohLogo" style="width: 100px; height: 100px;" />
       </div>
       <p style="text-align: left;">
         ${displayName}

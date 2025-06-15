@@ -24,7 +24,7 @@ const jwtOptions = {
 //? Passport JWT Strategy for Authorization
 passport.use(
   new JwtStrategy(jwtOptions, async (payload, done) => {
-    await prisma.employee
+    await prisma.user
       .findFirst({
         where: { id: payload?.sub },
         select: {
@@ -39,12 +39,9 @@ passport.use(
           primaryPhoneNumber: true,
           secondaryPhoneNumber: true,
           email: true,
-          employeeRole: true,
           password: true,
           photo: true,
-          uiLanguage: true,
-          uiLanguageCode: true,
-          myAccountId: true,
+          userRole: true,
         },
       })
       .then((user) => {
@@ -86,7 +83,7 @@ passport.use(
       console.log(
         `Decrypted Email: ${decryptedEmail}, Decrypted UserName: ${decryptedUserName}, Decrypted Password: ${decryptedPassword}`
       );
-      await prisma.employee
+      await prisma.user
         .findFirst({
           where: {
             OR: [{ email: decryptedEmail }, { userName: decryptedUserName }],
@@ -103,12 +100,9 @@ passport.use(
             primaryPhoneNumber: true,
             secondaryPhoneNumber: true,
             email: true,
-            employeeRole: true,
             password: true,
             photo: true,
-            uiLanguage: true,
-            uiLanguageCode: true,
-            myAccountId: true,
+            userRole: true,
           },
         })
         .then((user) => {
@@ -195,7 +189,7 @@ passport.serializeUser((user, done) => {
 
 //? De_Serialize User
 passport.deserializeUser(async (id, done) => {
-  await prisma.employee
+  await prisma.user
     .findFirst({
       where: { id: id },
     })

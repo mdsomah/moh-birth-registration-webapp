@@ -1,4 +1,4 @@
-const debug = require("debug")("NSA-Search-Queries-Backend"),
+const debug = require("debug")("MOH-Birth-Registration-System-Backend"),
   name = `${process.env.DEBUG}`;
 
 //? Check if the URL is development

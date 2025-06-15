@@ -1,11 +1,35 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "<!-- Backend Description -->",
-  "main": ".eslintrc.js",
+  "description": "<!-- Ministry of Health (MOH) Online Birth Registration System Backend -->",
+  "type": "commonjs",
+  "main": "./src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./src/server.js",
+    "build": "webpack --config webpack.config.js",
+    "dev": "nodemon ./src/server.js",
+    "prod": "nodemon ./src/server.js",
+    "start-dev": "cross-env NODE_ENV=development npm run dev",
+    "start-prod": "cross-env NODE_ENV=production npm run prod",
+    "backend-frontend": "concurrently \"npm run start-dev\" \"cd ../frontend && npm start\" ",
+    "migrate-dev": "npx prisma migrate dev",
+    "migrate-prod": "npx prisma migrate deploy",
+    "reset-dev": "npx prisma migrate reset",
+    "debug": "cross-env DEBUG=ROMMTech-eSales-POS-Backend npm run start-dev",
+    "lint:fix": "npx eslint --fix ./*.js",
+    "test": "mocha"
   },
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "Backend",
+    "APIs",
+    "Database"
+  ],
+  "author": "Mesheal D. Somah",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.9.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.9.0"
+  }
 }

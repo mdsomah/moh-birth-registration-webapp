@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+//? User Model
+model User {
+  id                   String              @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  lastName             String              @db.VarChar(255)
+  firstName            String              @db.VarChar(255)
+  middleName           String?             @db.VarChar(255)
+  displayName          String              @db.VarChar(255)
+  primaryPhoneNumber   String              @db.VarChar(225)
+  secondaryPhoneNumber String?             @db.VarChar(225)
+  email                String              @unique @db.VarChar(225)
+  userName             String              @unique @db.VarChar(255)
+  role                 String
+  password             String              @db.VarChar(255)
+  confirmPassword      String              @db.VarChar(255)
+  photo                String?             @default("")
+  userRole             UserRole            @relation(fields: [userRoleId], references: [id])
+  userRoleId           String
+  passwordResetToken   PasswordResetToken?
+  rememberToken        RememberToken?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+
+  @@index([userRoleId])
+  @@map(name: "user")
+}
+
+//? UserRole Model
+model UserRole {
+  id        String   @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  roleName  String
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map(name: "userRole")
+}
+
+//? PasswordResetToken Model
+model PasswordResetToken {
+  id        String   @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  token     String
+  expiresAt String
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map(name: "passwordResetToken")
+}
+
+//? RememberToken Model
+model RememberToken {
+  id        String   @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  token     String
+  expiresAt String
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map(name: "rememberToken")
+}

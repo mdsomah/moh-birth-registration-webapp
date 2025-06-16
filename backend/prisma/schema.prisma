@@ -115,7 +115,7 @@ model ApplicantFather {
   fatherDateOfNaturalization String
   isFatherLiving             String
   fatherPresentAddress       String?    @db.VarChar(255)
-  fatherTelephoneNumber      String?    @db.VarChar(12)
+  fatherTelephoneNumber      String?    @db.VarChar(14)
   applicant                  Applicant? @relation(fields: [applicantId], references: [id], onDelete: Cascade)
   applicantId                String?    @unique
   createdAt                  DateTime   @default(now())
@@ -139,7 +139,7 @@ model ApplicantMother {
   motherDateOfNaturalization String
   isMotherLiving             String
   motherPresentAddress       String?    @db.VarChar(255)
-  motherTelephoneNumber      String?    @db.VarChar(12)
+  motherTelephoneNumber      String?    @db.VarChar(14)
   applicant                  Applicant? @relation(fields: [applicantId], references: [id], onDelete: Cascade)
   applicantId                String?    @unique
   createdAt                  DateTime   @default(now())

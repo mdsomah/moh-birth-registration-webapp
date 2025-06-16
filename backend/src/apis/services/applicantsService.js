@@ -92,7 +92,7 @@ const registerNewApplicant = async (
         create: {
           motherName: motherName.trim(),
           motherNationality: motherNationality.trim(),
-          motherAge: motherAge.trim(),
+          motherAge: motherAge,
           motherTownOrCity: motherTownOrCity.trim(),
           motherCounty: motherCounty.trim(),
           motherCountry: motherCountry.trim(),
@@ -124,7 +124,7 @@ const registerNewApplicant = async (
       },
       dateOfApplication: dateOfApplication.trim(),
       formNumber: `MOH-${Form_Number()}`,
-      parentOrGuardianPhoto: parentOrGuardianPhoto.trim(),
+      parentOrGuardianPhoto: parentOrGuardianPhoto,
     },
     include: {
       applicantFather: true,

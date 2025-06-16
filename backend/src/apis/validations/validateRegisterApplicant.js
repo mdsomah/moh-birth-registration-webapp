@@ -20,9 +20,7 @@ const validateRegisterApplicantSchema = Yup.object()
     fatherCountry: Yup.string().required("Country required!"),
     fatherCountyOfOrigin: Yup.string().required("County of origin required!"),
     fatherOccupation: Yup.string().required("Occupation required!"),
-    fatherDateOfNaturalization: Yup.string().required(
-      "Date of naturalization required!"
-    ),
+    fatherDateOfNaturalization: Yup.string().notRequired(),
     isFatherLiving: Yup.string().required("Please select one!"),
     fatherPresentAddress: Yup.string().required("Present address required!"),
     fatherTelephoneNumber: Yup.string().required("Telephone number required!"),
@@ -34,17 +32,15 @@ const validateRegisterApplicantSchema = Yup.object()
     motherCountry: Yup.string().required("Country required!"),
     motherCountyOfOrigin: Yup.string().required("County of origin required!"),
     motherOccupation: Yup.string().required("Occupation required!"),
-    motherDateOfNaturalization: Yup.string().required(
-      "Date of naturalization required!"
-    ),
+    motherDateOfNaturalization: Yup.string().notRequired(),
     isMotherLiving: Yup.string().required("Select one!"),
     motherPresentAddress: Yup.string().required("Present address required!"),
     motherTelephoneNumber: Yup.string().required("Telephone number required!"),
-    applicantSignature: Yup.string().required("Applicant signature required!"),
+    applicantSignature: Yup.string().notRequired(),
     applicantContactNumber: Yup.string().required(
       "Applicant contact required!"
     ),
-    applicantPhoto: Yup.string().required("Applicant photo required!"),
+    applicantPhoto: Yup.string().notRequired(),
     fullName: Yup.string().required("Full name required!"),
     city: Yup.string().required("City required!"),
     county: Yup.string().required("County required!"),
@@ -57,9 +53,7 @@ const validateRegisterApplicantSchema = Yup.object()
     relationship: Yup.string().required("Relationship required!"),
     contactNumber: Yup.string().required("Contact number required!"),
     dateOfApplication: Yup.string().required("Date of application required!"),
-    parentOrGuardianPhoto: Yup.string().required(
-      "Parent or guardian photo required!"
-    ),
+    parentOrGuardianPhoto: Yup.string().notRequired(),
   })
   .required();
 

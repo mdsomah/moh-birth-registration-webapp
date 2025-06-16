@@ -3,14 +3,14 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import authReducer from "../slices/authSlice";
 import messageReducer from "../slices/messageSlice";
-import queryReducer from "../slices/querySlice";
 import userReducer from "../slices/userSlice";
+import newRegistrationReducer from "../slices/newRegistrationSlice";
 
 //? reducers
 const reducers = combineReducers({
   auth: authReducer,
   message: messageReducer,
-  query: queryReducer,
+  newRegistration: newRegistrationReducer,
   user: userReducer,
 });
 

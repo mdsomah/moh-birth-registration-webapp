@@ -1,5 +1,6 @@
 import * as React from "react";
 import { RouterProvider } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 
 //? CSS and Fonts
 import "./App.css";
@@ -10,7 +11,9 @@ import { router } from "./routes/routers";
 const App = () => {
   return (
     <React.Fragment>
-      <RouterProvider router={router} />
+      <HelmetProvider>
+        <RouterProvider router={router} />
+      </HelmetProvider>
     </React.Fragment>
   );
 };

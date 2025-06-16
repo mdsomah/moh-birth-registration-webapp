@@ -1,10 +1,11 @@
 import React from "react";
+import NewRegistration from "../NewRegistration/NewRegistration";
 
 const Home = () => {
   return (
-    <div>
-      <h1>Ministry of Health Online Birth Registration System</h1>
-    </div>
+    <React.Fragment>
+      <NewRegistration />
+    </React.Fragment>
   );
 };
 

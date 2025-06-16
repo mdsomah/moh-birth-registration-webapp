@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link as URLLink, useNavigate } from "react-router-dom";
+import { Link as URLLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
@@ -21,7 +21,6 @@ import SendIcon from "@mui/icons-material/Send";
 import CopyRights from "../../CopyRights/CopyRights";
 import {
   setIsCompleted,
-  removeRegistrationType,
   setStepOneForm,
   removeStepOneForm,
   setStepTwoForm,
@@ -174,9 +173,6 @@ const NewRegistration = () => {
   //? Destructure useSelector
   const { stepOneForm, stepTwoForm, stepThreeForm, finalStepForm } =
     useSelector((state) => state.newRegistration);
-
-  // useNavigate
-  // const navigate = useNavigate();
 
   const [activeStep, setActiveStep] = useState(0);
   const steps = [
@@ -344,57 +340,58 @@ const NewRegistration = () => {
 
   //? Applicant Data
   const ApplicantData = {
-    registrationType: formikStepOneForm.values.registrationType,
-    institutionName: formikStepOneForm.values.institutionName,
-    businessTIN: formikStepOneForm.values.businessTIN,
-    businessOwnership: formikStepOneForm.values.businessOwnership,
-    currentAddress: formikStepOneForm.values.currentAddress,
-    counties: formikStepOneForm.values.counties,
-    primaryContact: formikStepOneForm.values.primaryContact,
-    secondaryContact: formikStepOneForm.values.secondaryContact,
-    emailAddress: formikStepOneForm.values.emailAddress,
-    typeOfMedia: formikStepOneForm.values.typeOfMedia,
-    nameOfManager: formikStepOneForm.values.nameOfManager,
-    educationLevel: formikStepOneForm.values.educationLevel,
-    yearOfExperienceOfManager:
-      formikStepOneForm.values.yearOfExperienceOfManager,
-    dateOfEstablishment: formikStepTwoForm.values.dateOfEstablishment,
-    isMemberOfPUL: formikStepTwoForm.values.isMemberOfPUL,
-    ifNoStateReason: formikStepTwoForm.values.ifNoStateReason,
-    nameOfEditorInChief: formikStepTwoForm.values.nameOfEditorInChief,
-    phoneNumberOfEditorInChief:
-      formikStepTwoForm.values.phoneNumberOfEditorInChief,
-    jobExperienceOfEditorInChief:
-      formikStepTwoForm.values.jobExperienceOfEditorInChief,
-    essentialStaffs: formikStepTwoForm.values.essentialStaffs,
-    documents: formikStepThreeForm.values.documents,
-    currentWorkForce: formikStepThreeForm.values.currentWorkForce,
-    isInstitutionAlreadyRegister:
-      formikStepThreeForm.values.isInstitutionAlreadyRegister,
-    dateOfLastRegistration: formikStepThreeForm.values.dateOfLastRegistration,
-    equipments: formikStepThreeForm.values.equipments,
-    typeOfEquipments: formikStepThreeForm.values.typeOfEquipments.concat(
-      ...typeOfEquipments
-    ),
-    typeOfFrequency: formikStepThreeForm.values.typeOfFrequency,
-    typeOfCommunicationEngage:
-      formikStepThreeForm.values.typeOfCommunicationEngage,
-    programGuide: formikStepThreeForm.values.programGuide,
-    comments: formikStepThreeForm.values.comments,
-    publicationSchedule: formikStepThreeForm.values.publicationSchedule,
-    other: formikStepThreeForm.values.other,
-    kindOfPublication: formikStepThreeForm.values.kindOfPublication,
-    institutionPolicy: formikStepThreeForm.values.institutionPolicy,
-    documentTypeIds: formikStepThreeForm.values.documentTypeIds,
-    applicantFullName: formikFinalStepForm.values.applicantFullName,
-    logo: formikFinalStepForm.values.logo,
+    formNumber: formikStepOneForm.values.formNumber,
+    applicantSex: formikStepOneForm.values.applicantSex,
+    dateOfApplication: formikStepOneForm.values.dateOfApplication,
+    applicantPhoto: formikStepOneForm.values.applicantPhoto,
+    applicantFirstName: formikStepOneForm.values.applicantFirstName,
+    applicantMiddleName: formikStepOneForm.values.applicantMiddleName,
+    applicantLastName: formikStepOneForm.values.applicantLastName,
+    applicantFacility: formikStepOneForm.values.applicantFacility,
+    applicantTownOrCity: formikStepOneForm.values.applicantTownOrCity,
+    applicantCounty: formikStepOneForm.values.applicantCounty,
+    applicantCountry: formikStepOneForm.values.applicantCountry,
+    applicantDateOfBirth: formikStepOneForm.values.applicantDateOfBirth,
+    fatherName: formikStepTwoForm.values.fatherName,
+    fatherNationality: formikStepTwoForm.values.fatherNationality,
+    fatherAge: formikStepTwoForm.values.fatherAge,
+    fatherTownOrCity: formikStepTwoForm.values.fatherTownOrCity,
+    fatherCounty: formikStepTwoForm.values.fatherCounty,
+    fatherCountry: formikStepTwoForm.values.fatherCountry,
+    fatherCountyOfOrigin: formikStepTwoForm.values.fatherCountyOfOrigin,
+    fatherOccupation: formikStepTwoForm.values.fatherOccupation,
+    fatherDateOfNaturalization:
+      formikStepTwoForm.values.fatherDateOfNaturalization,
+    isFatherLiving: formikStepTwoForm.values.isFatherLiving,
+    fatherPresentAddress: formikStepTwoForm.values.fatherPresentAddress,
+    fatherTelephoneNumber: formikStepTwoForm.values.fatherTelephoneNumber,
+    motherName: formikStepThreeForm.values.motherName,
+    motherNationality: formikStepThreeForm.values.motherNationality,
+    motherAge: formikStepThreeForm.values.motherAge,
+    motherTownOrCity: formikStepThreeForm.values.motherTownOrCity,
+    motherCounty: formikStepThreeForm.values.motherCounty,
+    motherCountry: formikStepThreeForm.values.motherCountry,
+    motherCountyOfOrigin: formikStepThreeForm.values.motherCountyOfOrigin,
+    motherOccupation: formikStepThreeForm.values.motherOccupation,
+    motherDateOfNaturalization:
+      formikStepThreeForm.values.motherDateOfNaturalization,
+    isMotherLiving: formikStepThreeForm.values.isMotherLiving,
+    motherPresentAddress: formikStepThreeForm.values.motherPresentAddress,
+    motherTelephoneNumber: formikStepThreeForm.values.motherTelephoneNumber,
     applicantSignature: formikFinalStepForm.values.applicantSignature,
-    applicationDate: formikFinalStepForm.values.applicationDate,
-    termsOfConditions: formikFinalStepForm.values.termsOfConditions,
-    rejectedOrAcceptedFor: formikFinalStepForm.values.rejectedOrAcceptedFor,
-    rejectedOrAccepted: formikFinalStepForm.values.rejectedOrAccepted,
-    directorSignature: formikFinalStepForm.values.directorSignature,
-    directorSignedDate: formikFinalStepForm.values.directorSignedDate,
+    applicantContactNumber: formikFinalStepForm.values.applicantContactNumber,
+    parentOrGuardianPhoto: formikFinalStepForm.values.parentOrGuardianPhoto,
+    fullName: formikFinalStepForm.values.fullName,
+    city: formikFinalStepForm.values.city,
+    county: formikFinalStepForm.values.county,
+    motherFullName: formikFinalStepForm.values.motherFullName,
+    fatherFullName: formikFinalStepForm.values.fatherFullName,
+    date: formikFinalStepForm.values.date,
+    cityOrTown: formikFinalStepForm.values.cityOrTown,
+    name: formikFinalStepForm.values.name,
+    address: formikFinalStepForm.values.address,
+    relationship: formikFinalStepForm.values.relationship,
+    contactNumber: formikFinalStepForm.values.contactNumber,
   };
 
   console.log(ApplicantData);
@@ -626,7 +623,7 @@ const NewRegistration = () => {
                 to="/"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                <img src={logo} width="100" alt="eSalesPOS Logo" />
+                <img src={logo} width="100" alt="MOH Logo" />
               </URLLink>
               <Typography component="h1" variant="h5" sx={{ mt: 3, mb: 2 }}>
                 New Registration Form

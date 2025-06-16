@@ -2,7 +2,7 @@ import React from "react";
 import "quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 
-// CSS
+//? CSS
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 const CommentsEditor = (props) => {

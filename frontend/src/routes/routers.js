@@ -11,6 +11,9 @@ import UnPrivateRoute from "../hocs/unPrivateRoute";
 const Home = React.lazy(() =>
   import("../components/LandingPage/Pages/Home/Home")
 );
+const NewRegistration = React.lazy(() =>
+  import("../components/LandingPage/Pages/NewRegistration/NewRegistration")
+);
 
 //? 404 Error Component import
 const Error404 = React.lazy(() => import("../components/404/Erorr404"));
@@ -23,7 +26,7 @@ export const router = createBrowserRouter([
     element: (
       <UnPrivateRoute>
         <ErrorBoundary FallbackComponent={ErrorsHandler}>
-          <Home />
+          <NewRegistration />
         </ErrorBoundary>
       </UnPrivateRoute>
     ),

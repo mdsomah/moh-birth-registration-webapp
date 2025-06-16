@@ -28,6 +28,7 @@ const { rateSlowdown } = require("./apis/middlewares/rateSlowdownMiddleware");
 const authRouter = require("./apis/routes/authRoute");
 const usersRoute = require("./apis/routes/usersRoute");
 const userRolesRoute = require("./apis/routes/userRolesRoute");
+const applicantsRoute = require("./apis/routes/applicantsRoute");
 
 //? Prisma Client Model
 const { prisma } = require("./apis/models/db/database");
@@ -95,6 +96,7 @@ async function main() {
   app.use("/api/v1/auth", authRouter);
   app.use("/api/v1/users", usersRoute);
   app.use("/api/v1/user/roles", userRolesRoute);
+  app.use("/api/v1/applicants", applicantsRoute);
 
   //? Catch All Unregistered APIs Routes
   app.all("/*splat", (req, res) => {

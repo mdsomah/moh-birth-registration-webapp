@@ -73,3 +73,101 @@ model RememberToken {
   @@index([userId])
   @@map(name: "rememberToken")
 }
+
+//? Applicant Model
+model Applicant {
+  id                     String           @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  applicantFirstName     String           @db.VarChar(255)
+  applicantMiddleName    String?          @db.VarChar(255)
+  applicantLastName      String           @db.VarChar(255)
+  applicantSex           String
+  applicantFacility      String           @db.VarChar(255)
+  applicantTownOrCity    String           @db.VarChar(255)
+  applicantCounty        String           @db.VarChar(255)
+  applicantCountry       String           @db.VarChar(255)
+  applicantDateOfBirth   String
+  applicantFather        ApplicantFather?
+  applicantMother        ApplicantMother?
+  applicantSignature     String
+  applicantContactNumber String           @db.VarChar(14)
+  applicantPhoto         String?          @default("")
+  attestation            Attestation?
+  dateOfApplication      String
+  formNumber             String?          @default("")
+  parentOrGuardianPhoto  String[]
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+
+  @@map(name: "applicant")
+}
+
+//? ApplicantFather Model
+model ApplicantFather {
+  id                         String     @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  fatherName                 String     @db.VarChar(255)
+  fatherNationality          String     @db.VarChar(255)
+  fatherAge                  Int
+  fatherTownOrCity           String     @db.VarChar(255)
+  fatherCounty               String     @db.VarChar(255)
+  fatherCountry              String     @db.VarChar(255)
+  fatherCountyOfOrigin       String     @db.VarChar(255)
+  fatherOccupation           String     @db.VarChar(255)
+  fatherDateOfNaturalization String
+  isFatherLiving             String
+  fatherPresentAddress       String?    @db.VarChar(255)
+  fatherTelephoneNumber      String?    @db.VarChar(12)
+  applicant                  Applicant? @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  applicantId                String?    @unique
+  createdAt                  DateTime   @default(now())
+  updatedAt                  DateTime   @updatedAt
+
+  @@index([applicantId])
+  @@map(name: "applicantFather")
+}
+
+//? ApplicantMother Model
+model ApplicantMother {
+  id                         String     @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  motherName                 String     @db.VarChar(255)
+  motherNationality          String     @db.VarChar(255)
+  motherAge                  Int
+  motherTownOrCity           String     @db.VarChar(255)
+  motherCounty               String     @db.VarChar(255)
+  motherCountry              String     @db.VarChar(255)
+  motherCountyOfOrigin       String     @db.VarChar(255)
+  motherOccupation           String     @db.VarChar(255)
+  motherDateOfNaturalization String
+  isMotherLiving             String
+  motherPresentAddress       String?    @db.VarChar(255)
+  motherTelephoneNumber      String?    @db.VarChar(12)
+  applicant                  Applicant? @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  applicantId                String?    @unique
+  createdAt                  DateTime   @default(now())
+  updatedAt                  DateTime   @updatedAt
+
+  @@index([applicantId])
+  @@map(name: "applicantMother")
+}
+
+//? Attestation Model
+model Attestation {
+  id             String     @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  fullName       String     @db.VarChar(255)
+  city           String     @db.VarChar(255)
+  county         String     @db.VarChar(255)
+  motherFullName String     @db.VarChar(255)
+  fatherFullName String     @db.VarChar(255)
+  date           String
+  cityOrTown     String     @db.VarChar(255)
+  name           String     @db.VarChar(255)
+  address        String     @db.VarChar(255)
+  relationship   String     @db.VarChar(255)
+  contactNumber  String?    @db.VarChar(14)
+  applicant      Applicant? @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  applicantId    String?    @unique
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([applicantId])
+  @@map(name: "attestation")
+}

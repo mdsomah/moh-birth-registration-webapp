@@ -4,7 +4,7 @@ const { prisma } = require("../models/db/database");
 const createNewUserRole = async (roleName) => {
   const newUserRole = await prisma.userRole.create({
     data: {
-      roleName: roleName,
+      roleName: roleName.trim(),
     },
     include: { users: true },
   });

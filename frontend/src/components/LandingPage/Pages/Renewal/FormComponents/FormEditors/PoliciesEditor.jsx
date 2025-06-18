@@ -5,7 +5,7 @@ import ReactQuill from "react-quill";
 // CSS
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-const CommentsEditor = (props) => {
+const PoliciesEditor = (props) => {
   // Destructure props
   const { value, onChange } = props;
 
@@ -88,11 +88,11 @@ const CommentsEditor = (props) => {
   return (
     <React.Fragment>
       <ReactQuill
-        id="comments"
+        id="institutionPolicy"
         theme="snow"
         modules={modules}
         formats={formats}
-        placeholder="Enter comments...."
+        placeholder="Enter your instituion policy...."
         value={value}
         onChange={onChange}
         style={{ height: "220px" }}
@@ -101,4 +101,4 @@ const CommentsEditor = (props) => {
   );
 };
 
-export default CommentsEditor;
+export default PoliciesEditor;

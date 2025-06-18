@@ -22,8 +22,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-// import CommentsEditor from "./FormEditors/CommentsEditor";
-// import PoliciesEditor from "./FormEditors/PoliciesEditor";
+import CommentsEditor from "./FormEditors/CommentsEditor";
+import PoliciesEditor from "./FormEditors/PoliciesEditor";
 
 // Scroll to top of react route/page change
 import ScrollToTop from "../../../../ScrollToTop/ScrollToTop";
@@ -803,14 +803,14 @@ const StepThreeForm = (props) => {
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} sx={{ mb: 7 }}>
           <Typography sx={{ mb: 2 }}>Comments</Typography>
-          {/* <FormControl fullWidth>
+          <FormControl fullWidth>
             <CommentsEditor
               value={formik.values.comments}
               onChange={(event) => {
                 formik.setFieldValue("comments", event);
               }}
             />
-          </FormControl> */}
+          </FormControl>
         </Grid>
         <Grid item xs={12} sm={12} md={6} lg={6}>
           <Typography sx={{ mb: 2 }}>
@@ -962,12 +962,12 @@ const StepThreeForm = (props) => {
             </Tooltip>
           </Typography>
           <FormControl fullWidth>
-            {/* <PoliciesEditor
+            <PoliciesEditor
               value={formik.values.institutionPolicy}
               onChange={(event) => {
                 formik.setFieldValue("institutionPolicy", event);
               }}
-            /> */}
+            />
             <Typography variant="inherit" color="error.main" sx={{ mt: 7 }}>
               {formik.touched.institutionPolicy &&
                 formik.errors.institutionPolicy}

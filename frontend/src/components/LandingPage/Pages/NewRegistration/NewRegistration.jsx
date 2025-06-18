@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link as URLLink } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
-import { ThemeProvider } from "@mui/material/styles";
-import { responsiveTheme } from "../../../../utils/muiUtils";
-import {
-  CssBaseline,
-  Box,
-  Typography,
-  Grid,
-  Button,
-  Paper,
-  Stepper,
-  Step,
-  StepLabel,
-} from "@mui/material";
+import PropTypes from "prop-types";
+import { styled } from "@mui/material/styles";
+import Stack from "@mui/material/Stack";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import CssBaseline from "@mui/material/CssBaseline";
+import Check from "@mui/icons-material/Check";
+import SettingsIcon from "@mui/icons-material/Settings";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import VideoLabelIcon from "@mui/icons-material/VideoLabel";
+import StepConnector, {
+  stepConnectorClasses,
+} from "@mui/material/StepConnector";
 import { LoadingButton } from "@mui/lab";
 import SendIcon from "@mui/icons-material/Send";
+import { ThemeProvider } from "@mui/material/styles";
 import CopyRights from "../../CopyRights/CopyRights";
+import { responsiveTheme } from "../../../../utils/muiUtils";
 import {
   setIsCompleted,
+  // removeRegistrationType,
   setStepOneForm,
   removeStepOneForm,
   setStepTwoForm,
@@ -31,7 +36,7 @@ import {
   removeFinalStepForm,
 } from "../../../../app/slices/newRegistrationSlice";
 
-//? Scroll to top of react route/page change
+// Scroll to top of react route/page change
 import ScrollToTop from "../../../ScrollToTop/ScrollToTop";
 
 //? Formik and Yup
@@ -39,14 +44,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import "yup-phone-lite";
 
-//? Create Data
+// Create Data
 import CreateData from "../../../../apis/CreateData";
-
-//? Images Import
-import logo from "../../../../images/MOH_Logo/MOH-LOGO.png";
-
-//? Registration Image
-import registrationImageURL from "../../../../images/Registration-Image.jpg";
 
 //? Form Components imports
 import StepOneForm from "./FormComponents/StepOneForm";
@@ -55,160 +54,414 @@ import StepThreeForm from "./FormComponents/StepThreeForm";
 import FinalStepForm from "./FormComponents/FinalStepForm";
 
 //? Endpoints
-const postApplicantURL = "/applicants/register-new-applicant";
+const postApplicantURL = "/institutions/create-new-institution";
 
-//? Category Image upload formats
+// Category Image upload formats
 const SUPPORTED_FORMATS = ["image/jpeg, image/jpg, image/png, image/jif"];
 
-//? Category Image upload size
+// Category Image upload size
 const FILE_SIZE = 1024 * 1024 * 25;
 
 //? Step One Form Schema
 const StepOneFormSchema = Yup.object()
   .shape({
-    formNumber: Yup.string().required("Applicant first name required!"),
-    applicantSex: Yup.string().required("Applicant sex required!"),
-    dateOfApplication: Yup.string().required("Applicant first name required!"),
-    applicantPhoto: Yup.string().required("Applicant first name required!"),
-    applicantFirstName: Yup.string().required("Applicant first name required!"),
+    applicantFirstName: Yup.string().required("First name require!"),
     applicantMiddleName: Yup.string().notRequired(),
-    applicantLastName: Yup.string().required("Applicant last name required!"),
-    applicantFacility: Yup.string().required("Applicant facility required!"),
-    applicantTownOrCity: Yup.string().required("Applicant facility required!"),
-    applicantCounty: Yup.string().required("Applicant facility required!"),
-    applicantCountry: Yup.string().required("Applicant facility required!"),
-    applicantDateOfBirth: Yup.string().required("Applicant facility required!"),
+    registrationType: Yup.string().required("Registration type require!"),
+    institutionName: Yup.string().required("Institution name require!"),
+    businessTIN: Yup.number()
+      .required("Business TIN required!")
+      .positive()
+      .integer()
+      .min(9, "Invalid business TIN!"),
+    // .max(9, "Business TIN cannot exceed 9 digits!"),
+    businessOwnership: Yup.object().shape({
+      ownershipName: Yup.string().required("Please select business ownership!"),
+    }),
+    currentAddress: Yup.string().required("Current address required!"),
+    counties: Yup.array().of(
+      Yup.object().shape({
+        countyID: Yup.string().notRequired(),
+        countyName: Yup.string().required("County name required!"),
+        countyCapitals: Yup.array()
+          .of(Yup.string())
+          .min(1, "Please select at least one location!"),
+        countyFlag: Yup.string().notRequired(),
+      })
+    ),
+    primaryContact: Yup.string()
+      .phone(null, "Please enter a valid phone number!")
+      .required("Primary contact required!"),
+    secondaryContact: Yup.string().notRequired(),
+    emailAddress: Yup.string()
+      .required("Email address required!")
+      .email("Email address is invalid!"),
+    typeOfMedia: Yup.object().shape({
+      typeOfMediaID: Yup.string().notRequired(),
+      mediaType: Yup.string().required("Please select media type!"),
+      sourceCode: Yup.string().notRequired(),
+      codeFee: Yup.string().notRequired(),
+      amount: Yup.number().notRequired(),
+      amountCurrency: Yup.string().notRequired(),
+    }),
+    nameOfManager: Yup.string().required("Name of manager required!"),
+    educationLevel: Yup.object().shape({
+      educationLevelOfManager: Yup.string().required(
+        "Please select education level!"
+      ),
+    }),
+    yearOfExperienceOfManager: Yup.number().required(
+      "Year of experience required!"
+    ),
   })
   .required();
 
-//? Step Two Form Schema
+// Step Two Form Schema
 const StepTwoFormSchema = Yup.object()
   .shape({
-    fatherName: Yup.string().required("Father's name required!"),
-    fatherNationality: Yup.string().required("Father's nationality required!"),
-    fatherAge: Yup.number().required("Father's age required!"),
-    fatherTownOrCity: Yup.string().required("Father's age required!"),
-    fatherCounty: Yup.string().required("Father's age required!"),
-    fatherCountry: Yup.string().required("Father's age required!"),
-    fatherCountyOfOrigin: Yup.string().required("Father's age required!"),
-    fatherOccupation: Yup.string().required("Father's age required!"),
-    fatherDateOfNaturalization: Yup.string().required("Father's age required!"),
-    isFatherLiving: Yup.string().required("Father's age required!"),
-    fatherPresentAddress: Yup.string().required("Father's age required!"),
-    fatherTelephoneNumber: Yup.string().required("Father's age required!"),
+    dateOfEstablishment: Yup.string().required(
+      "Date of establishment required!"
+    ),
+    isMemberOfPUL: Yup.mixed()
+      .required("Please select one!")
+      .oneOf(["YES", "NO"]),
+    ifNoStateReason: Yup.string().when("isMemberOfPUL", {
+      is: (val) => val === "NO",
+      then: () => Yup.string().required("Reason required!"),
+      otherwise: () => Yup.string().notRequired(),
+    }),
+    nameOfEditorInChief: Yup.string().required(
+      "Name of editor in chief required!"
+    ),
+    phoneNumberOfEditorInChief: Yup.string()
+      .phone(null, "Please enter a valid phone number!")
+      .required("Phone number required!"),
+    jobExperienceOfEditorInChief: Yup.number().required(
+      " Job experience required!"
+    ),
+    essentialStaffs: Yup.array().of(
+      Yup.object().shape({
+        fullName: Yup.string().required("Full name required!"),
+        position: Yup.string().required("Position required!"),
+      })
+    ),
   })
   .required();
 
-//? Step Three Form Schema
+// Step Three Form Schema
 const StepThreeFormSchema = Yup.object()
   .shape({
-    motherName: Yup.string().required("Mother's name required!"),
-    motherNationality: Yup.string().required("Mother's nationality required!"),
-    motherAge: Yup.number().required("Mother's age required!"),
-    motherTownOrCity: Yup.string().required("Mother's age required!"),
-    motherCounty: Yup.string().required("Mother's age required!"),
-    motherCountry: Yup.string().required("Mother's age required!"),
-    motherCountyOfOrigin: Yup.string().required("Mother's age required!"),
-    motherOccupation: Yup.string().required("Mother's age required!"),
-    motherDateOfNaturalization: Yup.string().required("Mother's age required!"),
-    isMotherLiving: Yup.string().required("Mother's age required!"),
-    motherPresentAddress: Yup.string().required("Mother's age required!"),
-    motherTelephoneNumber: Yup.string().required("Mother's age required!"),
+    documents: Yup.array().of(
+      Yup.object().shape({
+        documentType: Yup.string().required("Document type required!"),
+        documentName: Yup.mixed()
+          .required("Please select a file to upload")
+          .test(
+            "fileFormat",
+            "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
+            (value) =>
+              !value ||
+              ((value) => value && SUPPORTED_FORMATS.includes(value.type))
+          )
+          .test(
+            "fileSize",
+            "File is too large! Supported size: is (2MB)",
+            (value) => !value || (value && value.size <= FILE_SIZE)
+          ),
+      })
+    ),
+    currentWorkForce: Yup.number().required("Current workforce required!"),
+    isInstitutionAlreadyRegister: Yup.mixed()
+      .required("Please select one!")
+      .oneOf(["YES", "NO"]),
+    dateOfLastRegistration: Yup.string().when("isInstitutionAlreadyRegister", {
+      is: (val) => val === "YES",
+      then: () => Yup.string().required("Date of last registration required!"),
+      otherwise: () => Yup.string().notRequired(),
+    }),
+    equipments: Yup.array()
+      .of(Yup.string())
+      .min(1, "Please select at least one equipment type!"),
+    typeOfEquipments: Yup.array().of(
+      Yup.object().shape({
+        typeOfEquipmentID: Yup.string().notRequired(),
+        equipmentType: Yup.string().notRequired(),
+      })
+    ),
+    typeOfFrequency: Yup.object().shape({
+      frequencyType: Yup.string().required("Please select frequency type!"),
+    }),
+    typeOfCommunicationEngage: Yup.object().shape({
+      communicationType: Yup.string().required(
+        "Please select one engagement type!"
+      ),
+    }),
+    programGuide: Yup.object().shape({
+      programGudieName: Yup.string().required(
+        "Please select one program guide!"
+      ),
+    }),
+    comments: Yup.string().notRequired(),
+    publicationSchedule: Yup.object().shape({
+      scheduleName: Yup.string().required("Please select one schedule!"),
+    }),
+    other: Yup.string().notRequired(),
+    kindOfPublication: Yup.object().shape({
+      publicationName: Yup.string().required("Please select one publication!"),
+    }),
+    institutionPolicy: Yup.string().required("Institution policy required!"),
+    documentTypeIds: Yup.lazy((val) =>
+      Array.isArray(val) ? Yup.array().of(Yup.string()) : Yup.string()
+    ),
   })
   .required();
 
-//? Final Step Form Schema
+// Final Step Form Schema
 const FinalStepFormSchema = Yup.object()
   .shape({
-    applicantSignature: Yup.string().required("Applicant full name required!"),
-    applicantContactNumber: Yup.string().required(
-      "Applicant full name required!"
-    ),
-    parentOrGuardianPhoto: Yup.string().required(
-      "Applicant full name required!"
-    ),
-    fullName: Yup.string().required("Applicant full name required!"),
-    city: Yup.string().required("Applicant full name required!"),
-    county: Yup.string().required("Applicant full name required!"),
-    motherFullName: Yup.string().required("Applicant full name required!"),
-    fatherFullName: Yup.string().required("Applicant full name required!"),
-    date: Yup.string().required("Applicant full name required!"),
-    cityOrTown: Yup.string().required("Applicant full name required!"),
-    name: Yup.string().required("Applicant full name required!"),
-    address: Yup.string().required("Applicant full name required!"),
-    relationship: Yup.string().required("Applicant full name required!"),
-    contactNumber: Yup.string().required("Applicant full name required!"),
+    applicantFullName: Yup.string().required("Applicant full name required!"),
+    logo: Yup.mixed()
+      .notRequired()
+      .test(
+        "fileFormat",
+        "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
+        (value) =>
+          !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
+      )
+      .test(
+        "fileSize",
+        "File is too large! Supported size: is (2MB)",
+        (value) => !value || (value && value.size <= FILE_SIZE)
+      ),
+    applicantSignature: Yup.string().required("Applicant signature required!"),
+    applicationDate: Yup.string().required("Application date required!"),
+    termsOfConditions: Yup.boolean()
+      .oneOf([true], "Terms of conditions is required!")
+      .required("Terms of condition is required!"),
+    rejectedOrAcceptedFor: Yup.string().notRequired(),
+    rejectedOrAccepted: Yup.string().notRequired(),
+    directorSignature: Yup.string().notRequired(),
+    directorSignedDate: Yup.string().notRequired(),
   })
   .required();
 
-const stepStyle = {
-  boxShadow: 2,
-  backgroundColor: "rgba(0,0,0,0.1)",
-  paddingTop: 2,
-  paddingBottom: 2,
-  "& .Mui-active": {
-    "&.MuiStepIcon-root": {
-      color: "error.main",
-      fontSize: "1.5rem",
-    },
-    "& .MuiStepConnector-line": {
-      borderColor: "secondary",
+const QontoConnector = styled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 10,
+    left: "calc(-50% + 16px)",
+    right: "calc(50% + 16px)",
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: "#784af4",
     },
   },
-  "& .Mui-completed": {
-    "&.MuiStepIcon-root": {
-      color: "secondary.main",
-      fontSize: "1.5rem",
-    },
-    "& .MuiStepConnector-line": {
-      borderColor: "secondary",
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      borderColor: "#784af4",
     },
   },
+  [`& .${stepConnectorClasses.line}`]: {
+    borderColor: "#eaeaf0",
+    borderTopWidth: 3,
+    borderRadius: 1,
+    ...theme.applyStyles("dark", {
+      borderColor: theme.palette.grey[800],
+    }),
+  },
+}));
+
+const QontoStepIconRoot = styled("div")(({ theme }) => ({
+  color: "#eaeaf0",
+  display: "flex",
+  height: 22,
+  alignItems: "center",
+  "& .QontoStepIcon-completedIcon": {
+    color: "#784af4",
+    zIndex: 1,
+    fontSize: 18,
+  },
+  "& .QontoStepIcon-circle": {
+    width: 8,
+    height: 8,
+    borderRadius: "50%",
+    backgroundColor: "currentColor",
+  },
+  ...theme.applyStyles("dark", {
+    color: theme.palette.grey[700],
+  }),
+  variants: [
+    {
+      props: ({ ownerState }) => ownerState.active,
+      style: {
+        color: "#784af4",
+      },
+    },
+  ],
+}));
+
+function QontoStepIcon(props) {
+  const { active, completed, className } = props;
+
+  return (
+    <QontoStepIconRoot ownerState={{ active }} className={className}>
+      {completed ? (
+        <Check className="QontoStepIcon-completedIcon" />
+      ) : (
+        <div className="QontoStepIcon-circle" />
+      )}
+    </QontoStepIconRoot>
+  );
+}
+
+QontoStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   * @default false
+   */
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   * @default false
+   */
+  completed: PropTypes.bool,
+};
+
+const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
+  [`&.${stepConnectorClasses.alternativeLabel}`]: {
+    top: 22,
+  },
+  [`&.${stepConnectorClasses.active}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundImage:
+        "linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)",
+    },
+  },
+  [`&.${stepConnectorClasses.completed}`]: {
+    [`& .${stepConnectorClasses.line}`]: {
+      backgroundImage:
+        "linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)",
+    },
+  },
+  [`& .${stepConnectorClasses.line}`]: {
+    height: 3,
+    border: 0,
+    backgroundColor: "#eaeaf0",
+    borderRadius: 1,
+    ...theme.applyStyles("dark", {
+      backgroundColor: theme.palette.grey[800],
+    }),
+  },
+}));
+
+const ColorlibStepIconRoot = styled("div")(({ theme }) => ({
+  backgroundColor: "#ccc",
+  zIndex: 1,
+  color: "#fff",
+  width: 50,
+  height: 50,
+  display: "flex",
+  borderRadius: "50%",
+  justifyContent: "center",
+  alignItems: "center",
+  ...theme.applyStyles("dark", {
+    backgroundColor: theme.palette.grey[700],
+  }),
+  variants: [
+    {
+      props: ({ ownerState }) => ownerState.active,
+      style: {
+        backgroundImage:
+          "linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)",
+        boxShadow: "0 4px 10px 0 rgba(0,0,0,.25)",
+      },
+    },
+    {
+      props: ({ ownerState }) => ownerState.completed,
+      style: {
+        backgroundImage:
+          "linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)",
+      },
+    },
+  ],
+}));
+
+function ColorlibStepIcon(props) {
+  const { active, completed, className } = props;
+
+  const icons = {
+    1: <SettingsIcon />,
+    2: <GroupAddIcon />,
+    3: <VideoLabelIcon />,
+    4: <VideoLabelIcon />,
+  };
+
+  return (
+    <ColorlibStepIconRoot
+      ownerState={{ completed, active }}
+      className={className}
+    >
+      {icons[String(props.icon)]}
+    </ColorlibStepIconRoot>
+  );
+}
+
+ColorlibStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   * @default false
+   */
+  active: PropTypes.bool,
+  className: PropTypes.string,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   * @default false
+   */
+  completed: PropTypes.bool,
+  /**
+   * The label displayed in the step icon.
+   */
+  icon: PropTypes.node,
 };
 
 const NewRegistration = () => {
-  //? useDispatch
+  // useDispatch
   const dispatch = useDispatch();
-
-  //? Destructure useSelector
-  const { stepOneForm, stepTwoForm, stepThreeForm, finalStepForm } =
-    useSelector((state) => state.newRegistration);
 
   const [activeStep, setActiveStep] = useState(0);
   const steps = [
-    "Applicant Info",
+    "Applicant Details",
     "Father's Info",
     "Mother's Info",
     "Attestation",
   ];
   const isLastStep = activeStep === steps.length - 1;
 
-  //? Loading State
+  // Loading State
   const [loading, setLoading] = useState(false);
 
   //? Step One Initial Values
   const StepOneInitialValues = {
-    formNumber: "",
-    applicantSex: "",
-    dateOfApplication: "",
-    applicantPhoto: "",
     applicantFirstName: "",
     applicantMiddleName: "",
     applicantLastName: "",
+    applicantSex: "",
     applicantFacility: "",
     applicantTownOrCity: "",
     applicantCounty: "",
     applicantCountry: "",
     applicantDateOfBirth: "",
+    applicantPhoto: "",
   };
 
   //? Formik Step One Form
   const formikStepOneForm = useFormik({
-    initialValues: stepOneForm !== null ? stepOneForm : StepOneInitialValues,
-    validationSchema: StepOneFormSchema,
+    initialValues: StepOneInitialValues,
+    // validationSchema: StepOneFormSchema,
     onSubmit: (values) => {
       handleNext();
-      dispatch(setStepOneForm(values));
+      // dispatch(setStepOneForm(values));
     },
   });
 
@@ -230,11 +483,11 @@ const NewRegistration = () => {
 
   //? Formik Step Two Form
   const formikStepTwoForm = useFormik({
-    initialValues: stepTwoForm !== null ? stepTwoForm : StepTwoInitialValues,
-    validationSchema: StepTwoFormSchema,
+    initialValues: StepTwoInitialValues,
+    // validationSchema: StepTwoFormSchema,
     onSubmit: (values) => {
       handleNext();
-      dispatch(setStepTwoForm(values));
+      // dispatch(setStepTwoForm(values));
     },
   });
 
@@ -242,7 +495,7 @@ const NewRegistration = () => {
   const StepThreeInitialValues = {
     motherName: "",
     motherNationality: "",
-    motherAge: 0,
+    motherAge: 35,
     motherTownOrCity: "",
     motherCounty: "",
     motherCountry: "",
@@ -252,24 +505,22 @@ const NewRegistration = () => {
     isMotherLiving: "",
     motherPresentAddress: "",
     motherTelephoneNumber: "",
+    applicantSignature: "",
+    applicantContactNumber: "",
   };
 
   //? Formik Step Three Form
   const formikStepThreeForm = useFormik({
-    initialValues:
-      stepThreeForm !== null ? stepThreeForm : StepThreeInitialValues,
-    validationSchema: StepThreeFormSchema,
+    initialValues: StepThreeInitialValues,
+    // validationSchema: StepThreeFormSchema,
     onSubmit: (values) => {
       handleNext();
-      dispatch(setStepThreeForm(values));
+      // dispatch(setStepThreeForm(values));
     },
   });
 
   //? Final Step Initial Values
   const FinalStepInitialValues = {
-    applicantSignature: "",
-    applicantContactNumber: "",
-    parentOrGuardianPhoto: "",
     fullName: "",
     city: "",
     county: "",
@@ -281,20 +532,21 @@ const NewRegistration = () => {
     address: "",
     relationship: "",
     contactNumber: "",
+    dateOfApplication: "",
+    parentOrGuardianPhoto: "",
   };
 
   //? Formik Final Step Form
   const formikFinalStepForm = useFormik({
-    initialValues:
-      finalStepForm !== null ? finalStepForm : FinalStepInitialValues,
-    validationSchema: FinalStepFormSchema,
+    initialValues: FinalStepInitialValues,
+    // validationSchema: FinalStepFormSchema,
     onSubmit: (values) => {
-      registerNewApplicant();
-      dispatch(setFinalStepForm(values));
+      registerApplicant();
+      // dispatch(setFinalStepForm(values));
     },
   });
 
-  //? Handle Submit
+  // Handle Submit
   const handleSubmit = (e) => {
     e.preventDefault();
     switch (activeStep) {
@@ -340,13 +592,10 @@ const NewRegistration = () => {
 
   //? Applicant Data
   const ApplicantData = {
-    formNumber: formikStepOneForm.values.formNumber,
-    applicantSex: formikStepOneForm.values.applicantSex,
-    dateOfApplication: formikStepOneForm.values.dateOfApplication,
-    applicantPhoto: formikStepOneForm.values.applicantPhoto,
     applicantFirstName: formikStepOneForm.values.applicantFirstName,
     applicantMiddleName: formikStepOneForm.values.applicantMiddleName,
     applicantLastName: formikStepOneForm.values.applicantLastName,
+    applicantSex: formikStepOneForm.values.applicantSex,
     applicantFacility: formikStepOneForm.values.applicantFacility,
     applicantTownOrCity: formikStepOneForm.values.applicantTownOrCity,
     applicantCounty: formikStepOneForm.values.applicantCounty,
@@ -370,7 +619,7 @@ const NewRegistration = () => {
     motherAge: formikStepThreeForm.values.motherAge,
     motherTownOrCity: formikStepThreeForm.values.motherTownOrCity,
     motherCounty: formikStepThreeForm.values.motherCounty,
-    motherCountry: formikStepThreeForm.values.motherCountry,
+    motherCountry: formikStepThreeForm.values.motherCounty,
     motherCountyOfOrigin: formikStepThreeForm.values.motherCountyOfOrigin,
     motherOccupation: formikStepThreeForm.values.motherOccupation,
     motherDateOfNaturalization:
@@ -380,7 +629,7 @@ const NewRegistration = () => {
     motherTelephoneNumber: formikStepThreeForm.values.motherTelephoneNumber,
     applicantSignature: formikFinalStepForm.values.applicantSignature,
     applicantContactNumber: formikFinalStepForm.values.applicantContactNumber,
-    parentOrGuardianPhoto: formikFinalStepForm.values.parentOrGuardianPhoto,
+    applicantPhoto: formikFinalStepForm.values.applicantPhoto,
     fullName: formikFinalStepForm.values.fullName,
     city: formikFinalStepForm.values.city,
     county: formikFinalStepForm.values.county,
@@ -392,6 +641,8 @@ const NewRegistration = () => {
     address: formikFinalStepForm.values.address,
     relationship: formikFinalStepForm.values.relationship,
     contactNumber: formikFinalStepForm.values.contactNumber,
+    dateOfApplication: formikFinalStepForm.values.dateOfApplication,
+    parentOrGuardianPhoto: formikFinalStepForm.values.parentOrGuardianPhoto,
   };
 
   console.log(ApplicantData);
@@ -404,10 +655,12 @@ const NewRegistration = () => {
     onSuccess: (data) => {
       if (isLastStep && data) {
         dispatch(setIsCompleted(true));
+        // dispatch(removeRegistrationType());
         dispatch(removeStepOneForm());
         dispatch(removeStepTwoForm());
         dispatch(removeStepThreeForm());
         dispatch(removeFinalStepForm());
+        // dispatch(removeInstitution());
         queryClient.invalidateQueries({
           queryKey: ["applicantsData"],
         });
@@ -422,7 +675,7 @@ const NewRegistration = () => {
     },
   });
 
-  //? Loading Effect
+  // Loading Effect
   useEffect(() => {
     if (Mutation.isPending) {
       setLoading(true);
@@ -432,7 +685,7 @@ const NewRegistration = () => {
   }, [Mutation]);
 
   //? Register New Applicant
-  const registerNewApplicant = async () => {
+  const registerApplicant = async () => {
     //? Destructure ApplicantData
     const {
       applicantFirstName,
@@ -486,7 +739,7 @@ const NewRegistration = () => {
       parentOrGuardianPhoto,
     } = ApplicantData;
 
-    //? Create FormData
+    // Create FormData
     const formData = new FormData();
     formData.append("applicantFirstName", applicantFirstName);
     formData.append("applicantMiddleName", applicantMiddleName);
@@ -545,174 +798,85 @@ const NewRegistration = () => {
 
   return (
     <React.Fragment>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>
-          New Registration | Ministry of Health (MOH) Online Birth Registration
-          System.
-        </title>
-      </Helmet>
       <ThemeProvider theme={responsiveTheme}>
-        <Grid container component="main" sx={{ height: "100vh" }}>
+        <Grid container component="main" sx={{ width: "70%", margin: "auto" }}>
           <CssBaseline />
-          <Grid
-            item
-            xs={false}
-            sm={5}
-            md={5}
-            lg={5}
-            sx={{
-              display: { xs: "none", lg: "block" },
-              bgcolor: "#4169E1",
-              textAlign: "center",
-              p: 3,
-            }}
-          >
-            <Box sx={{ mt: 14 }}>
-              <Typography
-                variant="h3"
-                sx={{ mt: 3, color: "#fff", fontWeight: "bolder" }}
-              >
-                MOH
-              </Typography>
-              <Box sx={{ mt: 4 }}>
-                <Box sx={{ mb: 2 }}>
-                  <Typography
-                    sx={{
-                      fontSize: "1.3rem",
-                      fontWeight: 500,
-                      color: "#fff",
-                    }}
-                  >
-                    National Communications Bureau Annual Registration System
-                  </Typography>
-                  <Typography sx={{ color: "#F5F5DC", fontSize: 16, mt: 1 }}>
-                    Complete your Institution registration process in four (4)
-                    steps
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    backgroundImage: `url(${registrationImageURL})`,
-                    height: 400,
-                  }}
-                ></Box>
-              </Box>
-            </Box>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={7}
-            md={7}
-            lg={7}
-            component={Paper}
-            elevation={6}
-            square
-          >
-            <Box
-              sx={{
-                my: 1.8,
-                mx: 4,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
+          <Stack spacing={4}>
+            <Stepper
+              alternativeLabel
+              activeStep={activeStep}
+              connector={<QontoConnector />}
             >
-              <URLLink
-                to="/"
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <img src={logo} width="100" alt="MOH Logo" />
-              </URLLink>
-              <Typography component="h1" variant="h5" sx={{ mt: 3, mb: 2 }}>
-                New Registration Form
-              </Typography>
-              <URLLink
-                to="/registration-info"
-                style={{
-                  textDecoration: "none",
-                  display: "inline-block",
-                  justifyContent: "end",
-                }}
-              >
-                <Button
-                  variant="contained"
-                  size="large"
-                  sx={{
-                    display: "inline-block",
-                    mt: 1,
-                    ml: 1,
-                    bgcolor: "buttonBGColor.main",
-                  }}
-                >
-                  Go Back
-                </Button>
-              </URLLink>
-              <Typography component="h1" variant="h5" sx={{ mt: 2, mb: 2 }}>
-                Register your Institution{" "}
-                <span style={{ color: "#4169E1" }}>and pay your fees</span>
-              </Typography>
-              <Box noValidate sx={{ mt: 1 }}>
-                <Stepper activeStep={activeStep} sx={stepStyle}>
-                  {steps.map((label) => (
-                    <Step key={label}>
-                      <StepLabel>{label}</StepLabel>
-                    </Step>
-                  ))}
-                </Stepper>
-                <Box
-                  component="form"
-                  noValidate
-                  autoComplete="on"
-                  encType="multipart/form-data"
-                  sx={{ mt: 3 }}
-                >
-                  {getStepContent(activeStep)}
-                  <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                    {activeStep !== 0 && (
-                      <Button
-                        variant="contained"
-                        size="large"
-                        sx={{ mt: 3, ml: 1, bgcolor: "buttonBGColor.main" }}
-                        onClick={handleBack}
-                      >
-                        Back
-                      </Button>
-                    )}
-                    {isLastStep ? (
-                      <LoadingButton
-                        variant="contained"
-                        size="large"
-                        loading={loading}
-                        loadingPosition="end"
-                        endIcon={<SendIcon />}
-                        sx={{ mt: 3, ml: 1, bgcolor: "buttonBGColor.main" }}
-                        onClick={handleSubmit}
-                      >
-                        <span>Submit</span>
-                      </LoadingButton>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        size="large"
-                        sx={{ mt: 3, ml: 1, bgcolor: "buttonBGColor.main" }}
-                        onClick={handleSubmit}
-                      >
-                        Next
-                      </Button>
-                    )}
-                  </Box>
-                  <Grid container justifyContent="center" sx={{ mt: 6 }}>
-                    <CopyRights />
-                  </Grid>
-                </Box>
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel StepIconComponent={QontoStepIcon}>
+                    {label}
+                  </StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <Stepper
+              alternativeLabel
+              activeStep={activeStep}
+              connector={<ColorlibConnector />}
+            >
+              {steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel StepIconComponent={ColorlibStepIcon}>
+                    {label}
+                  </StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+            <Box
+              component="form"
+              noValidate
+              autoComplete="on"
+              encType="multipart/form-data"
+              sx={{ mt: 4 }}
+            >
+              {getStepContent(activeStep)}
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                {activeStep !== 0 && (
+                  <Button
+                    variant="contained"
+                    size="large"
+                    sx={{ mt: 3, ml: 1, bgcolor: "buttonBGColor.main" }}
+                    onClick={handleBack}
+                  >
+                    Back
+                  </Button>
+                )}
+                {isLastStep ? (
+                  <LoadingButton
+                    variant="contained"
+                    size="large"
+                    loading={loading}
+                    loadingPosition="end"
+                    endIcon={<SendIcon />}
+                    sx={{ mt: 3, ml: 1, bgcolor: "buttonBGColor.main" }}
+                    onClick={handleSubmit}
+                  >
+                    <span>Submit</span>
+                  </LoadingButton>
+                ) : (
+                  <Button
+                    variant="contained"
+                    size="large"
+                    sx={{ mt: 3, ml: 1, bgcolor: "buttonBGColor.main" }}
+                    onClick={handleSubmit}
+                  >
+                    Next
+                  </Button>
+                )}
               </Box>
+              <Grid container justifyContent="center" sx={{ mt: 6 }}>
+                <CopyRights />
+              </Grid>
             </Box>
-          </Grid>
+          </Stack>
         </Grid>
       </ThemeProvider>
-      <ScrollToTop />
     </React.Fragment>
   );
 };

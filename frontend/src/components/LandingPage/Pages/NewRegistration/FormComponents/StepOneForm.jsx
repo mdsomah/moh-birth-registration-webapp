@@ -17,17 +17,17 @@ import { BsFillInfoCircleFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import StepOnePhoneInputField from "../PhoneInputsField/StepOnePhoneInputField";
 
-//? Scroll to top of react route/page change
+// Scroll to top of react route/page change
 import ScrollToTop from "../../../../ScrollToTop/ScrollToTop";
 
-//? Sweet Alert
+// Sweet Alert
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-//? Formik and Yup
+// Formik and Yup
 import { FormikProvider, FieldArray } from "formik";
 
-// Get All Data
+// Get All Datas
 import GetAllData from "../../../../../apis/GetAllData";
 
 // Endpoints
@@ -36,7 +36,7 @@ const getAllCountiesURL = "/counties";
 const getAllMediaTypesURL = "/media-types";
 const getAllEducationLevelsURL = "/education-levels";
 
-//? React Sweet Alert Initialization
+// React Sweet Alert Initializtion
 const MySwal = withReactContent(Swal);
 
 // Sweet Alert Error
@@ -231,7 +231,7 @@ const StepOneForm = (props) => {
               </IconButton>
             </Tooltip>
           </Typography>
-          {/* <FormControl fullWidth>
+          <FormControl fullWidth>
             <Autocomplete
               id="businessOwnership.ownershipName"
               value={formik.values.businessOwnership.ownershipName}
@@ -269,7 +269,7 @@ const StepOneForm = (props) => {
               {formik?.touched?.businessOwnership?.ownershipName &&
                 formik?.errors?.businessOwnership?.ownershipName}
             </Typography>
-          </FormControl> */}
+          </FormControl>
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <Typography>
@@ -309,7 +309,7 @@ const StepOneForm = (props) => {
             </Typography>
           </FormControl>
         </Grid>
-        {/* <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Grid item xs={12} sm={12} md={12} lg={12}>
           <Typography sx={{ mb: 2, color: "#4169E1" }}>
             Locations
             <span>
@@ -604,7 +604,7 @@ const StepOneForm = (props) => {
               }}
             />
           </FormikProvider>
-        </Grid> */}
+        </Grid>
         <Grid item xs={12} sm={6} md={6} lg={6}>
           <Typography>
             Phone Number
@@ -668,7 +668,7 @@ const StepOneForm = (props) => {
             </Typography>
           </FormControl>
         </Grid>
-        {/* <Grid item xs={12} sm={12} md={12} lg={12} sx={{ mt: 1 }}>
+        <Grid item xs={12} sm={12} md={12} lg={12} sx={{ mt: 1 }}>
           <Typography sx={{ mb: 2 }}>
             Type Of Media For Which Registration Is Requested
             <span>
@@ -725,7 +725,7 @@ const StepOneForm = (props) => {
                 formik?.errors?.typeOfMedia?.mediaType}
             </Typography>
           </FormControl>
-        </Grid> */}
+        </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <Typography>
             Name Of Publisher/ Manager/ Proprietor
@@ -764,7 +764,7 @@ const StepOneForm = (props) => {
             </Typography>
           </FormControl>
         </Grid>
-        {/* <Grid item xs={12} sm={6} md={6} lg={6}>
+        <Grid item xs={12} sm={6} md={6} lg={6}>
           <Typography sx={{ mb: 2 }}>
             Education Level
             <span>
@@ -825,7 +825,7 @@ const StepOneForm = (props) => {
                 formik?.errors?.educationLevel?.educationLevelOfManager}
             </Typography>
           </FormControl>
-        </Grid> */}
+        </Grid>
         <Grid item xs={12} sm={6} md={6} lg={6}>
           <Typography>
             Year Of Experience

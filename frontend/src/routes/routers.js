@@ -8,9 +8,9 @@ import PrivateRoute from "../hocs/privateRoute";
 import UnPrivateRoute from "../hocs/unPrivateRoute";
 
 //? LandingPage Components imports
-const Home = React.lazy(() =>
-  import("../components/LandingPage/Pages/Home/Home")
-);
+// const Home = React.lazy(() =>
+//   import("../components/LandingPage/Pages/Home/Home")
+// );
 const NewRegistration = React.lazy(() =>
   import("../components/LandingPage/Pages/NewRegistration/NewRegistration")
 );

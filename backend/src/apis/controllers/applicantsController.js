@@ -26,10 +26,13 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
 
   //? Destructure decryptedNewApplicant data
   const {
+    applicantPhoto,
+    formNumber,
+    applicantSex,
+    dateOfApplication,
     applicantFirstName,
     applicantMiddleName,
     applicantLastName,
-    applicantSex,
     applicantFacility,
     applicantTownOrCity,
     applicantCounty,
@@ -61,7 +64,6 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
     motherTelephoneNumber,
     applicantSignature,
     applicantContactNumber,
-    applicantPhoto,
     fullName,
     city,
     county,
@@ -73,17 +75,19 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
     address,
     relationship,
     contactNumber,
-    dateOfApplication,
     parentOrGuardianPhoto,
   } = decryptedNewApplicant;
 
   try {
     Logger.info("Registering New Applicant: Status success!");
     const newApplicant = await registerNewApplicant(
+      applicantPhoto,
+      formNumber,
+      applicantSex,
+      dateOfApplication,
       applicantFirstName,
       applicantMiddleName,
       applicantLastName,
-      applicantSex,
       applicantFacility,
       applicantTownOrCity,
       applicantCounty,
@@ -115,7 +119,6 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
       motherTelephoneNumber,
       applicantSignature,
       applicantContactNumber,
-      applicantPhoto,
       fullName,
       city,
       county,
@@ -127,7 +130,6 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
       address,
       relationship,
       contactNumber,
-      dateOfApplication,
       parentOrGuardianPhoto
     );
     //? Encrypt the newApplicant data

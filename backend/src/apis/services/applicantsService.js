@@ -7,16 +7,18 @@ const Form_Number = () => nanoidFormNumber();
 
 //? Register New Applicant
 const registerNewApplicant = async (
+  applicantPhoto,
+  formNumber,
+  applicantSex,
+  dateOfApplication,
   applicantFirstName,
   applicantMiddleName,
   applicantLastName,
-  applicantSex,
   applicantFacility,
   applicantTownOrCity,
   applicantCounty,
   applicantCountry,
   applicantDateOfBirth,
-  // applicantFather,
   fatherName,
   fatherNationality,
   fatherAge,
@@ -29,7 +31,6 @@ const registerNewApplicant = async (
   isFatherLiving,
   fatherPresentAddress,
   fatherTelephoneNumber,
-  // applicantMother,
   motherName,
   motherNationality,
   motherAge,
@@ -44,8 +45,6 @@ const registerNewApplicant = async (
   motherTelephoneNumber,
   applicantSignature,
   applicantContactNumber,
-  applicantPhoto,
-  // attestation,
   fullName,
   city,
   county,
@@ -57,16 +56,17 @@ const registerNewApplicant = async (
   address,
   relationship,
   contactNumber,
-  dateOfApplication,
-  // formNumber,
   parentOrGuardianPhoto
 ) => {
   const newApplicant = await prisma.applicant.create({
     data: {
+      applicantPhoto: applicantPhoto.trim(),
+      formNumber: formNumber === "" ? `MOH-${Form_Number()}` : formNumber,
+      applicantSex: applicantSex.trim(),
+      dateOfApplication: dateOfApplication.trim(),
       applicantFirstName: applicantFirstName.trim(),
       applicantMiddleName: applicantMiddleName.trim(),
       applicantLastName: applicantLastName.trim(),
-      applicantSex: applicantSex.trim(),
       applicantFacility: applicantFacility.trim(),
       applicantTownOrCity: applicantTownOrCity.trim(),
       applicantCounty: applicantCounty.trim(),
@@ -106,7 +106,6 @@ const registerNewApplicant = async (
       },
       applicantSignature: applicantSignature.trim(),
       applicantContactNumber: applicantContactNumber.trim(),
-      applicantPhoto: applicantPhoto.trim(),
       attestation: {
         create: {
           fullName: fullName.trim(),
@@ -122,8 +121,6 @@ const registerNewApplicant = async (
           contactNumber: contactNumber.trim(),
         },
       },
-      dateOfApplication: dateOfApplication.trim(),
-      formNumber: `MOH-${Form_Number()}`,
       parentOrGuardianPhoto: parentOrGuardianPhoto,
     },
     include: {

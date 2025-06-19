@@ -29,8 +29,6 @@ import StepConnector, {
 import { LoadingButton } from "@mui/lab";
 import SendIcon from "@mui/icons-material/Send";
 import { ThemeProvider } from "@mui/material/styles";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -49,6 +47,7 @@ import {
   setFinalStepForm,
   removeFinalStepForm,
 } from "../../../../app/slices/newRegistrationSlice";
+import { encrypt } from "../../../../utils/encryptUtils";
 
 //? Upload Applicant Photo
 import UploadApplicantPhoto from "./UploadApplicantPhoto/UploadApplicantPhoto";
@@ -76,7 +75,7 @@ import FinalStepForm from "./FormComponents/FinalStepForm";
 import { Avatar, TextField, Toolbar, Typography } from "@mui/material";
 
 //? Endpoints
-const postApplicantURL = "/institutions/create-new-institution";
+const postApplicantURL = "/applicants/register-new-applicant";
 
 //? Category Image upload formats
 const SUPPORTED_FORMATS = ["image/jpeg, image/jpg, image/png, image/jif"];
@@ -84,105 +83,51 @@ const SUPPORTED_FORMATS = ["image/jpeg, image/jpg, image/png, image/jif"];
 //? Category Image upload size
 const FILE_SIZE = 1024 * 1024 * 25;
 
-//? React Sweet Alert Initialization
-const MySwal = withReactContent(Swal);
-
-//? Sweet Alert Success
-const Success_Alert = (message) => {
-  MySwal.fire({
-    title: (
-      <Typography component="h5" variant="h5" color="success">
-        SUCCESS
-      </Typography>
-    ),
-    text: `${message}`,
-    icon: "success",
-  });
-};
-
 //? Step One Form Schema
 const StepOneFormSchema = Yup.object()
   .shape({
-    applicantFirstName: Yup.string().required("First name require!"),
+    applicantPhoto: Yup.string().required("Photo required!"),
+    formNumber: Yup.string().notRequired(),
+    applicantSex: Yup.string().required("First name required!"),
+    dateOfApplication: Yup.string().required("Date of application required!"),
+    applicantFirstName: Yup.string().required("First name required!"),
     applicantMiddleName: Yup.string().notRequired(),
-    registrationType: Yup.string().required("Registration type require!"),
-    institutionName: Yup.string().required("Institution name require!"),
-    businessTIN: Yup.number()
-      .required("Business TIN required!")
-      .positive()
-      .integer()
-      .min(9, "Invalid business TIN!"),
-    // .max(9, "Business TIN cannot exceed 9 digits!"),
-    businessOwnership: Yup.object().shape({
-      ownershipName: Yup.string().required("Please select business ownership!"),
-    }),
-    currentAddress: Yup.string().required("Current address required!"),
-    counties: Yup.array().of(
-      Yup.object().shape({
-        countyID: Yup.string().notRequired(),
-        countyName: Yup.string().required("County name required!"),
-        countyCapitals: Yup.array()
-          .of(Yup.string())
-          .min(1, "Please select at least one location!"),
-        countyFlag: Yup.string().notRequired(),
-      })
-    ),
-    primaryContact: Yup.string()
-      .phone(null, "Please enter a valid phone number!")
-      .required("Primary contact required!"),
-    secondaryContact: Yup.string().notRequired(),
-    emailAddress: Yup.string()
-      .required("Email address required!")
-      .email("Email address is invalid!"),
-    typeOfMedia: Yup.object().shape({
-      typeOfMediaID: Yup.string().notRequired(),
-      mediaType: Yup.string().required("Please select media type!"),
-      sourceCode: Yup.string().notRequired(),
-      codeFee: Yup.string().notRequired(),
-      amount: Yup.number().notRequired(),
-      amountCurrency: Yup.string().notRequired(),
-    }),
-    nameOfManager: Yup.string().required("Name of manager required!"),
-    educationLevel: Yup.object().shape({
-      educationLevelOfManager: Yup.string().required(
-        "Please select education level!"
-      ),
-    }),
-    yearOfExperienceOfManager: Yup.number().required(
-      "Year of experience required!"
-    ),
+    applicantLastName: Yup.string().required("last name required!"),
+    applicantFacility: Yup.string().required("Facility required!"),
+    applicantTownOrCity: Yup.string().required("Town/City required!"),
+    applicantCounty: Yup.string().required("County required!"),
+    applicantCountry: Yup.string().required("Country required!"),
+    applicantDateOfBirth: Yup.string().required("Date of birth required!"),
   })
   .required();
 
-// Step Two Form Schema
+//? Step Two Form Schema
 const StepTwoFormSchema = Yup.object()
   .shape({
-    dateOfEstablishment: Yup.string().required(
-      "Date of establishment required!"
-    ),
-    isMemberOfPUL: Yup.mixed()
-      .required("Please select one!")
-      .oneOf(["YES", "NO"]),
-    ifNoStateReason: Yup.string().when("isMemberOfPUL", {
-      is: (val) => val === "NO",
-      then: () => Yup.string().required("Reason required!"),
-      otherwise: () => Yup.string().notRequired(),
-    }),
-    nameOfEditorInChief: Yup.string().required(
-      "Name of editor in chief required!"
-    ),
-    phoneNumberOfEditorInChief: Yup.string()
-      .phone(null, "Please enter a valid phone number!")
-      .required("Phone number required!"),
-    jobExperienceOfEditorInChief: Yup.number().required(
-      " Job experience required!"
-    ),
-    essentialStaffs: Yup.array().of(
-      Yup.object().shape({
-        fullName: Yup.string().required("Full name required!"),
-        position: Yup.string().required("Position required!"),
-      })
-    ),
+    fatherName: Yup.string().required("Father's name required!"),
+    fatherNationality: Yup.string().required("Father Nationality required!"),
+    fatherAge: Yup.number().required("Father age required!"),
+    fatherTownOrCity: Yup.string().required("Town or City required!"),
+    fatherCounty: Yup.string().required("Father's county required!"),
+    fatherCountry: Yup.string().required("Father's country required!"),
+    fatherCountyOfOrigin: "",
+    fatherOccupation: "",
+    fatherDateOfNaturalization: "",
+    isFatherLiving: "",
+    fatherPresentAddress: "",
+    fatherTelephoneNumber: "",
+    // isMemberOfPUL: Yup.mixed()
+    //   .required("Please select one!")
+    //   .oneOf(["YES", "NO"]),
+    // ifNoStateReason: Yup.string().when("isMemberOfPUL", {
+    //   is: (val) => val === "NO",
+    //   then: () => Yup.string().required("Reason required!"),
+    //   otherwise: () => Yup.string().notRequired(),
+    // }),
+
+    // phoneNumberOfEditorInChief: Yup.string()
+    //   .phone(null, "Please enter a valid phone number!")
+    //   .required("Phone number required!"),
   })
   .required();
 
@@ -254,7 +199,7 @@ const StepThreeFormSchema = Yup.object()
   })
   .required();
 
-// Final Step Form Schema
+//? Final Step Form Schema
 const FinalStepFormSchema = Yup.object()
   .shape({
     applicantFullName: Yup.string().required("Applicant full name required!"),
@@ -464,7 +409,7 @@ ColorlibStepIcon.propTypes = {
 };
 
 const NewRegistration = () => {
-  // useDispatch
+  //? useDispatch
   const dispatch = useDispatch();
 
   const [activeStep, setActiveStep] = useState(0);
@@ -592,7 +537,6 @@ const NewRegistration = () => {
     initialValues: FinalStepInitialValues,
     // validationSchema: FinalStepFormSchema,
     onSubmit: (values) => {
-      // Success_Alert("Registration completed successfully!");
       registerApplicant();
       // dispatch(setFinalStepForm(values));
     },
@@ -846,8 +790,10 @@ const NewRegistration = () => {
     formData.append("contactNumber", contactNumber);
     formData.append("parentOrGuardianPhoto", parentOrGuardianPhoto);
 
+    const encryptedData = encrypt(formData);
+
     if (isLastStep) {
-      Mutation.mutate(formData);
+      Mutation.mutate(encryptedData);
     }
   };
 

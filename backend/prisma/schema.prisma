@@ -77,10 +77,13 @@ model RememberToken {
 //? Applicant Model
 model Applicant {
   id                     String           @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  applicantPhoto         String
+  formNumber             String?          @default("")
+  applicantSex           String
+  dateOfApplication      String
   applicantFirstName     String           @db.VarChar(255)
   applicantMiddleName    String?          @db.VarChar(255)
   applicantLastName      String           @db.VarChar(255)
-  applicantSex           String
   applicantFacility      String           @db.VarChar(255)
   applicantTownOrCity    String           @db.VarChar(255)
   applicantCounty        String           @db.VarChar(255)
@@ -90,10 +93,7 @@ model Applicant {
   applicantMother        ApplicantMother?
   applicantSignature     String
   applicantContactNumber String           @db.VarChar(14)
-  applicantPhoto         String
   attestation            Attestation?
-  dateOfApplication      String
-  formNumber             String?          @default("")
   parentOrGuardianPhoto  String
   createdAt              DateTime         @default(now())
   updatedAt              DateTime         @updatedAt

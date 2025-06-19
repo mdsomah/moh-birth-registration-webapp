@@ -14,29 +14,15 @@ import {
 } from "@mui/material";
 import { LuAsterisk } from "react-icons/lu";
 import { BsFillInfoCircleFill } from "react-icons/bs";
-import { MdDelete } from "react-icons/md";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
-import StepTwoPhoneInputField from "../PhoneInputsField/StepTwoPhoneInputField";
 
-// Scroll to top of react route/page change
+//? Scroll to top of react route/page change
 import ScrollToTop from "../../../../ScrollToTop/ScrollToTop";
 
-// Formik and Yup
-import { FormikProvider, FieldArray } from "formik";
-
 const StepTwoForm = (props) => {
-  // Destructure props
+  //? Destructure props
   const { formik } = props;
 
-  // Handle Date Of Establishment
-  const handleDateOfExtablishment = (newValue) => {
-    formik.setFieldValue("dateOfEstablishment", newValue);
-  };
-
-  // Scroll to error input on form submit
+  //? Scroll to error input on form submit
   useEffect(() => {
     if (!formik.isSubmitting) return;
     if (Object.keys(formik.errors).length > 0) {
@@ -48,410 +34,460 @@ const StepTwoForm = (props) => {
 
   return (
     <React.Fragment>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
-          <Typography sx={{ mb: 2 }}>
-            Date Of Establishment
-            <span>
-              <LuAsterisk size={10} color="#C41E3A" />
-            </span>
-            <Tooltip title="This field is required!" placement="bottom" arrow>
-              <IconButton
-                sx={{
-                  cursor: "default",
-                  position: "relative",
-                  bottom: 2,
-                }}
-              >
-                <BsFillInfoCircleFill size={14} color="#acb5c3" />
-              </IconButton>
-            </Tooltip>
-          </Typography>
-          <FormControl fullWidth>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                disableFuture
-                value={dayjs(formik.values.dateOfEstablishment)}
-                onChange={handleDateOfExtablishment}
-              />
-            </LocalizationProvider>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
-          <Typography>
-            Are You A Member Of The Press Union Of Liberia? If NO, State The
-            Reason
-            <span>
-              <LuAsterisk size={10} color="#C41E3A" />
-            </span>
-            <Tooltip title="This field is required!" placement="bottom" arrow>
-              <IconButton
-                sx={{
-                  cursor: "default",
-                  position: "relative",
-                  bottom: 2,
-                }}
-              >
-                <BsFillInfoCircleFill size={14} color="#acb5c3" />
-              </IconButton>
-            </Tooltip>
-          </Typography>
-          <FormControl>
-            <RadioGroup
-              row
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              id="isMemberOfPUL"
-              name="isMemberOfPUL"
-              value={formik.values.isMemberOfPUL}
-              onChange={formik.handleChange}
-            >
-              <FormControlLabel
-                value="YES"
-                control={
-                  <Radio
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        fontSize: 28,
-                      },
-                    }}
-                  />
-                }
-                label="YES"
-              />
-              <FormControlLabel
-                value="NO"
-                control={
-                  <Radio
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        fontSize: 28,
-                      },
-                    }}
-                  />
-                }
-                label="NO"
-              />
-            </RadioGroup>
-          </FormControl>
-        </Grid>
-        {formik.values.isMemberOfPUL === "NO" && (
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <Typography>
-              Reason
-              <span>
-                <LuAsterisk size={10} color="#C41E3A" />
-              </span>
-              <Tooltip title="This field is required!" placement="bottom" arrow>
-                <IconButton
-                  sx={{
-                    cursor: "default",
-                    position: "relative",
-                    bottom: 2,
-                  }}
-                >
-                  <BsFillInfoCircleFill size={14} color="#acb5c3" />
-                </IconButton>
-              </Tooltip>
-            </Typography>
-            <FormControl fullWidth>
-              <TextField
-                margin="normal"
-                id="ifNoStateReason"
-                name="ifNoStateReason"
-                type="text"
-                value={formik.values.ifNoStateReason}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={
-                  formik.touched.ifNoStateReason &&
-                  Boolean(formik.errors.ifNoStateReason)
-                }
-                placeholder="Enter reason..."
-              />
-              <Typography variant="inherit" color="error.main">
-                {formik.touched.ifNoStateReason &&
-                  formik.errors.ifNoStateReason}
-              </Typography>
-            </FormControl>
-          </Grid>
-        )}
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Typography>
-            Name Of Editor - In - Chief / Manager
-            <span>
-              <LuAsterisk size={10} color="#C41E3A" />
-            </span>
-            <Tooltip title="This field is required!" placement="bottom" arrow>
-              <IconButton
-                sx={{
-                  cursor: "default",
-                  position: "relative",
-                  bottom: 2,
-                }}
-              >
-                <BsFillInfoCircleFill size={14} color="#acb5c3" />
-              </IconButton>
-            </Tooltip>
-          </Typography>
-          <FormControl fullWidth>
-            <TextField
-              margin="normal"
-              id="nameOfEditorInChief"
-              name="nameOfEditorInChief"
-              type="text"
-              value={formik.values.nameOfEditorInChief}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.nameOfEditorInChief &&
-                Boolean(formik.errors.nameOfEditorInChief)
-              }
-              placeholder="Enter name of editor - in - chief/manager..."
-            />
-            <Typography variant="inherit" color="error.main">
-              {formik.touched.nameOfEditorInChief &&
-                formik.errors.nameOfEditorInChief}
-            </Typography>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
-          <Typography>
-            Phone Number
-            <span>
-              <LuAsterisk size={10} color="#C41E3A" />
-            </span>
-            <Tooltip title="This field is required!" placement="bottom" arrow>
-              <IconButton
-                sx={{
-                  cursor: "default",
-                  position: "relative",
-                  bottom: 2,
-                }}
-              >
-                <BsFillInfoCircleFill size={14} color="#acb5c3" />
-              </IconButton>
-            </Tooltip>
-          </Typography>
-          <FormControl fullWidth>
-            <FormControl sx={{ width: "100%" }}>
-              <StepTwoPhoneInputField formik={formik} />
-              <Typography variant="inherit" color="error.main">
-                {formik.touched.phoneNumberOfEditorInChief &&
-                  formik.errors.phoneNumberOfEditorInChief}
-              </Typography>
-            </FormControl>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6} md={6} lg={6}>
-          <Typography>
-            Job Experience
-            <span>
-              <LuAsterisk size={10} color="#C41E3A" />
-            </span>
-            <Tooltip title="This field is required!" placement="bottom" arrow>
-              <IconButton
-                sx={{
-                  cursor: "default",
-                  position: "relative",
-                  bottom: 2,
-                }}
-              >
-                <BsFillInfoCircleFill size={14} color="#acb5c3" />
-              </IconButton>
-            </Tooltip>
-          </Typography>
-          <FormControl fullWidth>
-            <TextField
-              margin="normal"
-              id="jobExperienceOfEditorInChief"
-              name="jobExperienceOfEditorInChief"
-              type="number"
-              value={formik.values.jobExperienceOfEditorInChief}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.jobExperienceOfEditorInChief &&
-                Boolean(formik.errors.jobExperienceOfEditorInChief)
-              }
-              placeholder="Enter job experience..."
-            />
-            <Typography variant="inherit" color="error.main">
-              {formik.touched.jobExperienceOfEditorInChief &&
-                formik.errors.jobExperienceOfEditorInChief}
-            </Typography>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Typography sx={{ mb: 2, color: "#4169E1" }}>
-            Name Of Essential Staff And Positions
-            <span>
-              <LuAsterisk size={10} color="#C41E3A" />
-            </span>
-          </Typography>
-          <FormikProvider value={formik}>
-            <FieldArray
-              name="essentialStaffs"
-              render={(arrayHelpers) => {
-                return (
-                  <React.Fragment>
-                    {formik.values.essentialStaffs &&
-                      formik.values.essentialStaffs.map((_, index) => (
-                        <Box
-                          sx={{
-                            display: "flex",
-                            gap: "1rem",
-                            mb: 3,
-                          }}
-                          key={index}
-                        >
-                          <Grid item xs={12} sm={6} md={6} lg={6}>
-                            <Typography>
-                              Full Name
-                              <span>
-                                <LuAsterisk size={10} color="#C41E3A" />
-                              </span>
-                              <Tooltip
-                                title="This field is required!"
-                                placement="bottom"
-                                arrow
-                              >
-                                <IconButton
-                                  sx={{
-                                    cursor: "default",
-                                    position: "relative",
-                                    bottom: 2,
-                                  }}
-                                >
-                                  <BsFillInfoCircleFill
-                                    size={14}
-                                    color="#acb5c3"
-                                  />
-                                </IconButton>
-                              </Tooltip>
-                            </Typography>
-                            <FormControl fullWidth>
-                              <TextField
-                                margin="normal"
-                                id={`essentialStaffs[${index}].fullName`}
-                                name={`essentialStaffs[${index}].fullName`}
-                                type="text"
-                                value={
-                                  formik.values.essentialStaffs[index].fullName
-                                }
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={
-                                  formik?.touched?.essentialStaffs?.[index]
-                                    ?.fullName &&
-                                  Boolean(
-                                    formik?.errors?.essentialStaffs?.[index]
-                                      ?.fullName
-                                  )
-                                }
-                                placeholder="Enter full name..."
-                              />
-                              <Typography variant="inherit" color="error.main">
-                                {formik?.touched?.essentialStaffs?.[index]
-                                  ?.fullName &&
-                                  formik?.errors?.essentialStaffs?.[index]
-                                    ?.fullName}
-                              </Typography>
-                            </FormControl>
-                          </Grid>
-                          <Grid item xs={12} sm={6} md={6} lg={6}>
-                            <Typography>
-                              Position
-                              <span>
-                                <LuAsterisk size={10} color="#C41E3A" />
-                              </span>
-                              <Tooltip
-                                title="This field is required!"
-                                placement="bottom"
-                                arrow
-                              >
-                                <IconButton
-                                  sx={{
-                                    cursor: "default",
-                                    position: "relative",
-                                    bottom: 2,
-                                  }}
-                                >
-                                  <BsFillInfoCircleFill
-                                    size={14}
-                                    color="#acb5c3"
-                                  />
-                                </IconButton>
-                              </Tooltip>
-                            </Typography>
-                            <FormControl fullWidth>
-                              <TextField
-                                margin="normal"
-                                id={`essentialStaffs[${index}].position`}
-                                name={`essentialStaffs[${index}].position`}
-                                type="text"
-                                value={
-                                  formik.values.essentialStaffs[index].position
-                                }
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={
-                                  formik?.touched?.essentialStaffs?.[index]
-                                    ?.position &&
-                                  Boolean(
-                                    formik?.errors?.essentialStaffs?.[index]
-                                      ?.position
-                                  )
-                                }
-                                placeholder="Enter position..."
-                              />
-                              <Typography variant="inherit" color="error.main">
-                                {formik?.touched?.essentialStaffs?.[index]
-                                  ?.position &&
-                                  formik?.errors?.essentialStaffs?.[index]
-                                    ?.position}
-                              </Typography>
-                            </FormControl>
-                          </Grid>
-                          <Grid item xs={12} sm={6} md={6} lg={1}>
-                            <FormControl sx={{ position: "relative", mt: 6 }}>
-                              <Tooltip title="Remove">
-                                <IconButton
-                                  aria-label="remove"
-                                  onClick={() => {
-                                    arrayHelpers.remove(index);
-                                  }}
-                                  sx={{
-                                    color: (theme) => theme.palette.grey[500],
-                                  }}
-                                >
-                                  <MdDelete size={20} color="#acb5c3" />
-                                </IconButton>
-                              </Tooltip>
-                            </FormControl>
-                          </Grid>
-                        </Box>
-                      ))}
-                    {formik.values.essentialStaffs &&
-                      formik.values.essentialStaffs.length < 4 && (
-                        <Button
-                          variant="outlined"
-                          sx={{ color: "#fff", bgcolor: "buttonBGColor.main" }}
-                          onClick={() =>
-                            arrayHelpers.push({
-                              fullName: "",
-                              position: "",
-                            })
-                          }
-                        >
-                          Add Staff
-                        </Button>
-                      )}
-                  </React.Fragment>
-                );
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Father's Name
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
               }}
-            />
-          </FormikProvider>
-        </Grid>
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="fatherName"
+            name="fatherName"
+            type="text"
+            value={formik.values.fatherName}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.fatherName && Boolean(formik.errors.fatherName)
+            }
+            placeholder="Enter father's name..."
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.fatherName && formik.errors.fatherName}
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Father's Nationality
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
+              }}
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="fatherNationality"
+            name="fatherNationality"
+            type="text"
+            value={formik.values.fatherNationality}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.fatherNationality &&
+              Boolean(formik.errors.fatherNationality)
+            }
+            placeholder="Enter father's nationality..."
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.fatherNationality &&
+              formik.errors.fatherNationality}
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Age When Child Was Born
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
+              }}
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="fatherAge"
+            name="fatherAge"
+            type="number"
+            value={formik.values.fatherAge}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.fatherAge && Boolean(formik.errors.fatherAge)}
+            placeholder="Enter last name..."
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.fatherAge && formik.errors.fatherAge}
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Father's Town/City
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
+              }}
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="fatherTownOrCity"
+            name="fatherTownOrCity"
+            type="text"
+            value={formik.values.fatherTownOrCity}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.fatherTownOrCity &&
+              Boolean(formik.errors.fatherTownOrCity)
+            }
+            placeholder="Enter facility..."
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.fatherTownOrCity && formik.errors.fatherTownOrCity}
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Father's County
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
+              }}
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="fatherCounty"
+            name="fatherCounty"
+            type="text"
+            value={formik.values.fatherCounty}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.fatherCounty && Boolean(formik.errors.fatherCounty)
+            }
+            placeholder="Enter county..."
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.fatherCounty && formik.errors.fatherCounty}
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Father's Country
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
+              }}
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="fatherCountry"
+            name="fatherCountry"
+            type="text"
+            value={formik.values.fatherCountry}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.fatherCountry &&
+              Boolean(formik.errors.fatherCountry)
+            }
+            placeholder="Enter country..."
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.fatherCountry && formik.errors.fatherCountry}
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Father's County of Origin
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
+              }}
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="fatherCountyOfOrigin"
+            name="fatherCountyOfOrigin"
+            type="text"
+            value={formik.values.fatherCountyOfOrigin}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.fatherCountyOfOrigin &&
+              Boolean(formik.errors.fatherCountyOfOrigin)
+            }
+            placeholder="Enter county of origin..."
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.fatherCountyOfOrigin &&
+              formik.errors.fatherCountyOfOrigin}
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Father's Occupation
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
+              }}
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="fatherOccupation"
+            name="fatherOccupation"
+            type="text"
+            value={formik.values.fatherOccupation}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.fatherOccupation &&
+              Boolean(formik.errors.fatherOccupation)
+            }
+            placeholder="Enter occupation..."
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.fatherOccupation && formik.errors.fatherOccupation}
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Father's Date of Naturalization
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
+              }}
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="fatherDateOfNaturalization"
+            name="fatherDateOfNaturalization"
+            type="text"
+            value={formik.values.fatherDateOfNaturalization}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.fatherDateOfNaturalization &&
+              Boolean(formik.errors.fatherDateOfNaturalization)
+            }
+            placeholder="Enter date of naturalization"
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.fatherDateOfNaturalization &&
+              formik.errors.fatherDateOfNaturalization}
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Is Father Living?
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
+              }}
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="isFatherLiving"
+            name="isFatherLiving"
+            type="text"
+            value={formik.values.isFatherLiving}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.isFatherLiving &&
+              Boolean(formik.errors.isFatherLiving)
+            }
+            placeholder="Enter yes or no..."
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.isFatherLiving && formik.errors.isFatherLiving}
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Is Father Living?
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
+              }}
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="isFatherLiving"
+            name="isFatherLiving"
+            type="text"
+            value={formik.values.isFatherLiving}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.isFatherLiving &&
+              Boolean(formik.errors.isFatherLiving)
+            }
+            placeholder="Enter yes or no..."
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.isFatherLiving && formik.errors.isFatherLiving}
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} sm={12} md={12} lg={12}>
+        <Typography>
+          Father's Telephone Number
+          <span>
+            <LuAsterisk size={10} color="#C41E3A" />
+          </span>
+          <Tooltip title="This field is required!" placement="bottom" arrow>
+            <IconButton
+              sx={{
+                cursor: "default",
+                position: "relative",
+                bottom: 2,
+              }}
+            >
+              <BsFillInfoCircleFill size={14} color="#acb5c3" />
+            </IconButton>
+          </Tooltip>
+        </Typography>
+        <FormControl fullWidth>
+          <TextField
+            margin="normal"
+            id="fatherTelephoneNumber"
+            name="fatherTelephoneNumber"
+            type="text"
+            value={formik.values.fatherTelephoneNumber}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.fatherTelephoneNumber &&
+              Boolean(formik.errors.fatherTelephoneNumber)
+            }
+            placeholder="Enter yes or no..."
+          />
+          <Typography variant="inherit" color="error.main">
+            {formik.touched.fatherTelephoneNumber &&
+              formik.errors.fatherTelephoneNumber}
+          </Typography>
+        </FormControl>
       </Grid>
       <ScrollToTop />
     </React.Fragment>

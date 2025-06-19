@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -10,17 +11,28 @@ import StepLabel from "@mui/material/StepLabel";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
+import Badge from "@mui/material/Badge";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import Autocomplete from "@mui/material/Autocomplete";
 import Check from "@mui/icons-material/Check";
-import SettingsIcon from "@mui/icons-material/Settings";
-import GroupAddIcon from "@mui/icons-material/GroupAdd";
-import VideoLabelIcon from "@mui/icons-material/VideoLabel";
+import PersonIcon from "@mui/icons-material/Person";
+import Person4Icon from "@mui/icons-material/Person4";
+import Person2Icon from "@mui/icons-material/Person2";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import { FaCamera } from "react-icons/fa";
 import StepConnector, {
   stepConnectorClasses,
 } from "@mui/material/StepConnector";
 import { LoadingButton } from "@mui/lab";
 import SendIcon from "@mui/icons-material/Send";
 import { ThemeProvider } from "@mui/material/styles";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import CopyRights from "../../CopyRights/CopyRights";
 import { responsiveTheme } from "../../../../utils/muiUtils";
 import {
@@ -36,15 +48,22 @@ import {
   removeFinalStepForm,
 } from "../../../../app/slices/newRegistrationSlice";
 
-// Scroll to top of react route/page change
+//? Upload Applicant Photo
+import UploadApplicantPhoto from "./UploadApplicantPhoto/UploadApplicantPhoto";
+
+//? Scroll to top of react route/page change
 import ScrollToTop from "../../../ScrollToTop/ScrollToTop";
+
+// Images Import
+import MOH_Logo from "../../../../images/MOH_Logo/MOH-LOGO.png";
+import Liberia_Seal from "../../../../images/MOH_Logo/Liberia-Seal.png";
 
 //? Formik and Yup
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "yup-phone-lite";
 
-// Create Data
+//? Create Data
 import CreateData from "../../../../apis/CreateData";
 
 //? Form Components imports
@@ -52,14 +71,15 @@ import StepOneForm from "./FormComponents/StepOneForm";
 import StepTwoForm from "./FormComponents/StepTwoForm";
 import StepThreeForm from "./FormComponents/StepThreeForm";
 import FinalStepForm from "./FormComponents/FinalStepForm";
+import { Avatar, TextField, Toolbar, Typography } from "@mui/material";
 
 //? Endpoints
 const postApplicantURL = "/institutions/create-new-institution";
 
-// Category Image upload formats
+//? Category Image upload formats
 const SUPPORTED_FORMATS = ["image/jpeg, image/jpg, image/png, image/jif"];
 
-// Category Image upload size
+//? Category Image upload size
 const FILE_SIZE = 1024 * 1024 * 25;
 
 //? Step One Form Schema
@@ -253,12 +273,12 @@ const QontoConnector = styled(StepConnector)(({ theme }) => ({
   },
   [`&.${stepConnectorClasses.active}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      borderColor: "#784af4",
+      borderColor: "#4169E1",
     },
   },
   [`&.${stepConnectorClasses.completed}`]: {
     [`& .${stepConnectorClasses.line}`]: {
-      borderColor: "#784af4",
+      borderColor: "#4169E1",
     },
   },
   [`& .${stepConnectorClasses.line}`]: {
@@ -277,7 +297,7 @@ const QontoStepIconRoot = styled("div")(({ theme }) => ({
   height: 22,
   alignItems: "center",
   "& .QontoStepIcon-completedIcon": {
-    color: "#784af4",
+    color: "#4169E1",
     zIndex: 1,
     fontSize: 18,
   },
@@ -294,7 +314,7 @@ const QontoStepIconRoot = styled("div")(({ theme }) => ({
     {
       props: ({ ownerState }) => ownerState.active,
       style: {
-        color: "#784af4",
+        color: "#4169E1",
       },
     },
   ],
@@ -391,10 +411,10 @@ function ColorlibStepIcon(props) {
   const { active, completed, className } = props;
 
   const icons = {
-    1: <SettingsIcon />,
-    2: <GroupAddIcon />,
-    3: <VideoLabelIcon />,
-    4: <VideoLabelIcon />,
+    1: <PersonIcon />,
+    2: <Person4Icon />,
+    3: <Person2Icon />,
+    4: <HowToRegIcon />,
   };
 
   return (
@@ -431,28 +451,42 @@ const NewRegistration = () => {
 
   const [activeStep, setActiveStep] = useState(0);
   const steps = [
-    "Applicant Details",
+    "Applicant's Info",
     "Father's Info",
     "Mother's Info",
     "Attestation",
   ];
   const isLastStep = activeStep === steps.length - 1;
 
-  // Loading State
+  //? Loading State
   const [loading, setLoading] = useState(false);
+
+  //? Applicant Photo Edit State
+  const [openApplicantPhoto, setOpenApplicantPhoto] = useState(false);
+
+  //? Applicant Photo Dialog Functions
+  const handleOpenApplicantPhoto = () => {
+    setOpenApplicantPhoto(true);
+  };
+
+  const handleCloseApplicantPhoto = useCallback(() => {
+    setOpenApplicantPhoto(false);
+  }, []);
 
   //? Step One Initial Values
   const StepOneInitialValues = {
+    applicantPhoto: "",
+    formNumber: "",
+    applicantSex: "",
+    dateOfApplication: dayjs(new Date()),
     applicantFirstName: "",
     applicantMiddleName: "",
     applicantLastName: "",
-    applicantSex: "",
     applicantFacility: "",
     applicantTownOrCity: "",
     applicantCounty: "",
     applicantCountry: "",
     applicantDateOfBirth: "",
-    applicantPhoto: "",
   };
 
   //? Formik Step One Form
@@ -532,7 +566,6 @@ const NewRegistration = () => {
     address: "",
     relationship: "",
     contactNumber: "",
-    dateOfApplication: "",
     parentOrGuardianPhoto: "",
   };
 
@@ -592,10 +625,13 @@ const NewRegistration = () => {
 
   //? Applicant Data
   const ApplicantData = {
+    applicantPhoto: formikStepOneForm.values.applicantPhoto,
+    formNumber: formikStepOneForm.values.formNumber,
+    applicantSex: formikStepOneForm.values.applicantSex,
+    dateOfApplication: formikStepOneForm.values.dateOfApplication,
     applicantFirstName: formikStepOneForm.values.applicantFirstName,
     applicantMiddleName: formikStepOneForm.values.applicantMiddleName,
     applicantLastName: formikStepOneForm.values.applicantLastName,
-    applicantSex: formikStepOneForm.values.applicantSex,
     applicantFacility: formikStepOneForm.values.applicantFacility,
     applicantTownOrCity: formikStepOneForm.values.applicantTownOrCity,
     applicantCounty: formikStepOneForm.values.applicantCounty,
@@ -629,7 +665,6 @@ const NewRegistration = () => {
     motherTelephoneNumber: formikStepThreeForm.values.motherTelephoneNumber,
     applicantSignature: formikFinalStepForm.values.applicantSignature,
     applicantContactNumber: formikFinalStepForm.values.applicantContactNumber,
-    applicantPhoto: formikFinalStepForm.values.applicantPhoto,
     fullName: formikFinalStepForm.values.fullName,
     city: formikFinalStepForm.values.city,
     county: formikFinalStepForm.values.county,
@@ -641,7 +676,6 @@ const NewRegistration = () => {
     address: formikFinalStepForm.values.address,
     relationship: formikFinalStepForm.values.relationship,
     contactNumber: formikFinalStepForm.values.contactNumber,
-    dateOfApplication: formikFinalStepForm.values.dateOfApplication,
     parentOrGuardianPhoto: formikFinalStepForm.values.parentOrGuardianPhoto,
   };
 
@@ -675,7 +709,7 @@ const NewRegistration = () => {
     },
   });
 
-  // Loading Effect
+  //? Loading Effect
   useEffect(() => {
     if (Mutation.isPending) {
       setLoading(true);
@@ -688,10 +722,13 @@ const NewRegistration = () => {
   const registerApplicant = async () => {
     //? Destructure ApplicantData
     const {
+      applicantPhoto,
+      formNumber,
+      applicantSex,
+      dateOfApplication,
       applicantFirstName,
       applicantMiddleName,
       applicantLastName,
-      applicantSex,
       applicantFacility,
       applicantTownOrCity,
       applicantCounty,
@@ -723,7 +760,6 @@ const NewRegistration = () => {
       motherTelephoneNumber,
       applicantSignature,
       applicantContactNumber,
-      applicantPhoto,
       fullName,
       city,
       county,
@@ -735,16 +771,18 @@ const NewRegistration = () => {
       address,
       relationship,
       contactNumber,
-      dateOfApplication,
       parentOrGuardianPhoto,
     } = ApplicantData;
 
-    // Create FormData
+    //? Create FormData
     const formData = new FormData();
+    formData.append("applicantPhoto", applicantPhoto);
+    formData.append("formNumber", formNumber);
+    formData.append("applicantSex", applicantSex);
+    formData.append("dateOfApplication", dateOfApplication);
     formData.append("applicantFirstName", applicantFirstName);
     formData.append("applicantMiddleName", applicantMiddleName);
     formData.append("applicantLastName", applicantLastName);
-    formData.append("applicantSex", applicantSex);
     formData.append("applicantFacility", applicantFacility);
     formData.append("applicantTownOrCity", applicantTownOrCity);
     formData.append("applicantCounty", applicantCounty);
@@ -776,7 +814,6 @@ const NewRegistration = () => {
     formData.append("motherTelephoneNumber", motherTelephoneNumber);
     formData.append("applicantSignature", applicantSignature);
     formData.append("applicantContactNumber", applicantContactNumber);
-    formData.append("applicantPhoto", applicantPhoto);
     formData.append("fullName", fullName);
     formData.append("city", city);
     formData.append("county", county);
@@ -788,7 +825,6 @@ const NewRegistration = () => {
     formData.append("address", address);
     formData.append("relationship", relationship);
     formData.append("contactNumber", contactNumber);
-    formData.append("dateOfApplication", dateOfApplication);
     formData.append("parentOrGuardianPhoto", parentOrGuardianPhoto);
 
     if (isLastStep) {
@@ -799,84 +835,239 @@ const NewRegistration = () => {
   return (
     <React.Fragment>
       <ThemeProvider theme={responsiveTheme}>
-        <Grid container component="main" sx={{ width: "70%", margin: "auto" }}>
-          <CssBaseline />
-          <Stack spacing={4}>
-            <Stepper
-              alternativeLabel
-              activeStep={activeStep}
-              connector={<QontoConnector />}
-            >
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel StepIconComponent={QontoStepIcon}>
-                    {label}
-                  </StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            <Stepper
-              alternativeLabel
-              activeStep={activeStep}
-              connector={<ColorlibConnector />}
-            >
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel StepIconComponent={ColorlibStepIcon}>
-                    {label}
-                  </StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            <Box
-              component="form"
-              noValidate
-              autoComplete="on"
-              encType="multipart/form-data"
-              sx={{ mt: 4 }}
-            >
-              {getStepContent(activeStep)}
-              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                {activeStep !== 0 && (
-                  <Button
-                    variant="contained"
-                    size="large"
-                    sx={{ mt: 3, ml: 1, bgcolor: "buttonBGColor.main" }}
-                    onClick={handleBack}
-                  >
-                    Back
-                  </Button>
-                )}
-                {isLastStep ? (
-                  <LoadingButton
-                    variant="contained"
-                    size="large"
-                    loading={loading}
-                    loadingPosition="end"
-                    endIcon={<SendIcon />}
-                    sx={{ mt: 3, ml: 1, bgcolor: "buttonBGColor.main" }}
-                    onClick={handleSubmit}
-                  >
-                    <span>Submit</span>
-                  </LoadingButton>
-                ) : (
-                  <Button
-                    variant="contained"
-                    size="large"
-                    sx={{ mt: 3, ml: 1, bgcolor: "buttonBGColor.main" }}
-                    onClick={handleSubmit}
-                  >
-                    Next
-                  </Button>
-                )}
+        {/* <Toolbar /> */}
+        <Container maxWidth="md" sx={{ mt: 3, mb: 3 }}>
+          <Paper sx={{ padding: 5, bgcolor: "#fff" }} elevation={4}>
+            <CssBaseline />
+            <Stack spacing={4}>
+              <Box sx={{ textAlign: "center" }}>
+                <Box
+                  sx={{
+                    mb: 3,
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <img src={MOH_Logo} width="100" alt="MOH Logo" />
+                  <Box>
+                    <Typography>REPUBLIC OF LIBERIA</Typography>
+                    <Typography>BUREAU OF VITAL & HEALTH STATISTICS</Typography>
+                    <Typography sx={{ fontSize: 20, fontWeight: "bolder" }}>
+                      MINISTRY OF HEALTH
+                    </Typography>
+                    <Typography>MONROVIA, LIBERIA</Typography>
+                  </Box>
+                  <img src={Liberia_Seal} width="100" alt="Liberia Seal" />
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                  {formikStepOneForm.values.applicantPhoto !== "" && (
+                    <Box>
+                      <Badge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        badgeContent={
+                          <Tooltip title="Upload Photo" placement="right" arrow>
+                            <IconButton onClick={handleOpenApplicantPhoto}>
+                              <FaCamera size={30} />
+                            </IconButton>
+                          </Tooltip>
+                        }
+                      >
+                        <Avatar
+                          alt=""
+                          src={formikStepOneForm.values.applicantPhoto.preview}
+                          variant="square"
+                          sx={{
+                            width: 130,
+                            height: 130,
+                          }}
+                          slotProps={{
+                            img: { loading: "lazy" },
+                          }}
+                        />
+                      </Badge>
+                    </Box>
+                  )}
+
+                  {formikStepOneForm.values.applicantPhoto === "" && (
+                    <Box>
+                      <Badge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        badgeContent={
+                          <Tooltip title="Upload Photo" placement="right" arrow>
+                            <IconButton onClick={handleOpenApplicantPhoto}>
+                              <FaCamera size={30} />
+                            </IconButton>
+                          </Tooltip>
+                        }
+                      >
+                        <Avatar
+                          alt=""
+                          src=""
+                          variant="square"
+                          sx={{
+                            width: 130,
+                            height: 130,
+                          }}
+                          slotProps={{
+                            img: { loading: "lazy" },
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              fontSize: 17,
+                              fontWeight: 500,
+                              color: "#fff",
+                            }}
+                          >
+                            APPLICANT PHOTO
+                          </Typography>
+                        </Avatar>
+                      </Badge>
+                    </Box>
+                  )}
+                  <Box>
+                    <Typography sx={{ color: "#000", fontWeight: "bold" }}>
+                      Form No: MOH-1001-2025-20-06
+                    </Typography>
+                    <Box>
+                      <Autocomplete
+                        id="applicantSex"
+                        clearOnEscape
+                        value={formikStepOneForm.values.applicantSex}
+                        onChange={(_event, newValue) => {
+                          formikStepOneForm.setFieldValue(
+                            "applicantSex",
+                            newValue
+                          );
+                        }}
+                        options={["Male", "Female"]}
+                        // sx={{ width: 300 }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Sex:"
+                            variant="standard"
+                          />
+                        )}
+                      />
+                    </Box>
+                    <Box>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          disablePast
+                          disableFuture
+                          label="Date:"
+                          value={formikStepOneForm.values.dateOfApplication}
+                          onChange={(newValue) => {
+                            formikStepOneForm.setFieldValue(
+                              "dateOfApplication",
+                              newValue
+                            );
+                          }}
+                          slotProps={{ textField: { variant: "standard" } }}
+                        />
+                      </LocalizationProvider>
+                    </Box>
+                  </Box>
+                </Box>
+                <Box sx={{ mt: 3 }}>
+                  <Typography>
+                    APPLICATION FOR DELAYED REGISTRATION OF BIRTH
+                  </Typography>
+                </Box>
               </Box>
-              <Grid container justifyContent="center" sx={{ mt: 6 }}>
-                <CopyRights />
-              </Grid>
-            </Box>
-          </Stack>
-        </Grid>
+              <Stepper
+                alternativeLabel
+                activeStep={activeStep}
+                connector={<QontoConnector />}
+              >
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel StepIconComponent={QontoStepIcon}>
+                      {label}
+                    </StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+              <Stepper
+                alternativeLabel
+                activeStep={activeStep}
+                connector={<ColorlibConnector />}
+              >
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel StepIconComponent={ColorlibStepIcon}>
+                      {label}
+                    </StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+              <Box
+                component="form"
+                noValidate
+                autoComplete="on"
+                encType="multipart/form-data"
+                sx={{ mt: 4 }}
+              >
+                {getStepContent(activeStep)}
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  {activeStep !== 0 && (
+                    <Button
+                      variant="contained"
+                      size="large"
+                      sx={{ mt: 3, ml: 1, bgcolor: "primary.main" }}
+                      onClick={handleBack}
+                    >
+                      Back
+                    </Button>
+                  )}
+                  {isLastStep ? (
+                    <LoadingButton
+                      variant="contained"
+                      size="large"
+                      loading={loading}
+                      loadingPosition="end"
+                      endIcon={<SendIcon />}
+                      sx={{ mt: 3, ml: 1, bgcolor: "primary.main" }}
+                      onClick={handleSubmit}
+                    >
+                      <span>Submit</span>
+                    </LoadingButton>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      size="large"
+                      sx={{ mt: 3, ml: 1, bgcolor: "primary.main" }}
+                      onClick={handleSubmit}
+                    >
+                      Next
+                    </Button>
+                  )}
+                </Box>
+                <Grid container justifyContent="center" sx={{ mt: 6 }}>
+                  <CopyRights />
+                </Grid>
+              </Box>
+            </Stack>
+          </Paper>
+        </Container>
       </ThemeProvider>
+
+      {/* Start UploadApplicantPhoto Dialog */}
+      <UploadApplicantPhoto
+        open={openApplicantPhoto}
+        handleClose={handleCloseApplicantPhoto}
+        formikStepOneForm={formikStepOneForm}
+      />
+      {/* End UploadApplicantPhoto Dialog */}
     </React.Fragment>
   );
 };

@@ -1,28 +1,32 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { styled } from "@mui/material/styles";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  forwardRef,
+} from "react";
+import { styled, useTheme } from "@mui/material/styles";
 import {
   Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
+  Slide,
   IconButton,
   Typography,
   Tooltip,
   Box,
   Paper,
-  Input,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
-import { LoadingButton } from "@mui/lab";
-import { IoMdClose } from "react-icons/io";
-import { useDropzone } from "react-dropzone";
-import { TbCameraUp } from "react-icons/tb";
 import { MdCancel } from "react-icons/md";
 import { IoMdSave } from "react-icons/io";
+import { IoMdClose } from "react-icons/io";
+import { useDropzone } from "react-dropzone";
 
-// React RC SlimScroll Bar
-import { Scrollbars } from "rc-scrollbars";
+//? MUI Dialog Responsive Query
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const baseStyle = {
   display: "flex",
@@ -50,7 +54,12 @@ const rejectStyle = {
   borderColor: "#ff1744",
 };
 
-// Dialog Styles
+//? Dialog Transition
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+//? Dialog Styles
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -60,44 +69,29 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const DocumentUpload = (props) => {
-  // Destructure props
-  const {
-    formikProductForm,
-    handleProductImage,
-    files,
-    setFiles,
-    handleCancelProductImage,
-  } = props;
+const UploadApplicantPhoto = ({ open, handleClose, formikStepOneForm }) => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-  // Dialog State
-  const [open, setOpen] = useState(false);
+  //? files State
+  const [files, setFiles] = useState([]);
 
-  // Loading State
-  const [loading, setLoading] = useState(false);
-
-  // Dialog Functions
-  const handleClickOpen = () => {
-    setOpen(true);
+  //? Handle Save
+  const handleSave = (e) => {
+    e.preventDefault();
+    handleClose();
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  // Save Photo
-  const handleSavePhoto = () => {
-    setLoading(true);
-    setTimeout(() => {
-      handleProductImage(files);
-      handleClose();
-      setLoading(false);
-    }, 2000);
+  //? Handle Cancel
+  const handleCancel = () => {
+    handleClose();
+    formikStepOneForm.setFieldValue("applicantPhoto", "");
+    setFiles([]);
   };
 
   const onDrop = useCallback(
     (acceptedFiles) => {
-      formikProductForm.setFieldValue("photo", acceptedFiles[0]);
+      formikStepOneForm.setFieldValue("applicantPhoto", acceptedFiles[0]);
       setFiles(
         acceptedFiles.map((file) =>
           Object.assign(file, {
@@ -106,7 +100,7 @@ const DocumentUpload = (props) => {
         )
       );
     },
-    [formikProductForm, setFiles]
+    [formikStepOneForm]
   );
 
   const {
@@ -128,7 +122,7 @@ const DocumentUpload = (props) => {
     maxFiles: 1,
   });
 
-  // File Rejection
+  //? File Rejection
   const fileRejectionItems = fileRejections.map(({ file, errors }) => {
     return (
       <Box key={file.path}>
@@ -163,7 +157,7 @@ const DocumentUpload = (props) => {
     [isDragActive, isDragAccept, isDragReject]
   );
 
-  // File Preview
+  //? File Preview
   const thumbs = files.map((file) => (
     <Box key={file.name}>
       <Typography sx={{ mb: 2, fontWeight: 500 }}>
@@ -179,7 +173,7 @@ const DocumentUpload = (props) => {
     </Box>
   ));
 
-  // clean up
+  //? clean up
   useEffect(
     () => () => {
       files.forEach((file) => URL.revokeObjectURL(file.preview));
@@ -189,19 +183,16 @@ const DocumentUpload = (props) => {
 
   return (
     <React.Fragment>
-      <Tooltip title="Upload Image">
-        <IconButton onClick={handleClickOpen}>
-          <TbCameraUp
-            size={100}
-            style={{ color: "#acb5c3", cursor: "pointer" }}
-          />
-        </IconButton>
-      </Tooltip>
       {/* Start Dialog */}
       <BootstrapDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
+        // onClose={handleClose}
+        // aria-labelledby="customized-dialog-title"
+        TransitionComponent={Transition}
+        keepMounted
+        aria-describedby="alert-dialog-slide-description"
+        fullWidth
         open={open}
+        fullScreen={fullScreen}
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
           <Typography
@@ -212,7 +203,7 @@ const DocumentUpload = (props) => {
               textTransform: "uppercase",
             }}
           >
-            Upload Product Image
+            Upload Photo
           </Typography>
         </DialogTitle>
         <Tooltip title="Close">
@@ -229,59 +220,47 @@ const DocumentUpload = (props) => {
             <IoMdClose size={20} color="#acb5c3" />
           </IconButton>
         </Tooltip>
-        <Scrollbars
-          autoHide
-          autoHideTimeout={1000}
-          autoHideDuration={200}
-          autoHeightMin={0}
-          style={{ width: 600, height: 440 }}
-        >
-          <DialogContent dividers>
+        <DialogContent dividers>
+          <Box component="form" noValidate>
             <Paper sx={{ p: 3 }}>
               <Box {...getRootProps({ style })}>
-                <Input
-                  id="photo"
-                  name="photo"
+                <input
+                  id="applicantPhoto"
+                  name="applicantPhoto"
                   type="file"
                   accept=".jpeg, .jpg, .png, .jif, .jfif"
                   {...getInputProps()}
                 />
-                <Typography>
-                  Drag and drop file or click to select product image file.
-                </Typography>
+                <Typography>Click here to upload photo</Typography>
               </Box>
               <Box sx={{ mt: 2 }}>
                 {fileRejectionItems}
                 {thumbs}
               </Box>
             </Paper>
-          </DialogContent>
-        </Scrollbars>
+          </Box>
+        </DialogContent>
         <DialogActions>
           <Button
             variant="contained"
+            size="large"
             sx={{
-              bgcolor: "#acb5c3",
               color: "#fff",
             }}
-            endIcon={<MdCancel size={20} />}
-            onClick={() => {
-              handleCancelProductImage();
-              handleClose();
-            }}
+            endIcon={<MdCancel size={20} color="#fff" />}
+            onClick={handleCancel}
           >
             Cancel
           </Button>
-          <LoadingButton
-            disabled={!files.length > 0}
+          <Button
             variant="contained"
-            loading={loading}
-            loadingPosition="end"
-            endIcon={<IoMdSave size={20} />}
-            onClick={() => handleSavePhoto()}
+            size="large"
+            endIcon={<IoMdSave size={20} color="#fff" />}
+            sx={{ color: "#fff" }}
+            onClick={handleSave}
           >
-            <span>Save</span>
-          </LoadingButton>
+            Save
+          </Button>
         </DialogActions>
       </BootstrapDialog>
       {/* End Dialog */}
@@ -289,4 +268,4 @@ const DocumentUpload = (props) => {
   );
 };
 
-export default React.memo(DocumentUpload);
+export default React.memo(UploadApplicantPhoto);

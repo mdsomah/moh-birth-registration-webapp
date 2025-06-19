@@ -26,7 +26,7 @@ const muiTheme = createTheme({
       main: red.A400,
     },
     background: {
-      default: "#F8F8F8",
+      default: "	#4682B4",
     },
   },
   // components: {

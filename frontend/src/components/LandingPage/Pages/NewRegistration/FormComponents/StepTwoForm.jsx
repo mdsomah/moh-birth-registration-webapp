@@ -414,7 +414,7 @@ const StepTwoForm = (props) => {
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <Typography>
-          Is Father Living?
+          Father's Present Address
           <span>
             <LuAsterisk size={10} color="#C41E3A" />
           </span>
@@ -433,20 +433,21 @@ const StepTwoForm = (props) => {
         <FormControl fullWidth>
           <TextField
             margin="normal"
-            id="isFatherLiving"
-            name="isFatherLiving"
+            id="fatherPresentAddress"
+            name="fatherPresentAddress"
             type="text"
-            value={formik.values.isFatherLiving}
+            value={formik.values.fatherPresentAddress}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
-              formik.touched.isFatherLiving &&
-              Boolean(formik.errors.isFatherLiving)
+              formik.touched.fatherPresentAddress &&
+              Boolean(formik.errors.fatherPresentAddress)
             }
             placeholder="Enter yes or no..."
           />
           <Typography variant="inherit" color="error.main">
-            {formik.touched.isFatherLiving && formik.errors.isFatherLiving}
+            {formik.touched.fatherPresentAddress &&
+              formik.errors.fatherPresentAddress}
           </Typography>
         </FormControl>
       </Grid>

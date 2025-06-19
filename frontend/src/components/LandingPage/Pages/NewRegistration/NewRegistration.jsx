@@ -29,6 +29,8 @@ import StepConnector, {
 import { LoadingButton } from "@mui/lab";
 import SendIcon from "@mui/icons-material/Send";
 import { ThemeProvider } from "@mui/material/styles";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -81,6 +83,22 @@ const SUPPORTED_FORMATS = ["image/jpeg, image/jpg, image/png, image/jif"];
 
 //? Category Image upload size
 const FILE_SIZE = 1024 * 1024 * 25;
+
+//? React Sweet Alert Initialization
+const MySwal = withReactContent(Swal);
+
+//? Sweet Alert Success
+const Success_Alert = (message) => {
+  MySwal.fire({
+    title: (
+      <Typography component="h5" variant="h5" color="success">
+        SUCCESS
+      </Typography>
+    ),
+    text: `${message}`,
+    icon: "success",
+  });
+};
 
 //? Step One Form Schema
 const StepOneFormSchema = Yup.object()
@@ -574,6 +592,7 @@ const NewRegistration = () => {
     initialValues: FinalStepInitialValues,
     // validationSchema: FinalStepFormSchema,
     onSubmit: (values) => {
+      // Success_Alert("Registration completed successfully!");
       registerApplicant();
       // dispatch(setFinalStepForm(values));
     },

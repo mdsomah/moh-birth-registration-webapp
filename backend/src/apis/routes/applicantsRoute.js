@@ -13,7 +13,7 @@ const applicantsController = require("../controllers/applicantsController");
 
 router.post(
   "/register-new-applicant",
-  validateInputs(validateRegisterApplicantSchema),
+  // validateInputs(validateRegisterApplicantSchema),
   applicantsController.RegisterNewApplicant
 );
 router.get(

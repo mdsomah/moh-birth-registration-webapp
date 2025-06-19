@@ -92,11 +92,11 @@ async function main() {
   });
 
   //? Registered APIs Routes
-  app.use("/api/v1/images", express.static("images"));
   app.use("/api/v1/auth", authRouter);
   app.use("/api/v1/users", usersRoute);
   app.use("/api/v1/user/roles", userRolesRoute);
   app.use("/api/v1/applicants", applicantsRoute);
+  app.use("/api/v1/images", express.static("images"));
 
   //? Catch All Unregistered APIs Routes
   app.all("/*splat", (req, res) => {

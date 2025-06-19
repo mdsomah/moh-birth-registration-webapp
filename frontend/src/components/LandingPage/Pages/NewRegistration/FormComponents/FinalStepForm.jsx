@@ -133,7 +133,7 @@ const FinalStepForm = (props) => {
             margin="normal"
             id="fullName"
             name="fullName"
-            type="number"
+            type="text"
             value={formik.values.fullName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}

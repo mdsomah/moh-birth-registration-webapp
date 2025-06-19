@@ -19,5 +19,3 @@ export const encrypt = (data) => {
 
   return cipherText;
 };
-
-module.exports = { encrypt };

@@ -21,6 +21,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ApplicantSignature from "./SignatureDialog/ApplicantSignature";
 import FinalStepPhoneInputField from "../PhoneInputsField/FinalStepPhoneInputField";
+import FinalStepContactPhoneInputField from "../PhoneInputsField/FinalStepContactPhoneInputField";
 
 //? Upload Guardian Photo
 import UploadGuardianPhoto from "../UploadGuardianPhoto/UploadGuardianPhoto";
@@ -322,6 +323,7 @@ const FinalStepForm = (props) => {
         <FormControl fullWidth>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
+              disablePast
               disableFuture
               value={dayjs(formik.values.date)}
               onChange={(newValue) => {
@@ -499,23 +501,12 @@ const FinalStepForm = (props) => {
           </Tooltip>
         </Typography>
         <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="contactNumber"
-            name="contactNumber"
-            type="text"
-            value={formik.values.contactNumber}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.contactNumber &&
-              Boolean(formik.errors.contactNumber)
-            }
-            placeholder="Enter yes or no..."
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.contactNumber && formik.errors.contactNumber}
-          </Typography>
+          <FormControl sx={{ width: "100%" }}>
+            <FinalStepContactPhoneInputField formik={formik} />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.contactNumber && formik.errors.contactNumber}
+            </Typography>
+          </FormControl>
         </FormControl>
       </Grid>
       {formik.values.parentOrGuardianPhoto !== "" && (

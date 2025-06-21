@@ -441,7 +441,7 @@ const NewRegistration = () => {
   //? Step One Initial Values
   const StepOneInitialValues = {
     applicantPhoto: "",
-    formNumber: "",
+    formNumber: "MOH-1001-2025-20-06",
     applicantSex: "",
     dateOfApplication: dayjs(new Date()),
     applicantFirstName: "",
@@ -798,6 +798,8 @@ const NewRegistration = () => {
       process.env.REACT_APP_ENCRYPTION_IV
     );
 
+    console.log(`Encrypted Data: ${encryptedData}`);
+
     if (isLastStep) {
       Mutation.mutate(encryptedData);
     }
@@ -818,7 +820,14 @@ const NewRegistration = () => {
       <ThemeProvider theme={responsiveTheme}>
         {/* <Toolbar /> */}
         <Container maxWidth="md" sx={{ mt: 3, mb: 3 }}>
-          <Paper sx={{ padding: 5, bgcolor: "#fff" }} elevation={4}>
+          <Paper
+            component="form"
+            noValidate
+            autoComplete="on"
+            encType="multipart/form-data"
+            sx={{ padding: 5, bgcolor: "#fff" }}
+            elevation={4}
+          >
             <CssBaseline />
             <Stack spacing={4}>
               <Box sx={{ textAlign: "center" }}>
@@ -926,7 +935,7 @@ const NewRegistration = () => {
                   )}
                   <Box>
                     <Typography sx={{ color: "#000", fontWeight: "bold" }}>
-                      Form No: MOH-1001-2025-20-06
+                      Form No: {formikStepOneForm.values.formNumber}
                     </Typography>
                     <Box>
                       <Autocomplete
@@ -1017,10 +1026,10 @@ const NewRegistration = () => {
                 ))}
               </Stepper>
               <Box
-                component="form"
-                noValidate
-                autoComplete="on"
-                encType="multipart/form-data"
+                // component="form"
+                // noValidate
+                // autoComplete="on"
+                // encType="multipart/form-data"
                 sx={{ mt: 4 }}
               >
                 {getStepContent(activeStep)}
@@ -1066,6 +1075,7 @@ const NewRegistration = () => {
           </Paper>
         </Container>
       </ThemeProvider>
+      <ScrollToTop />
 
       {/* Start UploadApplicantPhoto Dialog */}
       <UploadApplicantPhoto

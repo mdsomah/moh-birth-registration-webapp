@@ -40,15 +40,26 @@ const ApplicantSignature = (props) => {
           <>
             <SignatureCanvas
               penColor="#4169E1"
-              canvasProps={{ width: 500, height: 400, className: "sigCanvas" }}
+              canvasProps={{ width: 500, height: 300, className: "sigCanvas" }}
               ref={sigCanvas}
             />
-            <Button onClick={() => load(formik.values.applicantSignature)}>
-              Load
-            </Button>
-            <Button onClick={() => save()}>Save</Button>
-            <Button onClick={() => clear()}>Clear</Button>
-            <Button onClick={() => close()}>Close</Button>
+            <Box sx={{ display: "flex", mb: 2, ml: 2 }} gap={2}>
+              <Button
+                variant="contained"
+                onClick={() => load(formik.values.applicantSignature)}
+              >
+                Load
+              </Button>
+              <Button variant="contained" onClick={() => save()}>
+                Save
+              </Button>
+              <Button variant="contained" onClick={() => clear()}>
+                Clear
+              </Button>
+              <Button variant="contained" onClick={() => close()}>
+                Close
+              </Button>
+            </Box>
           </>
         )}
       </Popup>

@@ -82,7 +82,7 @@ const FinalStepForm = (props) => {
                 width={60}
                 height={60}
                 src={formik.values.applicantSignature}
-                // alt="Applicant Signature"
+                alt="Applicant Signature"
               />
             </Box>
           )}

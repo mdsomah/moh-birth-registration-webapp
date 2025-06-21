@@ -424,7 +424,7 @@ const StepThreeForm = (props) => {
               formik.touched.motherPresentAddress &&
               Boolean(formik.errors.motherPresentAddress)
             }
-            placeholder="Enter yes or no..."
+            placeholder="Enter present address..."
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherPresentAddress &&

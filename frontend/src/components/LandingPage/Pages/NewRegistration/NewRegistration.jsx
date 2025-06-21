@@ -504,8 +504,6 @@ const NewRegistration = () => {
     isMotherLiving: "",
     motherPresentAddress: "",
     motherTelephoneNumber: "",
-    applicantSignature: "",
-    applicantContactNumber: "",
   };
 
   //? Formik Step Three Form
@@ -521,6 +519,8 @@ const NewRegistration = () => {
 
   //? Final Step Initial Values
   const FinalStepInitialValues = {
+    applicantSignature: "",
+    applicantContactNumber: "",
     fullName: "",
     city: "",
     county: "",

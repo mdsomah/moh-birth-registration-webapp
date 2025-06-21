@@ -423,7 +423,7 @@ const StepTwoForm = (props) => {
               formik.touched.fatherPresentAddress &&
               Boolean(formik.errors.fatherPresentAddress)
             }
-            placeholder="Enter yes or no..."
+            placeholder="Enter present address..."
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherPresentAddress &&

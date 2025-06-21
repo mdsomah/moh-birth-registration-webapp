@@ -15,18 +15,18 @@ import {
 } from "react-international-phone";
 
 const StepTwoPhoneInputField = (props) => {
-  // Destructure props
+  //? Destructure props
   const { formik } = props;
 
-  // Handle Phone Input Change
+  //? Handle Phone Input Change
   const handlePhoneInputChange = (event) => {
-    formik.setFieldValue("phoneNumberOfEditorInChief", event);
+    formik.setFieldValue("fatherTelephoneNumber", event);
   };
 
   const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       defaultCountry: "lr",
-      value: formik.values.phoneNumberOfEditorInChief,
+      value: formik.values.fatherTelephoneNumber,
       countries: defaultCountries,
       onChange: (data) => handlePhoneInputChange(data?.phone),
     });
@@ -34,16 +34,16 @@ const StepTwoPhoneInputField = (props) => {
   return (
     <TextField
       margin="normal"
-      id="phoneNumberOfEditorInChief"
-      name="phoneNumberOfEditorInChief"
+      id="fatherTelephoneNumber"
+      name="fatherTelephoneNumber"
       type="tel"
-      placeholder="Enter phone number..."
+      placeholder="Enter telephone number..."
       value={inputValue}
       onChange={handlePhoneValueChange}
       onBlur={formik.handleBlur}
       error={
-        formik.touched.phoneNumberOfEditorInChief &&
-        Boolean(formik.errors.phoneNumberOfEditorInChief)
+        formik.touched.fatherTelephoneNumber &&
+        Boolean(formik.errors.fatherTelephoneNumber)
       }
       inputRef={inputRef}
       InputProps={{

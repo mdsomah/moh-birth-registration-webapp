@@ -11,9 +11,11 @@ import {
   RadioGroup,
   FormControl,
   FormControlLabel,
+  Autocomplete,
 } from "@mui/material";
 import { LuAsterisk } from "react-icons/lu";
 import { BsFillInfoCircleFill } from "react-icons/bs";
+import StepTwoPhoneInputField from "../PhoneInputsField/StepTwoPhoneInputField";
 
 //? Scroll to top of react route/page change
 import ScrollToTop from "../../../../ScrollToTop/ScrollToTop";
@@ -66,7 +68,7 @@ const StepTwoForm = (props) => {
             }
             placeholder="Enter father's name..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherName && formik.errors.fatherName}
           </Typography>
         </FormControl>
@@ -104,7 +106,7 @@ const StepTwoForm = (props) => {
             }
             placeholder="Enter father's nationality..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherNationality &&
               formik.errors.fatherNationality}
           </Typography>
@@ -140,7 +142,7 @@ const StepTwoForm = (props) => {
             error={formik.touched.fatherAge && Boolean(formik.errors.fatherAge)}
             placeholder="Enter last name..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherAge && formik.errors.fatherAge}
           </Typography>
         </FormControl>
@@ -178,7 +180,7 @@ const StepTwoForm = (props) => {
             }
             placeholder="Enter facility..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherTownOrCity && formik.errors.fatherTownOrCity}
           </Typography>
         </FormControl>
@@ -215,7 +217,7 @@ const StepTwoForm = (props) => {
             }
             placeholder="Enter county..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherCounty && formik.errors.fatherCounty}
           </Typography>
         </FormControl>
@@ -253,7 +255,7 @@ const StepTwoForm = (props) => {
             }
             placeholder="Enter country..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherCountry && formik.errors.fatherCountry}
           </Typography>
         </FormControl>
@@ -291,7 +293,7 @@ const StepTwoForm = (props) => {
             }
             placeholder="Enter county of origin..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherCountyOfOrigin &&
               formik.errors.fatherCountyOfOrigin}
           </Typography>
@@ -330,29 +332,13 @@ const StepTwoForm = (props) => {
             }
             placeholder="Enter occupation..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherOccupation && formik.errors.fatherOccupation}
           </Typography>
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Father's Date of Naturalization
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
+        <Typography>Father's Date of Naturalization</Typography>
         <FormControl fullWidth>
           <TextField
             margin="normal"
@@ -361,17 +347,8 @@ const StepTwoForm = (props) => {
             type="text"
             value={formik.values.fatherDateOfNaturalization}
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.fatherDateOfNaturalization &&
-              Boolean(formik.errors.fatherDateOfNaturalization)
-            }
             placeholder="Enter date of naturalization"
           />
-          <Typography variant="inherit" color="error.main">
-            {formik.touched.fatherDateOfNaturalization &&
-              formik.errors.fatherDateOfNaturalization}
-          </Typography>
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -393,21 +370,29 @@ const StepTwoForm = (props) => {
           </Tooltip>
         </Typography>
         <FormControl fullWidth>
-          <TextField
-            margin="normal"
+          <Autocomplete
             id="isFatherLiving"
-            name="isFatherLiving"
-            type="text"
+            clearOnEscape
             value={formik.values.isFatherLiving}
-            onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
               formik.touched.isFatherLiving &&
               Boolean(formik.errors.isFatherLiving)
             }
-            placeholder="Enter yes or no..."
+            onChange={(_event, newValue) => {
+              formik.setFieldValue("isFatherLiving", newValue);
+            }}
+            options={["YES", "NO"]}
+            // sx={{ width: 300 }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select YES or NO..."
+                variant="standard"
+              />
+            )}
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.isFatherLiving && formik.errors.isFatherLiving}
           </Typography>
         </FormControl>
@@ -445,7 +430,7 @@ const StepTwoForm = (props) => {
             }
             placeholder="Enter yes or no..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherPresentAddress &&
               formik.errors.fatherPresentAddress}
           </Typography>
@@ -470,24 +455,13 @@ const StepTwoForm = (props) => {
           </Tooltip>
         </Typography>
         <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="fatherTelephoneNumber"
-            name="fatherTelephoneNumber"
-            type="text"
-            value={formik.values.fatherTelephoneNumber}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.fatherTelephoneNumber &&
-              Boolean(formik.errors.fatherTelephoneNumber)
-            }
-            placeholder="Enter yes or no..."
-          />
-          <Typography variant="inherit" color="error.main">
-            {formik.touched.fatherTelephoneNumber &&
-              formik.errors.fatherTelephoneNumber}
-          </Typography>
+          <FormControl sx={{ width: "100%" }}>
+            <StepTwoPhoneInputField formik={formik} />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.fatherTelephoneNumber &&
+                formik.errors.fatherTelephoneNumber}
+            </Typography>
+          </FormControl>
         </FormControl>
       </Grid>
       <ScrollToTop />

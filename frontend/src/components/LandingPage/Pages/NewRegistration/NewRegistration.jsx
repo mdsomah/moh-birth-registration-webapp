@@ -37,7 +37,6 @@ import CopyRights from "../../CopyRights/CopyRights";
 import { responsiveTheme } from "../../../../utils/muiUtils";
 import {
   setIsCompleted,
-  // removeRegistrationType,
   setStepOneForm,
   removeStepOneForm,
   setStepTwoForm,
@@ -55,7 +54,7 @@ import UploadApplicantPhoto from "./UploadApplicantPhoto/UploadApplicantPhoto";
 //? Scroll to top of react route/page change
 import ScrollToTop from "../../../ScrollToTop/ScrollToTop";
 
-// Images Import
+//? Images Import
 import MOH_Logo from "../../../../images/MOH_Logo/MOH-LOGO.png";
 import Liberia_Seal from "../../../../images/MOH_Logo/Liberia-Seal.png";
 
@@ -77,134 +76,17 @@ import { Avatar, TextField, Toolbar, Typography } from "@mui/material";
 //? Endpoints
 const postApplicantURL = "/applicants/register-new-applicant";
 
-//? Category Image upload formats
-const SUPPORTED_FORMATS = ["image/jpeg, image/jpg, image/png, image/jif"];
+//? Photo upload formats
+const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
 
-//? Category Image upload size
+//? Photo upload size
 const FILE_SIZE = 1024 * 1024 * 25;
 
 //? Step One Form Schema
 const StepOneFormSchema = Yup.object()
   .shape({
-    applicantPhoto: Yup.string().required("Photo required!"),
-    formNumber: Yup.string().notRequired(),
-    applicantSex: Yup.string().required("First name required!"),
-    dateOfApplication: Yup.string().required("Date of application required!"),
-    applicantFirstName: Yup.string().required("First name required!"),
-    applicantMiddleName: Yup.string().notRequired(),
-    applicantLastName: Yup.string().required("last name required!"),
-    applicantFacility: Yup.string().required("Facility required!"),
-    applicantTownOrCity: Yup.string().required("Town/City required!"),
-    applicantCounty: Yup.string().required("County required!"),
-    applicantCountry: Yup.string().required("Country required!"),
-    applicantDateOfBirth: Yup.string().required("Date of birth required!"),
-  })
-  .required();
-
-//? Step Two Form Schema
-const StepTwoFormSchema = Yup.object()
-  .shape({
-    fatherName: Yup.string().required("Father's name required!"),
-    fatherNationality: Yup.string().required("Father Nationality required!"),
-    fatherAge: Yup.number().required("Father age required!"),
-    fatherTownOrCity: Yup.string().required("Town or City required!"),
-    fatherCounty: Yup.string().required("Father's county required!"),
-    fatherCountry: Yup.string().required("Father's country required!"),
-    fatherCountyOfOrigin: "",
-    fatherOccupation: "",
-    fatherDateOfNaturalization: "",
-    isFatherLiving: "",
-    fatherPresentAddress: "",
-    fatherTelephoneNumber: "",
-    // isMemberOfPUL: Yup.mixed()
-    //   .required("Please select one!")
-    //   .oneOf(["YES", "NO"]),
-    // ifNoStateReason: Yup.string().when("isMemberOfPUL", {
-    //   is: (val) => val === "NO",
-    //   then: () => Yup.string().required("Reason required!"),
-    //   otherwise: () => Yup.string().notRequired(),
-    // }),
-
-    // phoneNumberOfEditorInChief: Yup.string()
-    //   .phone(null, "Please enter a valid phone number!")
-    //   .required("Phone number required!"),
-  })
-  .required();
-
-// Step Three Form Schema
-const StepThreeFormSchema = Yup.object()
-  .shape({
-    documents: Yup.array().of(
-      Yup.object().shape({
-        documentType: Yup.string().required("Document type required!"),
-        documentName: Yup.mixed()
-          .required("Please select a file to upload")
-          .test(
-            "fileFormat",
-            "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
-            (value) =>
-              !value ||
-              ((value) => value && SUPPORTED_FORMATS.includes(value.type))
-          )
-          .test(
-            "fileSize",
-            "File is too large! Supported size: is (2MB)",
-            (value) => !value || (value && value.size <= FILE_SIZE)
-          ),
-      })
-    ),
-    currentWorkForce: Yup.number().required("Current workforce required!"),
-    isInstitutionAlreadyRegister: Yup.mixed()
-      .required("Please select one!")
-      .oneOf(["YES", "NO"]),
-    dateOfLastRegistration: Yup.string().when("isInstitutionAlreadyRegister", {
-      is: (val) => val === "YES",
-      then: () => Yup.string().required("Date of last registration required!"),
-      otherwise: () => Yup.string().notRequired(),
-    }),
-    equipments: Yup.array()
-      .of(Yup.string())
-      .min(1, "Please select at least one equipment type!"),
-    typeOfEquipments: Yup.array().of(
-      Yup.object().shape({
-        typeOfEquipmentID: Yup.string().notRequired(),
-        equipmentType: Yup.string().notRequired(),
-      })
-    ),
-    typeOfFrequency: Yup.object().shape({
-      frequencyType: Yup.string().required("Please select frequency type!"),
-    }),
-    typeOfCommunicationEngage: Yup.object().shape({
-      communicationType: Yup.string().required(
-        "Please select one engagement type!"
-      ),
-    }),
-    programGuide: Yup.object().shape({
-      programGudieName: Yup.string().required(
-        "Please select one program guide!"
-      ),
-    }),
-    comments: Yup.string().notRequired(),
-    publicationSchedule: Yup.object().shape({
-      scheduleName: Yup.string().required("Please select one schedule!"),
-    }),
-    other: Yup.string().notRequired(),
-    kindOfPublication: Yup.object().shape({
-      publicationName: Yup.string().required("Please select one publication!"),
-    }),
-    institutionPolicy: Yup.string().required("Institution policy required!"),
-    documentTypeIds: Yup.lazy((val) =>
-      Array.isArray(val) ? Yup.array().of(Yup.string()) : Yup.string()
-    ),
-  })
-  .required();
-
-//? Final Step Form Schema
-const FinalStepFormSchema = Yup.object()
-  .shape({
-    applicantFullName: Yup.string().required("Applicant full name required!"),
-    logo: Yup.mixed()
-      .notRequired()
+    applicantPhoto: Yup.mixed()
+      .required("Please select a photo!")
       .test(
         "fileFormat",
         "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
@@ -213,18 +95,134 @@ const FinalStepFormSchema = Yup.object()
       )
       .test(
         "fileSize",
-        "File is too large! Supported size: is (2MB)",
+        "File is too large! Supported size: (2MB)",
         (value) => !value || (value && value.size <= FILE_SIZE)
       ),
+    formNumber: Yup.string().notRequired(),
+    applicantSex: Yup.mixed()
+      .required("Please select one!")
+      .oneOf(["Male", "Female"]),
+    dateOfApplication: Yup.string().required("Application date required!"),
+    applicantFirstName: Yup.string().required("Applicant first name required!"),
+    applicantMiddleName: Yup.string().notRequired(),
+    applicantLastName: Yup.string().required("Applicant last name required!"),
+    applicantFacility: Yup.string().required("Applicant facility required!"),
+    applicantTownOrCity: Yup.string().required(
+      "Applicant town or city required!"
+    ),
+    applicantCounty: Yup.string().required("Applicant county required!"),
+    applicantCountry: Yup.string().required("Applicant country required!"),
+    applicantDateOfBirth: Yup.string().required(
+      "Applicant date of birth required!"
+    ),
+  })
+  .required();
+
+//? Step Two Form Schema
+const StepTwoFormSchema = Yup.object()
+  .shape({
+    fatherName: Yup.string().required("Father name required!"),
+    fatherNationality: Yup.string().required("Father nationality required!"),
+    fatherAge: Yup.number()
+      .required("Father age required!")
+      .positive()
+      .integer(),
+    fatherTownOrCity: Yup.string().required("Father town or city required!"),
+    fatherCounty: Yup.string().required("Father county required!"),
+    fatherCountry: Yup.string().required("Father country required!"),
+    fatherCountyOfOrigin: Yup.string().required(
+      "Father county of origin required!"
+    ),
+    fatherOccupation: Yup.string().required("Father occupation required!"),
+    fatherDateOfNaturalization: Yup.string().notRequired(),
+    isFatherLiving: Yup.mixed()
+      .required("Please select one!")
+      .oneOf(["YES", "NO"]),
+    fatherPresentAddress: Yup.string().when("isFatherLiving", {
+      is: (val) => val === "YES",
+      then: () => Yup.string().required("Father present address required!"),
+      otherwise: () => Yup.string().notRequired(),
+    }),
+    fatherTelephoneNumber: Yup.string().when("isFatherLiving", {
+      is: (val) => val === "YES",
+      then: () =>
+        Yup.string()
+          .phone(null, "Please enter a valid phone number!")
+          .required("Father telephone number required!"),
+      otherwise: () => Yup.string().notRequired(),
+    }),
+  })
+  .required();
+
+//? Step Three Form Schema
+const StepThreeFormSchema = Yup.object()
+  .shape({
+    motherName: Yup.string().required("Mother name required!"),
+    motherNationality: Yup.string().required("Mother nationality required!"),
+    motherAge: Yup.number()
+      .required("Mother age required!")
+      .positive()
+      .integer(),
+    motherTownOrCity: Yup.string().required("Mother town or city required!"),
+    motherCounty: Yup.string().required("Mother county required!"),
+    motherCountry: Yup.string().required("Mother country required!"),
+    motherCountyOfOrigin: Yup.string().required(
+      "Mother county of origin required!"
+    ),
+    motherOccupation: Yup.string().required("Mother occupation required!"),
+    motherDateOfNaturalization: Yup.string().notRequired(),
+    isMotherLiving: Yup.mixed()
+      .required("Please select one!")
+      .oneOf(["YES", "NO"]),
+    motherPresentAddress: Yup.string().when("isMotherLiving", {
+      is: (val) => val === "YES",
+      then: () => Yup.string().required("Mother present address required!"),
+      otherwise: () => Yup.string().notRequired(),
+    }),
+    motherTelephoneNumber: Yup.string().when("isMotherLiving", {
+      is: (val) => val === "YES",
+      then: () =>
+        Yup.string()
+          .phone(null, "Please enter a valid phone number!")
+          .required("Mother telephone number required!"),
+      otherwise: () => Yup.string().notRequired(),
+    }),
+  })
+  .required();
+
+//? Final Step Form Schema
+const FinalStepFormSchema = Yup.object()
+  .shape({
     applicantSignature: Yup.string().required("Applicant signature required!"),
-    applicationDate: Yup.string().required("Application date required!"),
-    termsOfConditions: Yup.boolean()
-      .oneOf([true], "Terms of conditions is required!")
-      .required("Terms of condition is required!"),
-    rejectedOrAcceptedFor: Yup.string().notRequired(),
-    rejectedOrAccepted: Yup.string().notRequired(),
-    directorSignature: Yup.string().notRequired(),
-    directorSignedDate: Yup.string().notRequired(),
+    applicantContactNumber: Yup.string()
+      .phone(null, "Please enter a valid phone number!")
+      .required("Applicant contact number required!"),
+    fullName: Yup.string().required("Full name required!"),
+    city: Yup.string().required("City required!"),
+    county: Yup.string().required("County required!"),
+    motherFullName: Yup.string().required("Mother full name required!"),
+    fatherFullName: Yup.string().required("Father full name required!"),
+    date: Yup.string().required("Date required!"),
+    cityOrTown: Yup.string().required("City or town required!"),
+    name: Yup.string().required("Name required!"),
+    address: Yup.string().required("Address required!"),
+    relationship: Yup.string().required("Relationship required!"),
+    contactNumber: Yup.string()
+      .phone(null, "Please enter a valid phone number!")
+      .required("Contact number required!"),
+    parentOrGuardianPhoto: Yup.mixed()
+      .required("Please select a photo!")
+      .test(
+        "fileFormat",
+        "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
+        (value) =>
+          !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
+      )
+      .test(
+        "fileSize",
+        "File is too large! Supported size: (2MB)",
+        (value) => !value || (value && value.size <= FILE_SIZE)
+      ),
   })
   .required();
 
@@ -412,6 +410,10 @@ const NewRegistration = () => {
   //? useDispatch
   const dispatch = useDispatch();
 
+  //? Destructure useSelector
+  const { stepOneForm, stepTwoForm, stepThreeForm, finalStepForm } =
+    useSelector((state) => state.newRegistration);
+
   const [activeStep, setActiveStep] = useState(0);
   const steps = [
     "Applicant's Info",
@@ -454,11 +456,11 @@ const NewRegistration = () => {
 
   //? Formik Step One Form
   const formikStepOneForm = useFormik({
-    initialValues: StepOneInitialValues,
-    // validationSchema: StepOneFormSchema,
+    initialValues: stepOneForm !== null ? stepOneForm : StepOneInitialValues,
+    validationSchema: StepOneFormSchema,
     onSubmit: (values) => {
       handleNext();
-      // dispatch(setStepOneForm(values));
+      dispatch(setStepOneForm(values));
     },
   });
 
@@ -480,11 +482,11 @@ const NewRegistration = () => {
 
   //? Formik Step Two Form
   const formikStepTwoForm = useFormik({
-    initialValues: StepTwoInitialValues,
-    // validationSchema: StepTwoFormSchema,
+    initialValues: stepTwoForm !== null ? stepTwoForm : StepTwoInitialValues,
+    validationSchema: StepTwoFormSchema,
     onSubmit: (values) => {
       handleNext();
-      // dispatch(setStepTwoForm(values));
+      dispatch(setStepTwoForm(values));
     },
   });
 
@@ -508,11 +510,12 @@ const NewRegistration = () => {
 
   //? Formik Step Three Form
   const formikStepThreeForm = useFormik({
-    initialValues: StepThreeInitialValues,
-    // validationSchema: StepThreeFormSchema,
+    initialValues:
+      stepThreeForm !== null ? stepThreeForm : StepThreeInitialValues,
+    validationSchema: StepThreeFormSchema,
     onSubmit: (values) => {
       handleNext();
-      // dispatch(setStepThreeForm(values));
+      dispatch(setStepThreeForm(values));
     },
   });
 
@@ -534,15 +537,16 @@ const NewRegistration = () => {
 
   //? Formik Final Step Form
   const formikFinalStepForm = useFormik({
-    initialValues: FinalStepInitialValues,
-    // validationSchema: FinalStepFormSchema,
+    initialValues:
+      finalStepForm !== null ? finalStepForm : FinalStepInitialValues,
+    validationSchema: FinalStepFormSchema,
     onSubmit: (values) => {
-      registerApplicant();
-      // dispatch(setFinalStepForm(values));
+      registerNewApplicant();
+      dispatch(setFinalStepForm(values));
     },
   });
 
-  // Handle Submit
+  //? Handle Submit
   const handleSubmit = (e) => {
     e.preventDefault();
     switch (activeStep) {
@@ -652,12 +656,10 @@ const NewRegistration = () => {
     onSuccess: (data) => {
       if (isLastStep && data) {
         dispatch(setIsCompleted(true));
-        // dispatch(removeRegistrationType());
         dispatch(removeStepOneForm());
         dispatch(removeStepTwoForm());
         dispatch(removeStepThreeForm());
         dispatch(removeFinalStepForm());
-        // dispatch(removeInstitution());
         queryClient.invalidateQueries({
           queryKey: ["applicantsData"],
         });
@@ -682,7 +684,7 @@ const NewRegistration = () => {
   }, [Mutation]);
 
   //? Register New Applicant
-  const registerApplicant = async () => {
+  const registerNewApplicant = async () => {
     //? Destructure ApplicantData
     const {
       applicantPhoto,
@@ -790,12 +792,26 @@ const NewRegistration = () => {
     formData.append("contactNumber", contactNumber);
     formData.append("parentOrGuardianPhoto", parentOrGuardianPhoto);
 
-    const encryptedData = encrypt(formData);
+    const encryptedData = encrypt(
+      formData,
+      process.env.REACT_APP_ENCRYPTION_KEY,
+      process.env.REACT_APP_ENCRYPTION_IV
+    );
 
     if (isLastStep) {
       Mutation.mutate(encryptedData);
     }
   };
+
+  //? Scroll to error input on form submit
+  useEffect(() => {
+    if (!formikStepOneForm.isSubmitting) return;
+    if (Object.keys(formikStepOneForm.errors).length > 0) {
+      document
+        .getElementsByName(Object.keys(formikStepOneForm.errors)[0])
+        .forEach((error) => error.focus());
+    }
+  }, [formikStepOneForm]);
 
   return (
     <React.Fragment>
@@ -842,7 +858,8 @@ const NewRegistration = () => {
                         }
                       >
                         <Avatar
-                          alt=""
+                          alt={formikStepTwoForm.values.applicantFirstName}
+                          // src={`data:image/jpeg;base64,${stepOneForm.applicantPhoto.preview}`}
                           src={formikStepOneForm.values.applicantPhoto.preview}
                           variant="square"
                           sx={{
@@ -890,12 +907,21 @@ const NewRegistration = () => {
                               fontSize: 17,
                               fontWeight: 500,
                               color: "#fff",
+                              textAlign: "center",
                             }}
                           >
                             APPLICANT PHOTO
                           </Typography>
                         </Avatar>
                       </Badge>
+                      <Typography
+                        variant="inherit"
+                        color="error.main"
+                        sx={{ mt: 1 }}
+                      >
+                        {formikStepOneForm.touched.applicantPhoto &&
+                          formikStepOneForm.errors.applicantPhoto}
+                      </Typography>
                     </Box>
                   )}
                   <Box>
@@ -907,6 +933,11 @@ const NewRegistration = () => {
                         id="applicantSex"
                         clearOnEscape
                         value={formikStepOneForm.values.applicantSex}
+                        onBlur={formikStepOneForm.handleBlur}
+                        error={
+                          formikStepOneForm.touched.applicantSex &&
+                          Boolean(formikStepOneForm.errors.applicantSex)
+                        }
                         onChange={(_event, newValue) => {
                           formikStepOneForm.setFieldValue(
                             "applicantSex",
@@ -923,6 +954,14 @@ const NewRegistration = () => {
                           />
                         )}
                       />
+                      <Typography
+                        variant="inherit"
+                        color="error.main"
+                        sx={{ mt: 1 }}
+                      >
+                        {formikStepOneForm.touched.applicantSex &&
+                          formikStepOneForm.errors.applicantSex}
+                      </Typography>
                     </Box>
                     <Box>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -930,7 +969,9 @@ const NewRegistration = () => {
                           disablePast
                           disableFuture
                           label="Date:"
-                          value={formikStepOneForm.values.dateOfApplication}
+                          value={dayjs(
+                            formikStepOneForm.values.dateOfApplication
+                          )}
                           onChange={(newValue) => {
                             formikStepOneForm.setFieldValue(
                               "dateOfApplication",

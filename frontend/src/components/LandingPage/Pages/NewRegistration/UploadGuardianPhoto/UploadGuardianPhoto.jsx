@@ -69,7 +69,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const UploadApplicantPhoto = ({ open, handleClose, formikStepOneForm }) => {
+const UploadGuardianPhoto = ({ open, handleClose, formik }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -85,13 +85,13 @@ const UploadApplicantPhoto = ({ open, handleClose, formikStepOneForm }) => {
   //? Handle Cancel
   const handleCancel = () => {
     handleClose();
-    formikStepOneForm.setFieldValue("applicantPhoto", "");
+    formik.setFieldValue("parentOrGuardianPhoto", "");
     setFiles([]);
   };
 
   const onDrop = useCallback(
     (acceptedFiles) => {
-      formikStepOneForm.setFieldValue("applicantPhoto", acceptedFiles[0]);
+      formik.setFieldValue("parentOrGuardianPhoto", acceptedFiles[0]);
       setFiles(
         acceptedFiles.map((file) =>
           Object.assign(file, {
@@ -100,7 +100,7 @@ const UploadApplicantPhoto = ({ open, handleClose, formikStepOneForm }) => {
         )
       );
     },
-    [formikStepOneForm]
+    [formik]
   );
 
   const {
@@ -225,14 +225,14 @@ const UploadApplicantPhoto = ({ open, handleClose, formikStepOneForm }) => {
             <Paper sx={{ p: 3 }}>
               <Box {...getRootProps({ style })}>
                 <input
-                  id="applicantPhoto"
-                  name="applicantPhoto"
+                  id="parentOrGuardianPhoto"
+                  name="parentOrGuardianPhoto"
                   type="file"
                   accept=".jpeg, .jpg, .png, .jif, .jfif"
                   {...getInputProps()}
                   error={
-                    formikStepOneForm.touched.applicantPhoto &&
-                    Boolean(formikStepOneForm.errors.applicantPhoto)
+                    formik.touched.parentOrGuardianPhoto &&
+                    Boolean(formik.errors.parentOrGuardianPhoto)
                   }
                 />
                 <Typography>Click here to upload photo</Typography>
@@ -272,4 +272,4 @@ const UploadApplicantPhoto = ({ open, handleClose, formikStepOneForm }) => {
   );
 };
 
-export default React.memo(UploadApplicantPhoto);
+export default React.memo(UploadGuardianPhoto);

@@ -68,7 +68,7 @@ const StepThreeForm = (props) => {
             }
             placeholder="Enter mother's name..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherName && formik.errors.motherName}
           </Typography>
         </FormControl>
@@ -106,7 +106,7 @@ const StepThreeForm = (props) => {
             }
             placeholder="Enter mother's nationality..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherNationality &&
               formik.errors.motherNationality}
           </Typography>
@@ -142,7 +142,7 @@ const StepThreeForm = (props) => {
             error={formik.touched.motherAge && Boolean(formik.errors.motherAge)}
             placeholder="Enter age..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherAge && formik.errors.motherAge}
           </Typography>
         </FormControl>
@@ -180,7 +180,7 @@ const StepThreeForm = (props) => {
             }
             placeholder="Enter facility..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherTownOrCity && formik.errors.motherTownOrCity}
           </Typography>
         </FormControl>
@@ -217,7 +217,7 @@ const StepThreeForm = (props) => {
             }
             placeholder="Enter county..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherCounty && formik.errors.motherCounty}
           </Typography>
         </FormControl>
@@ -255,7 +255,7 @@ const StepThreeForm = (props) => {
             }
             placeholder="Enter country..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherCountry && formik.errors.motherCountry}
           </Typography>
         </FormControl>
@@ -293,7 +293,7 @@ const StepThreeForm = (props) => {
             }
             placeholder="Enter county of origin..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherCountyOfOrigin &&
               formik.errors.motherCountyOfOrigin}
           </Typography>
@@ -332,29 +332,13 @@ const StepThreeForm = (props) => {
             }
             placeholder="Enter occupation..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherOccupation && formik.errors.motherOccupation}
           </Typography>
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Mother's Date of Naturalization
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
+        <Typography>Mother's Date of Naturalization</Typography>
         <FormControl fullWidth>
           <TextField
             margin="normal"
@@ -363,17 +347,8 @@ const StepThreeForm = (props) => {
             type="text"
             value={formik.values.motherDateOfNaturalization}
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.motherDateOfNaturalization &&
-              Boolean(formik.errors.motherDateOfNaturalization)
-            }
             placeholder="Enter date of naturalization"
           />
-          <Typography variant="inherit" color="error.main">
-            {formik.touched.motherDateOfNaturalization &&
-              formik.errors.motherDateOfNaturalization}
-          </Typography>
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -395,21 +370,29 @@ const StepThreeForm = (props) => {
           </Tooltip>
         </Typography>
         <FormControl fullWidth>
-          <TextField
-            margin="normal"
+          <Autocomplete
             id="isMotherLiving"
-            name="isMotherLiving"
-            type="text"
+            clearOnEscape
             value={formik.values.isMotherLiving}
-            onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
               formik.touched.isMotherLiving &&
               Boolean(formik.errors.isMotherLiving)
             }
-            placeholder="Enter yes or no..."
+            onChange={(_event, newValue) => {
+              formik.setFieldValue("isMotherLiving", newValue);
+            }}
+            options={["YES", "NO"]}
+            // sx={{ width: 300 }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select YES or NO..."
+                variant="standard"
+              />
+            )}
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.isMotherLiving && formik.errors.isMotherLiving}
           </Typography>
         </FormControl>
@@ -447,7 +430,7 @@ const StepThreeForm = (props) => {
             }
             placeholder="Enter yes or no..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherPresentAddress &&
               formik.errors.motherPresentAddress}
           </Typography>
@@ -486,7 +469,7 @@ const StepThreeForm = (props) => {
             }
             placeholder="Enter yes or no..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherTelephoneNumber &&
               formik.errors.motherTelephoneNumber}
           </Typography>

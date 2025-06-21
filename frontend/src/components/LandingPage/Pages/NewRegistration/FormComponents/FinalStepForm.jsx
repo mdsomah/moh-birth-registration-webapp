@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
   Typography,
@@ -9,9 +9,20 @@ import {
   Checkbox,
   IconButton,
   Tooltip,
+  Badge,
+  Avatar,
 } from "@mui/material";
 import { LuAsterisk } from "react-icons/lu";
 import { BsFillInfoCircleFill } from "react-icons/bs";
+import { FaCamera } from "react-icons/fa";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import ApplicantSignature from "./SignatureDialog/ApplicantSignature";
+
+//? Upload Guardian Photo
+import UploadGuardianPhoto from "../UploadGuardianPhoto/UploadGuardianPhoto";
 
 //? Scroll to top of react route/page change
 import ScrollToTop from "../../../../ScrollToTop/ScrollToTop";
@@ -19,6 +30,18 @@ import ScrollToTop from "../../../../ScrollToTop/ScrollToTop";
 const FinalStepForm = (props) => {
   //? Destructure props
   const { formik } = props;
+
+  //? Guardian Photo State
+  const [openGuardianPhoto, setOpenGuardianPhoto] = useState(false);
+
+  //? Guardian Photo Dialog Functions
+  const handleOpenGuardianPhoto = () => {
+    setOpenGuardianPhoto(true);
+  };
+
+  const handleCloseGuardianPhoto = useCallback(() => {
+    setOpenGuardianPhoto(false);
+  }, []);
 
   //? Scroll to error input on form submit
   useEffect(() => {
@@ -51,21 +74,18 @@ const FinalStepForm = (props) => {
           </Tooltip>
         </Typography>
         <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="applicantSignature"
-            name="applicantSignature"
-            type="text"
-            value={formik.values.applicantSignature}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.applicantSignature &&
-              Boolean(formik.errors.applicantSignature)
-            }
-            placeholder="Enter signature..."
-          />
-          <Typography variant="inherit" color="error.main">
+          <ApplicantSignature formik={formik} />
+          {formik.values.applicantSignature !== "" && (
+            <Box sx={{ mt: 1 }}>
+              <img
+                width={60}
+                height={60}
+                src={formik.values.applicantSignature}
+                // alt="Applicant Signature"
+              />
+            </Box>
+          )}
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantSignature &&
               formik.errors.applicantSignature}
           </Typography>
@@ -104,7 +124,7 @@ const FinalStepForm = (props) => {
             }
             placeholder="Enter mother's nationality..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantContactNumber &&
               formik.errors.applicantContactNumber}
           </Typography>
@@ -140,7 +160,7 @@ const FinalStepForm = (props) => {
             error={formik.touched.fullName && Boolean(formik.errors.fullName)}
             placeholder="Enter full name..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fullName && formik.errors.fullName}
           </Typography>
         </FormControl>
@@ -175,7 +195,7 @@ const FinalStepForm = (props) => {
             error={formik.touched.city && Boolean(formik.errors.city)}
             placeholder="Enter facility..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.city && formik.errors.city}
           </Typography>
         </FormControl>
@@ -210,7 +230,7 @@ const FinalStepForm = (props) => {
             error={formik.touched.county && Boolean(formik.errors.county)}
             placeholder="Enter county..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.county && formik.errors.county}
           </Typography>
         </FormControl>
@@ -248,7 +268,7 @@ const FinalStepForm = (props) => {
             }
             placeholder="Enter country..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherFullName && formik.errors.motherFullName}
           </Typography>
         </FormControl>
@@ -286,7 +306,7 @@ const FinalStepForm = (props) => {
             }
             placeholder="Enter county of origin..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherFullName && formik.errors.fatherFullName}
           </Typography>
         </FormControl>
@@ -310,18 +330,18 @@ const FinalStepForm = (props) => {
           </Tooltip>
         </Typography>
         <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="date"
-            name="date"
-            type="text"
-            value={formik.values.date}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.date && Boolean(formik.errors.date)}
-            placeholder="Enter date..."
-          />
-          <Typography variant="inherit" color="error.main">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              disableFuture
+              value={dayjs(formik.values.date)}
+              onChange={(newValue) => {
+                formik.setFieldValue("date", newValue);
+              }}
+              onBlur={formik.handleBlur}
+              error={formik.touched.date && Boolean(formik.errors.date)}
+            />
+          </LocalizationProvider>
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.date && formik.errors.date}
           </Typography>
         </FormControl>
@@ -358,7 +378,7 @@ const FinalStepForm = (props) => {
             }
             placeholder="Enter date of naturalization"
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.cityOrTown && formik.errors.cityOrTown}
           </Typography>
         </FormControl>
@@ -393,7 +413,7 @@ const FinalStepForm = (props) => {
             error={formik.touched.name && Boolean(formik.errors.name)}
             placeholder="Enter yes or no..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.name && formik.errors.name}
           </Typography>
         </FormControl>
@@ -428,7 +448,7 @@ const FinalStepForm = (props) => {
             error={formik.touched.address && Boolean(formik.errors.address)}
             placeholder="Enter yes or no..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.address && formik.errors.address}
           </Typography>
         </FormControl>
@@ -465,7 +485,7 @@ const FinalStepForm = (props) => {
             }
             placeholder="Enter yes or no..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.relationship && formik.errors.relationship}
           </Typography>
         </FormControl>
@@ -503,51 +523,97 @@ const FinalStepForm = (props) => {
             }
             placeholder="Enter yes or no..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.contactNumber && formik.errors.contactNumber}
           </Typography>
         </FormControl>
       </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Photo of Parent or Guardian
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
+      {formik.values.parentOrGuardianPhoto !== "" && (
+        <Box sx={{ mt: 3 }}>
+          <Badge
+            overlap="circular"
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            badgeContent={
+              <Tooltip title="Upload Photo" placement="right" arrow>
+                <IconButton onClick={handleOpenGuardianPhoto}>
+                  <FaCamera size={30} />
+                </IconButton>
+              </Tooltip>
+            }
+          >
+            <Avatar
+              alt=""
+              src={formik.values.parentOrGuardianPhoto.preview}
+              variant="square"
               sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
+                width: 140,
+                height: 140,
+              }}
+              slotProps={{
+                img: { loading: "lazy" },
+              }}
+            />
+          </Badge>
+        </Box>
+      )}
+
+      {formik.values.parentOrGuardianPhoto === "" && (
+        <Box sx={{ mt: 3 }}>
+          <Badge
+            overlap="circular"
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            badgeContent={
+              <Tooltip title="Upload Photo" placement="right" arrow>
+                <IconButton onClick={handleOpenGuardianPhoto}>
+                  <FaCamera size={30} />
+                </IconButton>
+              </Tooltip>
+            }
+          >
+            <Avatar
+              alt=""
+              src=""
+              variant="square"
+              sx={{
+                width: 200,
+                height: 200,
+              }}
+              slotProps={{
+                img: { loading: "lazy" },
               }}
             >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="parentOrGuardianPhoto"
-            name="parentOrGuardianPhoto"
-            type="text"
-            value={formik.values.parentOrGuardianPhoto}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.parentOrGuardianPhoto &&
-              Boolean(formik.errors.parentOrGuardianPhoto)
-            }
-            placeholder="Enter yes or no..."
-          />
-          <Typography variant="inherit" color="error.main">
+              <Typography
+                sx={{
+                  fontSize: 17,
+                  fontWeight: 500,
+                  color: "#fff",
+                  textAlign: "center",
+                }}
+              >
+                PHOTO OF PARENT OR GUARDIAN
+              </Typography>
+            </Avatar>
+          </Badge>
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.parentOrGuardianPhoto &&
               formik.errors.parentOrGuardianPhoto}
           </Typography>
-        </FormControl>
-      </Grid>
+        </Box>
+      )}
       <ScrollToTop />
+      {/* Start UploadApplicantPhoto Dialog */}
+      <UploadGuardianPhoto
+        open={openGuardianPhoto}
+        handleClose={handleCloseGuardianPhoto}
+        formik={formik}
+      />
+      {/* End UploadApplicantPhoto Dialog */}
     </React.Fragment>
   );
 };

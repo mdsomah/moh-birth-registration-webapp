@@ -1,3 +1,4 @@
+const dayjs = require("dayjs");
 const { customAlphabet } = require("nanoid");
 const { prisma } = require("../models/db/database");
 
@@ -64,7 +65,7 @@ const registerNewApplicant = async (
       formNumber:
         formNumber === "" ? `MOH-${Form_Number()}` : formNumber.trim(),
       applicantSex: applicantSex.trim(),
-      dateOfApplication: dateOfApplication.trim(),
+      dateOfApplication: dayjs(dateOfApplication).format("MM/DD/YYYY").trim(),
       applicantFirstName: applicantFirstName.trim(),
       applicantMiddleName: applicantMiddleName.trim(),
       applicantLastName: applicantLastName.trim(),
@@ -72,7 +73,9 @@ const registerNewApplicant = async (
       applicantTownOrCity: applicantTownOrCity.trim(),
       applicantCounty: applicantCounty.trim(),
       applicantCountry: applicantCountry.trim(),
-      applicantDateOfBirth: applicantDateOfBirth.trim(),
+      applicantDateOfBirth: dayjs(applicantDateOfBirth)
+        .format("MM/DD/YYYY")
+        .trim(),
       applicantFather: {
         create: {
           fatherName: fatherName.trim(),
@@ -83,7 +86,10 @@ const registerNewApplicant = async (
           fatherCountry: fatherCountry.trim(),
           fatherCountyOfOrigin: fatherCountyOfOrigin.trim(),
           fatherOccupation: fatherOccupation.trim(),
-          fatherDateOfNaturalization: fatherDateOfNaturalization.trim(),
+          fatherDateOfNaturalization:
+            fatherDateOfNaturalization !== ""
+              ? dayjs(fatherDateOfNaturalization).format("MM/DD/YYYY").trim()
+              : fatherDateOfNaturalization.trim(),
           isFatherLiving: isFatherLiving.trim(),
           fatherPresentAddress: fatherPresentAddress.trim(),
           fatherTelephoneNumber: fatherTelephoneNumber.trim(),
@@ -99,7 +105,10 @@ const registerNewApplicant = async (
           motherCountry: motherCountry.trim(),
           motherCountyOfOrigin: motherCountyOfOrigin.trim(),
           motherOccupation: motherOccupation.trim(),
-          motherDateOfNaturalization: motherDateOfNaturalization.trim(),
+          motherDateOfNaturalization:
+            motherDateOfNaturalization !== ""
+              ? dayjs(motherDateOfNaturalization).format("MM/DD/YYYY").trim()
+              : motherDateOfNaturalization.trim(),
           isMotherLiving: isMotherLiving.trim(),
           motherPresentAddress: motherPresentAddress.trim(),
           motherTelephoneNumber: motherTelephoneNumber.trim(),
@@ -114,7 +123,7 @@ const registerNewApplicant = async (
           county: county.trim(),
           motherFullName: motherFullName.trim(),
           fatherFullName: fatherFullName.trim(),
-          date: date.trim(),
+          date: dayjs(date).format("MM/DD/YYYY").trim(),
           cityOrTown: cityOrTown.trim(),
           name: name.trim(),
           address: address.trim(),

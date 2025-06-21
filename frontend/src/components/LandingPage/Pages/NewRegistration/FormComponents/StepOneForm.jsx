@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Typography,
@@ -13,6 +13,10 @@ import {
 } from "@mui/material";
 import { LuAsterisk } from "react-icons/lu";
 import { BsFillInfoCircleFill } from "react-icons/bs";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 //? Scroll to top of react route/page change
 import ScrollToTop from "../../../../ScrollToTop/ScrollToTop";
@@ -66,7 +70,7 @@ const StepOneForm = (props) => {
             }
             placeholder="Enter first name..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantFirstName &&
               formik.errors.applicantFirstName}
           </Typography>
@@ -119,7 +123,7 @@ const StepOneForm = (props) => {
             }
             placeholder="Enter last name..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantLastName &&
               formik.errors.applicantLastName}
           </Typography>
@@ -158,7 +162,7 @@ const StepOneForm = (props) => {
             }
             placeholder="Enter facility..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantFacility &&
               formik.errors.applicantFacility}
           </Typography>
@@ -197,7 +201,7 @@ const StepOneForm = (props) => {
             }
             placeholder="Enter town/city..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantTownOrCity &&
               formik.errors.applicantTownOrCity}
           </Typography>
@@ -236,7 +240,7 @@ const StepOneForm = (props) => {
             }
             placeholder="Enter county..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantCounty && formik.errors.applicantCounty}
           </Typography>
         </FormControl>
@@ -274,7 +278,7 @@ const StepOneForm = (props) => {
             }
             placeholder="Enter country..."
           />
-          <Typography variant="inherit" color="error.main">
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantCountry && formik.errors.applicantCountry}
           </Typography>
         </FormControl>
@@ -298,21 +302,21 @@ const StepOneForm = (props) => {
           </Tooltip>
         </Typography>
         <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="applicantDateOfBirth"
-            name="applicantDateOfBirth"
-            type="text"
-            value={formik.values.applicantDateOfBirth}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.applicantDateOfBirth &&
-              Boolean(formik.errors.applicantDateOfBirth)
-            }
-            placeholder="Enter DoB..."
-          />
-          <Typography variant="inherit" color="error.main">
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              disableFuture
+              value={dayjs(formik.values.applicantDateOfBirth)}
+              onChange={(newValue) => {
+                formik.setFieldValue("applicantDateOfBirth", newValue);
+              }}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.applicantDateOfBirth &&
+                Boolean(formik.errors.applicantDateOfBirth)
+              }
+            />
+          </LocalizationProvider>
+          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantDateOfBirth &&
               formik.errors.applicantDateOfBirth}
           </Typography>

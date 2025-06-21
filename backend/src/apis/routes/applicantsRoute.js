@@ -1,5 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const {
+  applicantUpload,
+  parentOrGuardianUpload,
+} = require("../utils/uploadUtils");
 const { passportAuthenticateJWT } = require("../middlewares/jwtMiddleware");
 const { verifyToken } = require("../middlewares/authMiddleware");
 const { validateInputs } = require("../middlewares/validateMiddleware");
@@ -13,7 +17,9 @@ const applicantsController = require("../controllers/applicantsController");
 
 router.post(
   "/register-new-applicant",
-  // validateInputs(validateRegisterApplicantSchema),
+  validateInputs(validateRegisterApplicantSchema),
+  applicantUpload.single("applicantPhoto"),
+  parentOrGuardianUpload.single("parentOrGuardianPhoto"),
   applicantsController.RegisterNewApplicant
 );
 router.get(

@@ -2,7 +2,7 @@ const { customAlphabet } = require("nanoid");
 const { prisma } = require("../models/db/database");
 
 //? Generate NanoId for Form_Number
-const nanoidFormNumber = customAlphabet("1234", 4);
+const nanoidFormNumber = customAlphabet("0123456789", 4);
 const Form_Number = () => nanoidFormNumber();
 
 //? Register New Applicant
@@ -61,7 +61,8 @@ const registerNewApplicant = async (
   const newApplicant = await prisma.applicant.create({
     data: {
       applicantPhoto: applicantPhoto.trim(),
-      formNumber: formNumber === "" ? `MOH-${Form_Number()}` : formNumber,
+      formNumber:
+        formNumber === "" ? `MOH-${Form_Number()}` : formNumber.trim(),
       applicantSex: applicantSex.trim(),
       dateOfApplication: dateOfApplication.trim(),
       applicantFirstName: applicantFirstName.trim(),
@@ -121,7 +122,7 @@ const registerNewApplicant = async (
           contactNumber: contactNumber.trim(),
         },
       },
-      parentOrGuardianPhoto: parentOrGuardianPhoto,
+      parentOrGuardianPhoto: parentOrGuardianPhoto.trim(),
     },
     include: {
       applicantFather: true,

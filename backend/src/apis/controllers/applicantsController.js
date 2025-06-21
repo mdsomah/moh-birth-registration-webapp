@@ -140,14 +140,14 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
     );
     return res.status(201).json({
       success: true,
-      isAuthenticated: true,
+      isAuthenticated: false,
       method: req.method,
       message: "Registration completed successfully!",
       encryptedNewApplicant: encryptedNewApplicant,
     });
   } catch (err) {
     Logger.error("Registering New Applicant: Status failed!");
-    return next(HTTPErrors(500, `${err}`));
+    return next(HTTPErrors(400, `${err}`));
   }
 });
 

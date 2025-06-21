@@ -112,7 +112,7 @@ model ApplicantFather {
   fatherCountry              String     @db.VarChar(255)
   fatherCountyOfOrigin       String     @db.VarChar(255)
   fatherOccupation           String     @db.VarChar(255)
-  fatherDateOfNaturalization String
+  fatherDateOfNaturalization String?
   isFatherLiving             String
   fatherPresentAddress       String?    @db.VarChar(255)
   fatherTelephoneNumber      String?    @db.VarChar(14)
@@ -136,7 +136,7 @@ model ApplicantMother {
   motherCountry              String     @db.VarChar(255)
   motherCountyOfOrigin       String     @db.VarChar(255)
   motherOccupation           String     @db.VarChar(255)
-  motherDateOfNaturalization String
+  motherDateOfNaturalization String?
   isMotherLiving             String
   motherPresentAddress       String?    @db.VarChar(255)
   motherTelephoneNumber      String?    @db.VarChar(14)

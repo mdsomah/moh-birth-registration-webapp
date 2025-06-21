@@ -20,6 +20,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ApplicantSignature from "./SignatureDialog/ApplicantSignature";
+import FinalStepPhoneInputField from "../PhoneInputsField/FinalStepPhoneInputField";
 
 //? Upload Guardian Photo
 import UploadGuardianPhoto from "../UploadGuardianPhoto/UploadGuardianPhoto";
@@ -110,24 +111,13 @@ const FinalStepForm = (props) => {
           </Tooltip>
         </Typography>
         <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="applicantContactNumber"
-            name="applicantContactNumber"
-            type="text"
-            value={formik.values.applicantContactNumber}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.applicantContactNumber &&
-              Boolean(formik.errors.applicantContactNumber)
-            }
-            placeholder="Enter mother's nationality..."
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.applicantContactNumber &&
-              formik.errors.applicantContactNumber}
-          </Typography>
+          <FormControl sx={{ width: "100%" }}>
+            <FinalStepPhoneInputField formik={formik} />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.applicantContactNumber &&
+                formik.errors.applicantContactNumber}
+            </Typography>
+          </FormControl>
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>

@@ -458,24 +458,6 @@ const StepThreeForm = (props) => {
                 formik.errors.motherTelephoneNumber}
             </Typography>
           </FormControl>
-          {/* <TextField
-            margin="normal"
-            id="motherTelephoneNumber"
-            name="motherTelephoneNumber"
-            type="text"
-            value={formik.values.motherTelephoneNumber}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.motherTelephoneNumber &&
-              Boolean(formik.errors.motherTelephoneNumber)
-            }
-            placeholder="Enter yes or no..."
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.motherTelephoneNumber &&
-              formik.errors.motherTelephoneNumber}
-          </Typography> */}
         </FormControl>
       </Grid>
       <ScrollToTop />

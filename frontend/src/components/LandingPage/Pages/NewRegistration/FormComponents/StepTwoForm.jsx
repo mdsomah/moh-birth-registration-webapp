@@ -383,13 +383,8 @@ const StepTwoForm = (props) => {
               formik.setFieldValue("isFatherLiving", newValue);
             }}
             options={["YES", "NO"]}
-            // sx={{ width: 300 }}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Select YES or NO..."
-                variant="standard"
-              />
+              <TextField {...params} variant="standard" />
             )}
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>

@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { BsFillInfoCircleFill } from "react-icons/bs";
 import { LuAsterisk } from "react-icons/lu";
+import StepThreePhoneInputField from "../PhoneInputsField/StepThreePhoneInputField";
 
 //? Scroll to top of react route/page change
 import ScrollToTop from "../../../../ScrollToTop/ScrollToTop";
@@ -383,13 +384,8 @@ const StepThreeForm = (props) => {
               formik.setFieldValue("isMotherLiving", newValue);
             }}
             options={["YES", "NO"]}
-            // sx={{ width: 300 }}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Select YES or NO..."
-                variant="standard"
-              />
+              <TextField {...params} variant="standard" />
             )}
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
@@ -455,7 +451,14 @@ const StepThreeForm = (props) => {
           </Tooltip>
         </Typography>
         <FormControl fullWidth>
-          <TextField
+          <FormControl sx={{ width: "100%" }}>
+            <StepThreePhoneInputField formik={formik} />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.motherTelephoneNumber &&
+                formik.errors.motherTelephoneNumber}
+            </Typography>
+          </FormControl>
+          {/* <TextField
             margin="normal"
             id="motherTelephoneNumber"
             name="motherTelephoneNumber"
@@ -472,7 +475,7 @@ const StepThreeForm = (props) => {
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherTelephoneNumber &&
               formik.errors.motherTelephoneNumber}
-          </Typography>
+          </Typography> */}
         </FormControl>
       </Grid>
       <ScrollToTop />

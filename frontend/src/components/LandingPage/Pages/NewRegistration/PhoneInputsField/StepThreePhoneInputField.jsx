@@ -14,35 +14,36 @@ import {
   usePhoneInput,
 } from "react-international-phone";
 
-const StepOnePhoneInputField = (props) => {
-  // Destructure props
+const StepThreePhoneInputField = (props) => {
+  //? Destructure props
   const { formik } = props;
 
-  // Handle Primary Contact Change
-  const handlePrimaryContactChange = (event) => {
-    formik.setFieldValue("primaryContact", event);
+  //? Handle Phone Input Change
+  const handlePhoneInputChange = (event) => {
+    formik.setFieldValue("motherTelephoneNumber", event);
   };
 
   const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       defaultCountry: "lr",
-      value: formik.values.primaryContact,
-      onChange: (data) => handlePrimaryContactChange(data?.phone),
+      value: formik.values.motherTelephoneNumber,
       countries: defaultCountries,
+      onChange: (data) => handlePhoneInputChange(data?.phone),
     });
 
   return (
     <TextField
       margin="normal"
-      id="primaryContact"
-      name="primaryContact"
+      id="motherTelephoneNumber"
+      name="motherTelephoneNumber"
       type="tel"
-      placeholder="Enter phone number..."
+      placeholder="Enter telephone number..."
       value={inputValue}
       onChange={handlePhoneValueChange}
       onBlur={formik.handleBlur}
       error={
-        formik.touched.primaryContact && Boolean(formik.errors.primaryContact)
+        formik.touched.motherTelephoneNumber &&
+        Boolean(formik.errors.motherTelephoneNumber)
       }
       inputRef={inputRef}
       InputProps={{
@@ -116,4 +117,4 @@ const StepOnePhoneInputField = (props) => {
   );
 };
 
-export default StepOnePhoneInputField;
+export default StepThreePhoneInputField;

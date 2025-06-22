@@ -1,3 +1,4 @@
+//? Import CryptoJS library
 import CryptoJS from "crypto-js";
 
 //? Key for encryption (must be the same as the one used in the backend)

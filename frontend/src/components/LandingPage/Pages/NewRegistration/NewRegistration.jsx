@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector, useDispatch } from "react-redux";
-import PropTypes from "prop-types";
+import PropTypes, { object } from "prop-types";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -656,10 +656,10 @@ const NewRegistration = () => {
     onSuccess: (data) => {
       if (isLastStep && data) {
         dispatch(setIsCompleted(true));
-        dispatch(removeStepOneForm());
-        dispatch(removeStepTwoForm());
-        dispatch(removeStepThreeForm());
-        dispatch(removeFinalStepForm());
+        // dispatch(removeStepOneForm());
+        // dispatch(removeStepTwoForm());
+        // dispatch(removeStepThreeForm());
+        // dispatch(removeFinalStepForm());
         queryClient.invalidateQueries({
           queryKey: ["applicantsData"],
         });
@@ -797,8 +797,6 @@ const NewRegistration = () => {
       process.env.REACT_APP_ENCRYPTION_KEY,
       process.env.REACT_APP_ENCRYPTION_IV
     );
-
-    console.log(`Encrypted Data: ${encryptedData}`);
 
     if (isLastStep) {
       Mutation.mutate(encryptedData);

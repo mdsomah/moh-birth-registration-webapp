@@ -89,7 +89,7 @@ const registerNewApplicant = async (
           fatherDateOfNaturalization:
             fatherDateOfNaturalization !== ""
               ? dayjs(fatherDateOfNaturalization).format("MM/DD/YYYY").trim()
-              : fatherDateOfNaturalization.trim(),
+              : fatherDateOfNaturalization,
           isFatherLiving: isFatherLiving.trim(),
           fatherPresentAddress: fatherPresentAddress.trim(),
           fatherTelephoneNumber: fatherTelephoneNumber.trim(),
@@ -108,7 +108,7 @@ const registerNewApplicant = async (
           motherDateOfNaturalization:
             motherDateOfNaturalization !== ""
               ? dayjs(motherDateOfNaturalization).format("MM/DD/YYYY").trim()
-              : motherDateOfNaturalization.trim(),
+              : motherDateOfNaturalization,
           isMotherLiving: isMotherLiving.trim(),
           motherPresentAddress: motherPresentAddress.trim(),
           motherTelephoneNumber: motherTelephoneNumber.trim(),

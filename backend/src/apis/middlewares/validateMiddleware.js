@@ -5,16 +5,17 @@ const { decrypt } = require("../utils/decryptUtils");
 const validateInputs = (schema) =>
   asyncHandler(async (req, _res, next) => {
     //? Destructure req.body
-    const { encryptedData } = req.body;
+    // const { encryptedData } = req.body;
 
     //? Decrypt the encryptedData
-    const decryptedData = decrypt(
-      encryptedData,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
+    // const decryptedData = decrypt(
+    //   encryptedData,
+    //   process.env.ENCRYPTION_KEY,
+    //   process.env.ENCRYPTION_IV
+    // );
 
-    const validateInputs = decryptedData;
+    const validateInputs = req.body;
+    // const validateInputs = decryptedData;
 
     try {
       await schema.validate(validateInputs);

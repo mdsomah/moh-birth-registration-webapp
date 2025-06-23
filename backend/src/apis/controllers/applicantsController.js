@@ -15,18 +15,8 @@ const { decrypt } = require("../utils/decryptUtils");
 //? Register New Applicant
 const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
-  const { encryptedData } = req.body;
-
-  //? Decrypt the encryptedData
-  const decryptedNewApplicant = decrypt(
-    encryptedData,
-    process.env.ENCRYPTION_KEY,
-    process.env.ENCRYPTION_IV
-  );
-
-  //? Destructure decryptedNewApplicant data
   const {
-    applicantPhoto,
+    // applicantPhoto,
     formNumber,
     applicantSex,
     dateOfApplication,
@@ -75,8 +65,13 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
     address,
     relationship,
     contactNumber,
-    parentOrGuardianPhoto,
-  } = decryptedNewApplicant;
+    // parentOrGuardianPhoto,
+  } = req.body;
+
+  //? Define Applicant & Guardian Photo
+  const applicantPhoto = req.file?.filename;
+
+  const parentOrGuardianPhoto = req.file?.filename;
 
   try {
     Logger.info("Registering New Applicant: Status success!");
@@ -132,18 +127,12 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
       contactNumber,
       parentOrGuardianPhoto
     );
-    //? Encrypt the newApplicant data
-    const encryptedNewApplicant = encrypt(
-      newApplicant,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
     return res.status(201).json({
       success: true,
       isAuthenticated: false,
       method: req.method,
       message: "Registration completed successfully!",
-      encryptedNewApplicant: encryptedNewApplicant,
+      newApplicant: newApplicant,
     });
   } catch (err) {
     Logger.error("Registering New Applicant: Status failed!");

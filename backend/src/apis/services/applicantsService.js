@@ -80,7 +80,7 @@ const registerNewApplicant = async (
         create: {
           fatherName: fatherName.trim(),
           fatherNationality: fatherNationality.trim(),
-          fatherAge: fatherAge,
+          fatherAge: JSON.parse(fatherAge),
           fatherTownOrCity: fatherTownOrCity.trim(),
           fatherCounty: fatherCounty.trim(),
           fatherCountry: fatherCountry.trim(),
@@ -99,7 +99,7 @@ const registerNewApplicant = async (
         create: {
           motherName: motherName.trim(),
           motherNationality: motherNationality.trim(),
-          motherAge: motherAge,
+          motherAge: JSON.parse(motherAge),
           motherTownOrCity: motherTownOrCity.trim(),
           motherCounty: motherCounty.trim(),
           motherCountry: motherCountry.trim(),

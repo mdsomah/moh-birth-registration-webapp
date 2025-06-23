@@ -63,8 +63,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import "yup-phone-lite";
 
-//? Create Data
-import CreateData from "../../../../apis/CreateData";
+//? Post Applicant Data
+import PostApplicant from "../../../../apis/PostApplicant";
 
 //? Form Components imports
 import StepOneForm from "./FormComponents/StepOneForm";
@@ -82,8 +82,8 @@ const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
 //? Photo upload size
 const FILE_SIZE = 1024 * 1024 * 25;
 
-//? Step One Form Schema
-const StepOneFormSchema = Yup.object()
+//? Validate Step One Form Schema
+const validateStepOneFormSchema = Yup.object()
   .shape({
     applicantPhoto: Yup.mixed()
       .required("Please select a photo!")
@@ -118,15 +118,12 @@ const StepOneFormSchema = Yup.object()
   })
   .required();
 
-//? Step Two Form Schema
-const StepTwoFormSchema = Yup.object()
+//? Validate Step Two Form Schema
+const validateStepTwoFormSchema = Yup.object()
   .shape({
     fatherName: Yup.string().required("Father name required!"),
     fatherNationality: Yup.string().required("Father nationality required!"),
-    fatherAge: Yup.number()
-      .required("Father age required!")
-      .positive()
-      .integer(),
+    fatherAge: Yup.number().required("Father age required!"),
     fatherTownOrCity: Yup.string().required("Father town or city required!"),
     fatherCounty: Yup.string().required("Father county required!"),
     fatherCountry: Yup.string().required("Father country required!"),
@@ -154,15 +151,12 @@ const StepTwoFormSchema = Yup.object()
   })
   .required();
 
-//? Step Three Form Schema
-const StepThreeFormSchema = Yup.object()
+//? Validate Step Three Form Schema
+const validateStepThreeFormSchema = Yup.object()
   .shape({
     motherName: Yup.string().required("Mother name required!"),
     motherNationality: Yup.string().required("Mother nationality required!"),
-    motherAge: Yup.number()
-      .required("Mother age required!")
-      .positive()
-      .integer(),
+    motherAge: Yup.number().required("Mother age required!"),
     motherTownOrCity: Yup.string().required("Mother town or city required!"),
     motherCounty: Yup.string().required("Mother county required!"),
     motherCountry: Yup.string().required("Mother country required!"),
@@ -190,8 +184,8 @@ const StepThreeFormSchema = Yup.object()
   })
   .required();
 
-//? Final Step Form Schema
-const FinalStepFormSchema = Yup.object()
+//? Validate Final Step Form Schema
+const validateFinalStepFormSchema = Yup.object()
   .shape({
     applicantSignature: Yup.string().required("Applicant signature required!"),
     applicantContactNumber: Yup.string()
@@ -457,7 +451,7 @@ const NewRegistration = () => {
   //? Formik Step One Form
   const formikStepOneForm = useFormik({
     initialValues: stepOneForm !== null ? stepOneForm : StepOneInitialValues,
-    validationSchema: StepOneFormSchema,
+    validationSchema: validateStepOneFormSchema,
     onSubmit: (values) => {
       handleNext();
       dispatch(setStepOneForm(values));
@@ -483,7 +477,7 @@ const NewRegistration = () => {
   //? Formik Step Two Form
   const formikStepTwoForm = useFormik({
     initialValues: stepTwoForm !== null ? stepTwoForm : StepTwoInitialValues,
-    validationSchema: StepTwoFormSchema,
+    validationSchema: validateStepTwoFormSchema,
     onSubmit: (values) => {
       handleNext();
       dispatch(setStepTwoForm(values));
@@ -510,7 +504,7 @@ const NewRegistration = () => {
   const formikStepThreeForm = useFormik({
     initialValues:
       stepThreeForm !== null ? stepThreeForm : StepThreeInitialValues,
-    validationSchema: StepThreeFormSchema,
+    validationSchema: validateStepThreeFormSchema,
     onSubmit: (values) => {
       handleNext();
       dispatch(setStepThreeForm(values));
@@ -539,7 +533,7 @@ const NewRegistration = () => {
   const formikFinalStepForm = useFormik({
     initialValues:
       finalStepForm !== null ? finalStepForm : FinalStepInitialValues,
-    validationSchema: FinalStepFormSchema,
+    validationSchema: validateFinalStepFormSchema,
     onSubmit: (values) => {
       registerNewApplicant();
       dispatch(setFinalStepForm(values));
@@ -652,7 +646,7 @@ const NewRegistration = () => {
   const queryClient = useQueryClient();
 
   const Mutation = useMutation({
-    mutationFn: (newData) => CreateData(`${postApplicantURL}`, newData),
+    mutationFn: (newData) => PostApplicant(`${postApplicantURL}`, newData),
     onSuccess: (data) => {
       if (isLastStep && data) {
         dispatch(setIsCompleted(true));
@@ -755,7 +749,7 @@ const NewRegistration = () => {
     formData.append("applicantDateOfBirth", applicantDateOfBirth);
     formData.append("fatherName", fatherName);
     formData.append("fatherNationality", fatherNationality);
-    formData.append("fatherAge", fatherAge);
+    formData.append("fatherAge", JSON.stringify(fatherAge));
     formData.append("fatherTownOrCity", fatherTownOrCity);
     formData.append("fatherCounty", fatherCounty);
     formData.append("fatherCountry", fatherCountry);
@@ -767,7 +761,7 @@ const NewRegistration = () => {
     formData.append("fatherTelephoneNumber", fatherTelephoneNumber);
     formData.append("motherName", motherName);
     formData.append("motherNationality", motherNationality);
-    formData.append("motherAge", motherAge);
+    formData.append("motherAge", JSON.stringify(motherAge));
     formData.append("motherTownOrCity", motherTownOrCity);
     formData.append("motherCounty", motherCounty);
     formData.append("motherCountry", motherCountry);
@@ -792,14 +786,8 @@ const NewRegistration = () => {
     formData.append("contactNumber", contactNumber);
     formData.append("parentOrGuardianPhoto", parentOrGuardianPhoto);
 
-    const encryptedData = encrypt(
-      formData,
-      process.env.REACT_APP_ENCRYPTION_KEY,
-      process.env.REACT_APP_ENCRYPTION_IV
-    );
-
     if (isLastStep) {
-      Mutation.mutate(encryptedData);
+      Mutation.mutate(formData);
     }
   };
 

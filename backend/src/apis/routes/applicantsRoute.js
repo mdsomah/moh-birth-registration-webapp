@@ -17,7 +17,7 @@ const applicantsController = require("../controllers/applicantsController");
 
 router.post(
   "/register-new-applicant",
-  validateInputs(validateRegisterApplicantSchema),
+  // validateInputs(validateRegisterApplicantSchema),
   applicantUpload.single("applicantPhoto"),
   parentOrGuardianUpload.single("parentOrGuardianPhoto"),
   applicantsController.RegisterNewApplicant

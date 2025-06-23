@@ -48,6 +48,9 @@ import {
 } from "../../../../app/slices/newRegistrationSlice";
 import { encrypt } from "../../../../utils/encryptUtils";
 
+//? React Responsive Media Queries
+import { useMediaQuery } from "react-responsive";
+
 //? Upload Applicant Photo
 import UploadApplicantPhoto from "./UploadApplicantPhoto/UploadApplicantPhoto";
 
@@ -401,6 +404,14 @@ ColorlibStepIcon.propTypes = {
 };
 
 const NewRegistration = () => {
+  const isDesktopOrLaptop = useMediaQuery({
+    query: "(min-width: 1224px)",
+  });
+  const isBigScreen = useMediaQuery({ query: "(min-width: 1824px)" });
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+  const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
+  const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
+
   //? useDispatch
   const dispatch = useDispatch();
 
@@ -824,7 +835,25 @@ const NewRegistration = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <img src={MOH_Logo} width="100" alt="MOH Logo" />
+                  {isBigScreen && (
+                    <img
+                      src={MOH_Logo}
+                      alt="MOH Logo"
+                      width="150"
+                      height="150"
+                    />
+                  )}
+                  {isDesktopOrLaptop && (
+                    <img
+                      src={MOH_Logo}
+                      alt="MOH Logo"
+                      width="100"
+                      height="100"
+                    />
+                  )}
+                  {isTabletOrMobile && (
+                    <img src={MOH_Logo} alt="MOH Logo" width="50" height="50" />
+                  )}
                   <Box>
                     <Typography>REPUBLIC OF LIBERIA</Typography>
                     <Typography>BUREAU OF VITAL & HEALTH STATISTICS</Typography>
@@ -833,9 +862,42 @@ const NewRegistration = () => {
                     </Typography>
                     <Typography>MONROVIA, LIBERIA</Typography>
                   </Box>
-                  <img src={Liberia_Seal} width="100" alt="Liberia Seal" />
+                  {isBigScreen && (
+                    <img
+                      src={Liberia_Seal}
+                      alt="Liberia Seal"
+                      width="150"
+                      height="150"
+                    />
+                  )}
+                  {isDesktopOrLaptop && (
+                    <img
+                      src={Liberia_Seal}
+                      alt="Liberia Seal"
+                      width="100"
+                      height="100"
+                    />
+                  )}
+                  {isTabletOrMobile && (
+                    <img
+                      src={Liberia_Seal}
+                      alt="Liberia Seal"
+                      width="50"
+                      height="50"
+                    />
+                  )}
                 </Box>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Box
+                  sx={{
+                    display: {
+                      xs: "block",
+                      sm: "block",
+                      md: "block",
+                      lg: "flex",
+                    },
+                    justifyContent: "space-between",
+                  }}
+                >
                   {formikStepOneForm.values.applicantPhoto !== "" && (
                     <Box>
                       <Badge

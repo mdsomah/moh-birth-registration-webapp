@@ -650,10 +650,10 @@ const NewRegistration = () => {
     onSuccess: (data) => {
       if (isLastStep && data) {
         dispatch(setIsCompleted(true));
-        // dispatch(removeStepOneForm());
-        // dispatch(removeStepTwoForm());
-        // dispatch(removeStepThreeForm());
-        // dispatch(removeFinalStepForm());
+        dispatch(removeStepOneForm());
+        dispatch(removeStepTwoForm());
+        dispatch(removeStepThreeForm());
+        dispatch(removeFinalStepForm());
         queryClient.invalidateQueries({
           queryKey: ["applicantsData"],
         });

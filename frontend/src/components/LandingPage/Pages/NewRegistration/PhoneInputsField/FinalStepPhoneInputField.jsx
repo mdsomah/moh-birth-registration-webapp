@@ -37,7 +37,7 @@ const FinalStepPhoneInputField = (props) => {
       id="applicantContactNumber"
       name="applicantContactNumber"
       type="tel"
-      placeholder="Enter contact number..."
+      placeholder="Enter contact..."
       value={inputValue}
       onChange={handlePhoneValueChange}
       onBlur={formik.handleBlur}

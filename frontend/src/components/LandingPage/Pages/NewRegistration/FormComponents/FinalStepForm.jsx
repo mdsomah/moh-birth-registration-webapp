@@ -57,6 +57,11 @@ const FinalStepForm = (props) => {
 
   return (
     <React.Fragment>
+      <Typography
+        sx={{ mb: 3, textAlign: "center", fontSize: 18, fontWeight: 700 }}
+      >
+        ATTESTATION
+      </Typography>
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <Typography>
           Applicant Signature
@@ -184,7 +189,7 @@ const FinalStepForm = (props) => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.city && Boolean(formik.errors.city)}
-            placeholder="Enter facility..."
+            placeholder="Enter city..."
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.city && formik.errors.city}
@@ -257,7 +262,7 @@ const FinalStepForm = (props) => {
               formik.touched.motherFullName &&
               Boolean(formik.errors.motherFullName)
             }
-            placeholder="Enter country..."
+            placeholder="Enter mother's full name..."
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.motherFullName && formik.errors.motherFullName}
@@ -295,7 +300,7 @@ const FinalStepForm = (props) => {
               formik.touched.fatherFullName &&
               Boolean(formik.errors.fatherFullName)
             }
-            placeholder="Enter county of origin..."
+            placeholder="Enter father's full name..."
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.fatherFullName && formik.errors.fatherFullName}
@@ -368,7 +373,7 @@ const FinalStepForm = (props) => {
             error={
               formik.touched.cityOrTown && Boolean(formik.errors.cityOrTown)
             }
-            placeholder="Enter date of naturalization"
+            placeholder="Enter city/town"
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.cityOrTown && formik.errors.cityOrTown}
@@ -403,7 +408,7 @@ const FinalStepForm = (props) => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.name && Boolean(formik.errors.name)}
-            placeholder="Enter yes or no..."
+            placeholder="Enter name..."
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.name && formik.errors.name}
@@ -438,7 +443,7 @@ const FinalStepForm = (props) => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.address && Boolean(formik.errors.address)}
-            placeholder="Enter yes or no..."
+            placeholder="Enter address..."
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.address && formik.errors.address}
@@ -475,7 +480,7 @@ const FinalStepForm = (props) => {
             error={
               formik.touched.relationship && Boolean(formik.errors.relationship)
             }
-            placeholder="Enter yes or no..."
+            placeholder="Enter relationship..."
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.relationship && formik.errors.relationship}

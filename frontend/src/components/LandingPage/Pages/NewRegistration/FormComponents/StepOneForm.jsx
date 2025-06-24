@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { Country_Lists } from "./CountryLists/CountryLists";
 
 //? Scroll to top of react route/page change
 import ScrollToTop from "../../../../ScrollToTop/ScrollToTop";
@@ -24,6 +25,12 @@ import ScrollToTop from "../../../../ScrollToTop/ScrollToTop";
 const StepOneForm = (props) => {
   //? Destructure props
   const { formik } = props;
+
+  //? Handle Step One Country Change
+  const handleStepOneCountryChange = (_e, newValue) => {
+    const { label } = newValue || {};
+    formik.setFieldValue("applicantCountry", label);
+  };
 
   //? Scroll to error input on form submit
   useEffect(() => {
@@ -263,20 +270,50 @@ const StepOneForm = (props) => {
             </IconButton>
           </Tooltip>
         </Typography>
-        <FormControl fullWidth>
-          <TextField
-            margin="normal"
+        <FormControl fullWidth sx={{ mt: 2 }}>
+          <Autocomplete
             id="applicantCountry"
-            name="applicantCountry"
-            type="text"
             value={formik.values.applicantCountry}
-            onChange={formik.handleChange}
+            onChange={handleStepOneCountryChange}
             onBlur={formik.handleBlur}
             error={
               formik.touched.applicantCountry &&
               Boolean(formik.errors.applicantCountry)
             }
-            placeholder="Enter country..."
+            options={Country_Lists ?? []}
+            filterSelectedOptions={true}
+            isOptionEqualToValue={(option, value) =>
+              option?.label === value?.label
+            }
+            autoHighlight
+            getOptionLabel={(option) => option?.label ?? option}
+            renderOption={(props, option) => (
+              <Box
+                component="li"
+                sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+                {...props}
+                key={option?.code}
+              >
+                <img
+                  loading="lazy"
+                  width="20"
+                  srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                  src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                  alt="Country Flag"
+                />
+                {option?.label} {option?.code} +{option?.phone}
+              </Box>
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="Select country..."
+                inputProps={{
+                  ...params.inputProps,
+                  autoComplete: "country",
+                }}
+              />
+            )}
           />
           <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantCountry && formik.errors.applicantCountry}
@@ -284,7 +321,7 @@ const StepOneForm = (props) => {
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
+        <Typography sx={{ mt: 1, mb: 2 }}>
           Date of Birth
           <span>
             <LuAsterisk size={10} color="#C41E3A" />

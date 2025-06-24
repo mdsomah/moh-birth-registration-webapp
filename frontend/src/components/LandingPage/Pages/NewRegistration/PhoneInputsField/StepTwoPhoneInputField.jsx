@@ -37,7 +37,7 @@ const StepTwoPhoneInputField = (props) => {
       id="fatherTelephoneNumber"
       name="fatherTelephoneNumber"
       type="tel"
-      placeholder="Enter telephone number..."
+      placeholder="Enter father's telephone number..."
       value={inputValue}
       onChange={handlePhoneValueChange}
       onBlur={formik.handleBlur}

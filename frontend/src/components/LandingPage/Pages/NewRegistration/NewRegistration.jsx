@@ -499,7 +499,7 @@ const NewRegistration = () => {
   const StepThreeInitialValues = {
     motherName: "",
     motherNationality: "",
-    motherAge: 35,
+    motherAge: 0,
     motherTownOrCity: "",
     motherCounty: "",
     motherCountry: "",

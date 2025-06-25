@@ -11,6 +11,9 @@ import UnPrivateRoute from "../hocs/unPrivateRoute";
 const Home = React.lazy(() =>
   import("../components/LandingPage/Pages/Home/Home")
 );
+const ValidateApplicant = React.lazy(() =>
+  import("../components/LandingPage/Pages/ValidateApplicant/ValidateApplicant")
+);
 const NewRegistration = React.lazy(() =>
   import("../components/LandingPage/Pages/NewRegistration/NewRegistration")
 );
@@ -27,6 +30,17 @@ export const router = createBrowserRouter([
       <UnPrivateRoute>
         <ErrorBoundary FallbackComponent={ErrorsHandler}>
           <Home />
+        </ErrorBoundary>
+      </UnPrivateRoute>
+    ),
+  },
+  {
+    path: "/validate-new-applicant",
+    index: true,
+    element: (
+      <UnPrivateRoute>
+        <ErrorBoundary FallbackComponent={ErrorsHandler}>
+          <ValidateApplicant />
         </ErrorBoundary>
       </UnPrivateRoute>
     ),

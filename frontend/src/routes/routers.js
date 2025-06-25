@@ -8,9 +8,9 @@ import PrivateRoute from "../hocs/privateRoute";
 import UnPrivateRoute from "../hocs/unPrivateRoute";
 
 //? LandingPage Components imports
-// const Home = React.lazy(() =>
-//   import("../components/LandingPage/Pages/Home/Home")
-// );
+const Home = React.lazy(() =>
+  import("../components/LandingPage/Pages/Home/Home")
+);
 const NewRegistration = React.lazy(() =>
   import("../components/LandingPage/Pages/NewRegistration/NewRegistration")
 );
@@ -22,6 +22,17 @@ const Error404 = React.lazy(() => import("../components/404/Erorr404"));
 export const router = createBrowserRouter([
   {
     path: "/",
+    index: true,
+    element: (
+      <UnPrivateRoute>
+        <ErrorBoundary FallbackComponent={ErrorsHandler}>
+          <Home />
+        </ErrorBoundary>
+      </UnPrivateRoute>
+    ),
+  },
+  {
+    path: "/register-new-applicant",
     index: true,
     element: (
       <UnPrivateRoute>

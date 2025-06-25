@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes, { object } from "prop-types";
 import { styled } from "@mui/material/styles";
@@ -814,6 +815,13 @@ const NewRegistration = () => {
 
   return (
     <React.Fragment>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>
+          Register New Applicant | Ministry of Health (MOH) Online Delayed Birth
+          Registration System
+        </title>
+      </Helmet>
       <ThemeProvider theme={responsiveTheme}>
         {/* <Toolbar /> */}
         <Container maxWidth="md" sx={{ mt: 3, mb: 3 }}>

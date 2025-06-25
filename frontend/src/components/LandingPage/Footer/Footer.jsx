@@ -8,7 +8,7 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 
 // eSalesPOS Logo import
-import logo from "../../../images/MICAT_Logo/MICAT-LOGO.png";
+import logo from "../../../images/MOH_Logo/MOH-LOGO.png";
 
 // Components Imports
 import CopyRights from "../CopyRights/CopyRights";

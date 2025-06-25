@@ -18,13 +18,13 @@ import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import { FaYoutube } from "react-icons/fa6";
 import { responsiveTheme } from "../../../../utils/muiUtils";
 
-// Scroll to top of react route/page change
+//? Scroll to top of react route/page change
 import ScrollToTop from "../../../ScrollToTop/ScrollToTop";
 
-// Images imports
+//? Images imports
 import heroImage from "../../../../images/Hero-Image.png";
 
-// Components imports
+//? Components imports
 import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
 import CategoriesSection from "../Home/CategoriesSection/CategoriesSection";
@@ -78,7 +78,10 @@ const Home = () => {
     <React.Fragment>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Home | MICAT online registration web software.</title>
+        <title>
+          Home | Ministry of Health (MOH) Online Delayed Birth Registration
+          System
+        </title>
       </Helmet>
       <ThemeProvider theme={responsiveTheme}>
         <Header />

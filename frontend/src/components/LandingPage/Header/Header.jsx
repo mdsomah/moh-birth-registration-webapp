@@ -3,7 +3,7 @@ import { Link as URLLink } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 
 // eSalesPOS Logo import
-import logo from "../../../images/MICAT_Logo/MICAT-LOGO.png";
+import logo from "../../../images/MOH_Logo/MOH-LOGO.png";
 
 const Header = () => {
   return (
@@ -108,7 +108,10 @@ const Header = () => {
             Login
           </Typography>
         </URLLink>
-        <URLLink to="/registration-info" style={{ textDecoration: "none" }}>
+        <URLLink
+          to="/validate-applicant-tin"
+          style={{ textDecoration: "none" }}
+        >
           <Button
             variant="contained"
             sx={{ my: 1, mx: 1.5, bgcolor: "buttonBGColor.main" }}

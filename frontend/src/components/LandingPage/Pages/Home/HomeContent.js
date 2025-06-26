@@ -179,7 +179,7 @@ export function Search() {
   );
 }
 
-export default function MainContent() {
+const HomeContent = () => {
   const [focusedCardIndex, setFocusedCardIndex] = React.useState(null);
 
   const handleFocus = (index) => {
@@ -517,4 +517,6 @@ export default function MainContent() {
       </Grid>
     </Box>
   );
-}
+};
+
+export default HomeContent;

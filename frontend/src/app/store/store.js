@@ -5,6 +5,7 @@ import authReducer from "../slices/authSlice";
 import messageReducer from "../slices/messageSlice";
 import userReducer from "../slices/userSlice";
 import newRegistrationReducer from "../slices/newRegistrationSlice";
+import nirAPIsTokenReducer from "../slices/nirAPIsTokenSlice";
 
 //? reducers
 const reducers = combineReducers({
@@ -12,6 +13,7 @@ const reducers = combineReducers({
   message: messageReducer,
   newRegistration: newRegistrationReducer,
   user: userReducer,
+  nirAPIs: nirAPIsTokenReducer,
 });
 
 //? persistConfig

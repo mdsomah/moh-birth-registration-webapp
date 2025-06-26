@@ -47,7 +47,7 @@ import {
   setFinalStepForm,
   removeFinalStepForm,
 } from "../../../../app/slices/newRegistrationSlice";
-import { encrypt } from "../../../../utils/encryptUtils";
+import { encrypt } from "../../../../utils/encrypt";
 
 //? React Responsive Media Queries
 import { useMediaQuery } from "react-responsive";

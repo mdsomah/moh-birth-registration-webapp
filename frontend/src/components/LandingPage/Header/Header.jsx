@@ -64,34 +64,48 @@ const Header = () => {
               <img src={MOHLogo} width="50" alt="MOH Logo" loading="lazy" />
             </URLLink>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <Button variant="text" color="info" size="small">
-                Features
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Testimonials
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Highlights
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Pricing
-              </Button>
-              <Button
-                variant="text"
-                color="info"
-                size="small"
-                sx={{ minWidth: 0 }}
+              <URLLink
+                to="/"
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-                FAQ
-              </Button>
-              <Button
-                variant="text"
-                color="info"
-                size="small"
-                sx={{ minWidth: 0 }}
+                <Button variant="text" color="info" size="small">
+                  Home
+                </Button>
+              </URLLink>
+              <URLLink
+                to="/track-application-status"
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-                Blog
-              </Button>
+                <Button variant="text" color="info" size="small">
+                  Track Application
+                </Button>
+              </URLLink>
+              <URLLink
+                to="/schedule-appointment"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  sx={{ minWidth: 0 }}
+                >
+                  Schedule Appointment
+                </Button>
+              </URLLink>
+              <URLLink
+                to="/make-payment"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <Button
+                  variant="text"
+                  color="info"
+                  size="small"
+                  sx={{ minWidth: 0 }}
+                >
+                  Make Payment
+                </Button>
+              </URLLink>
             </Box>
           </Box>
           <Box
@@ -101,9 +115,14 @@ const Header = () => {
               alignItems: "center",
             }}
           >
-            {/* <Button color="primary" variant="text" size="small">
-              Sign in
-            </Button> */}
+            <URLLink
+              to="/sign-in"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <Button color="primary" variant="text" size="small">
+                Sign in
+              </Button>
+            </URLLink>
             <URLLink
               to="/validate-new-applicant"
               style={{ textDecoration: "none", color: "inherit" }}

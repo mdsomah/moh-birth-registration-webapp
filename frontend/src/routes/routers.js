@@ -11,8 +11,10 @@ import UnPrivateRoute from "../hocs/unPrivateRoute";
 const Home = React.lazy(() =>
   import("../components/LandingPage/Pages/Home/Home")
 );
-const ValidateApplicant = React.lazy(() =>
-  import("../components/LandingPage/Pages/ValidateApplicant/ValidateApplicant")
+const ValidateNewApplicant = React.lazy(() =>
+  import(
+    "../components/LandingPage/Pages/ValidateNewApplicant/ValidateNewApplicant"
+  )
 );
 const NewRegistration = React.lazy(() =>
   import("../components/LandingPage/Pages/NewRegistration/NewRegistration")
@@ -40,7 +42,7 @@ export const router = createBrowserRouter([
     element: (
       <UnPrivateRoute>
         <ErrorBoundary FallbackComponent={ErrorsHandler}>
-          <ValidateApplicant />
+          <ValidateNewApplicant />
         </ErrorBoundary>
       </UnPrivateRoute>
     ),

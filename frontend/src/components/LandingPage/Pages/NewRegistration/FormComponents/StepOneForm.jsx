@@ -5,11 +5,9 @@ import {
   Grid,
   TextField,
   IconButton,
-  Button,
   Tooltip,
   FormControl,
   Autocomplete,
-  Chip,
 } from "@mui/material";
 import { LuAsterisk } from "react-icons/lu";
 import { BsFillInfoCircleFill } from "react-icons/bs";
@@ -69,18 +67,18 @@ const StepOneForm = (props) => {
             name="applicantFirstName"
             type="text"
             value={formik.values.applicantFirstName}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.applicantFirstName &&
-              Boolean(formik.errors.applicantFirstName)
-            }
+            // onChange={formik.handleChange}
+            // onBlur={formik.handleBlur}
+            // error={
+            //   formik.touched.applicantFirstName &&
+            //   Boolean(formik.errors.applicantFirstName)
+            // }
             placeholder="Enter first name..."
           />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+          {/* <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantFirstName &&
               formik.errors.applicantFirstName}
-          </Typography>
+          </Typography> */}
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -92,7 +90,7 @@ const StepOneForm = (props) => {
             name="applicantMiddleName"
             type="text"
             value={formik.values.applicantMiddleName}
-            onChange={formik.handleChange}
+            // onChange={formik.handleChange}
             placeholder="Enter middle name..."
           />
         </FormControl>
@@ -122,18 +120,18 @@ const StepOneForm = (props) => {
             name="applicantLastName"
             type="text"
             value={formik.values.applicantLastName}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.applicantLastName &&
-              Boolean(formik.errors.applicantLastName)
-            }
+            // onChange={formik.handleChange}
+            // onBlur={formik.handleBlur}
+            // error={
+            //   formik.touched.applicantLastName &&
+            //   Boolean(formik.errors.applicantLastName)
+            // }
             placeholder="Enter last name..."
           />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+          {/* <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantLastName &&
               formik.errors.applicantLastName}
-          </Typography>
+          </Typography> */}
         </FormControl>
       </Grid>
       <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -343,20 +341,20 @@ const StepOneForm = (props) => {
             <DatePicker
               disableFuture
               value={dayjs(formik.values.applicantDateOfBirth)}
-              onChange={(newValue) => {
-                formik.setFieldValue("applicantDateOfBirth", newValue);
-              }}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.applicantDateOfBirth &&
-                Boolean(formik.errors.applicantDateOfBirth)
-              }
+              // onChange={(newValue) => {
+              //   formik.setFieldValue("applicantDateOfBirth", newValue);
+              // }}
+              // onBlur={formik.handleBlur}
+              // error={
+              //   formik.touched.applicantDateOfBirth &&
+              //   Boolean(formik.errors.applicantDateOfBirth)
+              // }
             />
           </LocalizationProvider>
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+          {/* <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
             {formik.touched.applicantDateOfBirth &&
               formik.errors.applicantDateOfBirth}
-          </Typography>
+          </Typography> */}
         </FormControl>
       </Grid>
       <ScrollToTop />

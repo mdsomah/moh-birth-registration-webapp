@@ -7,6 +7,9 @@ import { ErrorsHandler } from "../errors/errorsHandler";
 import PrivateRoute from "../hocs/privateRoute";
 import UnPrivateRoute from "../hocs/unPrivateRoute";
 
+//? Protected Registration routes
+import ProtectedRegistration from "../hocs/protectedRegistration";
+
 //? LandingPage Components imports
 const Home = React.lazy(() =>
   import("../components/LandingPage/Pages/Home/Home")
@@ -51,11 +54,11 @@ export const router = createBrowserRouter([
     path: "/register-new-applicant",
     index: true,
     element: (
-      <UnPrivateRoute>
+      <ProtectedRegistration>
         <ErrorBoundary FallbackComponent={ErrorsHandler}>
           <NewRegistration />
         </ErrorBoundary>
-      </UnPrivateRoute>
+      </ProtectedRegistration>
     ),
   },
   {

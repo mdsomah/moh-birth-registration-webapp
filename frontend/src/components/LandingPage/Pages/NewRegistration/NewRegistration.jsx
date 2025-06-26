@@ -47,7 +47,8 @@ import {
   setFinalStepForm,
   removeFinalStepForm,
 } from "../../../../app/slices/newRegistrationSlice";
-import { encrypt } from "../../../../utils/encrypt";
+import { removeApplicant } from "../../../../app/slices/querySlice";
+// import { encrypt } from "../../../../utils/encrypt";
 
 //? React Responsive Media Queries
 import { useMediaQuery } from "react-responsive";
@@ -420,6 +421,20 @@ const NewRegistration = () => {
   const { stepOneForm, stepTwoForm, stepThreeForm, finalStepForm } =
     useSelector((state) => state.newRegistration);
 
+  const {
+    query: [
+      {
+        PhotoBase64,
+        NINNumber,
+        GenderName,
+        FirstName,
+        MiddleName,
+        Surname,
+        DateOfBirth,
+      },
+    ],
+  } = useSelector((state) => state.queryApplicant);
+
   const [activeStep, setActiveStep] = useState(0);
   const steps = [
     "Applicant's Info",
@@ -444,20 +459,33 @@ const NewRegistration = () => {
     setOpenApplicantPhoto(false);
   }, []);
 
+  //? Applicant Query Object
+  const ApplicantQueryOBJ = {
+    applicantPhoto: () => PhotoBase64,
+    formNumber: () => NINNumber,
+    applicantSex: () => GenderName,
+    applicantFirstName: () => FirstName,
+    applicantMiddleName: () => MiddleName,
+    applicantLastName: () => Surname,
+    applicantDateOfBirth: () => DateOfBirth,
+  };
+
   //? Step One Initial Values
   const StepOneInitialValues = {
     applicantPhoto: "",
-    formNumber: "MOH-1001-2025-20-06",
-    applicantSex: "",
+    formNumber: `${ApplicantQueryOBJ.formNumber()}`,
+    applicantSex: `${ApplicantQueryOBJ.applicantSex()}`,
     dateOfApplication: dayjs(new Date()),
-    applicantFirstName: "",
-    applicantMiddleName: "",
-    applicantLastName: "",
+    applicantFirstName: `${ApplicantQueryOBJ.applicantFirstName()}`,
+    applicantMiddleName: `${ApplicantQueryOBJ.applicantMiddleName()}`,
+    applicantLastName: `${ApplicantQueryOBJ.applicantLastName()}`,
     applicantFacility: "",
     applicantTownOrCity: "",
     applicantCounty: "",
     applicantCountry: "",
-    applicantDateOfBirth: "",
+    applicantDateOfBirth: dayjs(
+      ApplicantQueryOBJ.applicantDateOfBirth()
+    ).format("MM/DD/YYYY"),
   };
 
   //? Formik Step One Form
@@ -666,6 +694,7 @@ const NewRegistration = () => {
         dispatch(removeStepTwoForm());
         dispatch(removeStepThreeForm());
         dispatch(removeFinalStepForm());
+        dispatch(removeApplicant());
         queryClient.invalidateQueries({
           queryKey: ["applicantsData"],
         });
@@ -994,7 +1023,14 @@ const NewRegistration = () => {
                       Form No: {formikStepOneForm.values.formNumber}
                     </Typography>
                     <Box>
-                      <Autocomplete
+                      <TextField
+                        id="applicantSex"
+                        name="applicantSex"
+                        label="Sex:"
+                        variant="standard"
+                        value={formikStepOneForm.values.applicantSex}
+                      />
+                      {/* <Autocomplete
                         id="applicantSex"
                         clearOnEscape
                         value={formikStepOneForm.values.applicantSex}
@@ -1018,17 +1054,17 @@ const NewRegistration = () => {
                             variant="standard"
                           />
                         )}
-                      />
-                      <Typography
+                      /> */}
+                      {/* <Typography
                         variant="inherit"
                         color="error.main"
                         sx={{ mt: 1 }}
                       >
                         {formikStepOneForm.touched.applicantSex &&
                           formikStepOneForm.errors.applicantSex}
-                      </Typography>
+                      </Typography> */}
                     </Box>
-                    <Box>
+                    <Box sx={{ width: 160, mt: 1 }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           disablePast

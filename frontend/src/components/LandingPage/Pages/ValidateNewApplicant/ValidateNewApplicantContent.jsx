@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import {
   Box,
   Typography,
-  Grid,
   Paper,
   TextField,
   FormControl,
@@ -21,7 +20,7 @@ import { LuAsterisk } from "react-icons/lu";
 import { FaArrowLeft } from "react-icons/fa";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-// import { setInstitution } from "../../../../app/slices/verifyInstitutionSlice";
+import { setApplicant } from "../../../../app/slices/querySlice";
 import { encrypt } from "../../../../utils/encrypt";
 import { decrypt } from "../../../../utils/decrypt";
 
@@ -76,10 +75,6 @@ const ValidateNewApplicantContent = () => {
   //? Loading State
   const [loading, setLoading] = useState(false);
 
-  //? Applicant Search Results State
-  const [applicantSearchResults, setApplicantSearchResults] = useState([]);
-  console.log(applicantSearchResults);
-
   //? Formik Validate Applicant Form
   const formikValidateApplicantForm = useFormik({
     initialValues: {
@@ -93,12 +88,8 @@ const ValidateNewApplicantContent = () => {
     },
   });
 
-  //? Handle Submit
-  const handleSubmit = (e) => {
-    // if (Object.keys(ValidateApplicantData).length === 0) {
-    //   Error_Alert("Please enter at least one search field!");
-    //   return;
-    // }
+  //? Handle Submit Form
+  const handleSubmitForm = (e) => {
     e.preventDefault();
     formikValidateApplicantForm.handleSubmit();
   };
@@ -106,8 +97,6 @@ const ValidateNewApplicantContent = () => {
   //? Handle Reset Form
   const handleResetForm = () => {
     formikValidateApplicantForm.resetForm();
-    setApplicantSearchResults([]);
-    // setEnabled(false);
   };
 
   //? Validate Applicant Data
@@ -136,17 +125,19 @@ const ValidateNewApplicantContent = () => {
         //? Check if applicant available
         if (decryptedData?.TotalCount === 0) {
           return Error_Alert("No Applicant found!");
+        } else {
+          //? Handle Applicant Filters
+          const ApplicantFilters =
+            decryptedData.Data?.filter(
+              (applicant) =>
+                applicant?.NINNumber === searchData.NIN && searchData.NIN !== ""
+            ) ?? [];
+          dispatch(setApplicant(ApplicantFilters));
+          navigate("/register-new-applicant", { replace: true });
+          queryClient.invalidateQueries({
+            queryKey: ["applicantsData"],
+          });
         }
-        //? Handle Applicant Filters
-        const ApplicantFilters =
-          decryptedData.Data?.filter(
-            (applicant) =>
-              applicant?.NINNumber === searchData.NIN && searchData.NIN !== ""
-          ) ?? [];
-        setApplicantSearchResults(ApplicantFilters);
-        queryClient.invalidateQueries({
-          queryKey: ["applicantsData"],
-        });
       }
       return data;
     },
@@ -206,10 +197,9 @@ const ValidateNewApplicantContent = () => {
         </Typography>
         <Box
           component="form"
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmitForm}
           noValidate
           autoComplete="off"
-          sx={{ mt: 4 }}
         >
           <FormControl variant="outlined" fullWidth>
             <Typography>
@@ -259,13 +249,28 @@ const ValidateNewApplicantContent = () => {
             type="submit"
             fullWidth
             variant="contained"
+            size="large"
             loading={loading}
             loadingPosition="end"
             endIcon={<IoMdCheckmarkCircleOutline size={20} color="#fff" />}
             sx={{ mt: 3, mb: 2, bgcolor: "buttonBGColor.main" }}
           >
-            <span>Validate</span>
+            {loading ? (
+              <span style={{ color: "#fff" }}>Validating</span>
+            ) : (
+              <span>Validate</span>
+            )}
           </LoadingButton>
+          <Box sx={{ mt: 1 }}>
+            <Button
+              fullWidth
+              variant="outlined"
+              size="large"
+              onClick={handleResetForm}
+            >
+              Reset
+            </Button>
+          </Box>
           <URLLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
             <Button
               sx={{ p: 1, mt: 1, color: "#4169E1" }}

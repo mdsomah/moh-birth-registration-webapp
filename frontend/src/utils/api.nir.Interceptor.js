@@ -101,8 +101,8 @@ NIR_API.interceptors.response.use(
       } catch (error) {
         //? Handle refresh token error or redirect to login
         if (error?.response) {
-          const { error, message } = error?.response;
-          store.dispatch(setMessage(Error_Alert(`${error}: ${message}`)));
+          const { message } = error?.response;
+          store.dispatch(setMessage(Error_Alert(`Error: ${message}`)));
           return Promise.reject(error);
         }
       }

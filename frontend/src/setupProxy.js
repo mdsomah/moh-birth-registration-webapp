@@ -30,10 +30,17 @@ const imagesProxy = {
   changeOrigin: true,
 };
 
+//? NIR APIs
+const nirAPIsProxy = {
+  target: `${process.env.REACT_APP_NIR_APIS_URL}`,
+  changeOrigin: true,
+};
+
 module.exports = function (app) {
   app.use("/auth", createProxyMiddleware(authProxy));
   app.use("/users", createProxyMiddleware(usersProxy));
   app.use("/user/roles", createProxyMiddleware(userRolesProxy));
   app.use("/applicants", createProxyMiddleware(applicantsProxy));
   app.use("/images", createProxyMiddleware(imagesProxy));
+  app.use("/api", createProxyMiddleware(nirAPIsProxy));
 };

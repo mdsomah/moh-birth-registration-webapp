@@ -64,6 +64,7 @@
     "react-spinners": "^0.17.0",
     "reactjs-popup": "^2.0.6",
     "redux-persist": "^6.0.0",
+    "rsuite": "^5.83.1",
     "sweetalert2": "^11.22.0",
     "sweetalert2-react-content": "^5.1.0",
     "web-vitals": "^2.1.4",

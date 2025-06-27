@@ -4,11 +4,9 @@ import PulseLoader from "react-spinners/PulseLoader";
 const override = {
   display: "block",
   margin: "0 auto",
-  // borderColor: "#d4bf79",
-  // color: "#d4bf79",
 };
 
-const color = "#d4bf79";
+const color = "#0047AB";
 
 const Loader = () => {
   return (
@@ -23,7 +21,6 @@ const Loader = () => {
       >
         <PulseLoader
           color={color}
-          // loading={loading}
           cssOverride={override}
           size={15}
           aria-label="Loading Spinner"

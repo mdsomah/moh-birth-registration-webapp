@@ -1,7 +1,7 @@
 import React from "react";
 import { Link as URLLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-// import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet-async";
 import {
   Paper,
   Typography,
@@ -19,10 +19,13 @@ const Error404 = () => {
 
   return (
     <React.Fragment>
-      {/* <Helmet>
+      <Helmet>
         <meta charSet="utf-8" />
-        <title>404 Error | MICAT online registration web software.</title>
-      </Helmet> */}
+        <title>
+          404 Error | Ministry of Health (MOH) Online Delayed Birth Registration
+          Platform
+        </title>
+      </Helmet>
       <ThemeProvider theme={responsiveTheme}>
         <CssBaseline />
         <Paper

@@ -21,7 +21,7 @@ router.post(
   "/login",
   passportAuthenticateLocal,
   passportAuthenticateRememberMe,
-  // validateInputs(validateUserLoginSchema),
+  validateInputs(validateUserLoginSchema),
   authController.Login
 );
 router.post(

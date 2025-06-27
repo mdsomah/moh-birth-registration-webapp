@@ -8,7 +8,7 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { LoadingButton } from "@mui/lab";
 import { FaSearch } from "react-icons/fa";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";

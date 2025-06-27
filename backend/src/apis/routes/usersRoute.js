@@ -64,8 +64,8 @@ const upload = multer({ storage, fileFilter, limits: { fileSize } });
 
 router.post(
   "/create-new-user",
-  // passportAuthenticateJWT,
-  // verifyToken,
+  passportAuthenticateJWT,
+  verifyToken,
   upload.single("photo"),
   validateInputs(validateAddUserSchema),
   usersController.CreateNewUser

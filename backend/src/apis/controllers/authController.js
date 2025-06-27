@@ -1,4 +1,3 @@
-require("dotenv").config();
 const { Logger } = require("../libs/logger");
 const JWT = require("jsonwebtoken");
 const ms = require("ms");
@@ -15,8 +14,6 @@ const {
   forgetUserPassword,
   resetUserPassword,
 } = require("../services/authService");
-const { encrypt } = require("../utils/encryptUtils");
-const { decrypt } = require("../utils/decryptUtils");
 
 //? Creating 30 days from milliseconds
 const cookieExpiresAt = new Date(
@@ -25,71 +22,42 @@ const cookieExpiresAt = new Date(
 
 //? Authenticate & Login User
 const Login = asyncHandler(async (req, res, next) => {
-  //? Destructure req.body
-  const { rememberMe } = req.body;
-
-  //? Decrypt the encryptedData
-  const decryptedRemembeMe = decrypt(
-    rememberMe,
-    process.env.ENCRYPTION_KEY,
-    process.env.ENCRYPTION_IV
-  );
-
-  //? Destructure req.user
-  const {
-    id,
-    firstName,
-    middleName,
-    lastName,
-    displayName,
-    userName,
-    role,
-    primaryPhoneNumber,
-    secondaryPhoneNumber,
-    email,
-    photo,
-    userRole,
-  } = req.user;
-
   try {
     Logger.info("Logging In User: Status success!");
+    //? Destructure req.user
+    const {
+      id,
+      lastName,
+      firstName,
+      middleName,
+      displayName,
+      primaryPhoneNumber,
+      secondaryPhoneNumber,
+      email,
+      userName,
+      role,
+      photo,
+    } = req.user;
+
+    //? Destructure req.body
+    const { rememberMe } = req.body;
+
     if (req.isAuthenticated()) {
       const accessToken = Access_Token(id);
       const refreshToken = Refresh_Token(id);
+      let rememberMe_Token = null;
 
-      if (decryptedRemembeMe === true) {
-        const generateToken = Remember_Me_Token(id);
-        await rememberMeToken(id, generateToken);
-        res.cookie(`${process.env.REMEMBER_TOKEN_NAME}`, generateToken, {
+      if (rememberMe === true) {
+        rememberMe_Token = Remember_Me_Token(id);
+        await rememberMeToken(id, rememberMe_Token);
+        res.cookie(`${process.env.REMEMBER_TOKEN_NAME}`, rememberMe_Token, {
           httpOnly: true,
           secure: process.env.NODE_ENV !== "development",
           sameSite: "strict",
           maxAge: cookieExpiresAt,
         });
       }
-      //? Create user object
-      const user = {
-        id: id,
-        firstName: firstName,
-        middleName: middleName,
-        lastName: lastName,
-        displayName: displayName,
-        userName: userName,
-        rememberMe: decryptedRemembeMe,
-        role: role,
-        primaryPhoneNumber: primaryPhoneNumber,
-        secondaryPhoneNumber: secondaryPhoneNumber,
-        email: email,
-        photo: photo,
-        userRole: userRole,
-        accessToken: accessToken,
-      };
-      //? Encrypt user object
-      const encryptedUser = encrypt(
-        user,
-        process.env.ENCRYPTION_KEY,
-        process.env.ENCRYPTION_IV
-      );
+
       req.session[`${process.env.TOKEN_NAME}`] = refreshToken;
       return res
         .cookie(`${process.env.TOKEN_NAME}`, refreshToken, {
@@ -104,8 +72,23 @@ const Login = asyncHandler(async (req, res, next) => {
           success: true,
           isAuthenticated: true,
           method: req.method,
-          message: `${displayName} login successfully!`,
-          user: encryptedUser,
+          message: "User login successfully!",
+          user: {
+            id,
+            lastName,
+            firstName,
+            middleName,
+            displayName,
+            primaryPhoneNumber,
+            secondaryPhoneNumber,
+            email,
+            userName,
+            rememberMe,
+            role,
+            photo,
+            accessToken,
+            rememberMe_Token,
+          },
         });
     }
   } catch (err) {
@@ -128,14 +111,8 @@ const Logout = asyncHandler(async (req, res, next) => {
         success: true,
         isAuthenticated: false,
         method: req.method,
-        message: "Logout successful!",
-        user: {
-          id: "",
-          userName: "",
-          role: "",
-          userRole: "",
-          accessToken: "",
-        },
+        message: "User logout successful!",
+        user: { id: "", userName: "", role: "" },
       });
   } catch (err) {
     Logger.error("Logging Out User: Status failed!");
@@ -150,53 +127,40 @@ const GetAuthenticatedUser = asyncHandler(async (req, res, next) => {
     if (!req.user) {
       return next(HTTPErrors(401, "Unauthenticated!"));
     }
-
     //? Destructure req.user
     const {
       id,
+      lastName,
       firstName,
       middleName,
-      lastName,
       displayName,
-      userName,
-      rememberMe,
-      role,
       primaryPhoneNumber,
       secondaryPhoneNumber,
       email,
+      userName,
+      role,
       photo,
-      userRole,
     } = req.user;
 
     if (req.isAuthenticated()) {
-      //? Create user object
-      const user = {
-        id: id,
-        firstName: firstName,
-        middleName: middleName,
-        lastName: lastName,
-        displayName: displayName,
-        userName: userName,
-        rememberMe: rememberMe,
-        role: role,
-        primaryPhoneNumber: primaryPhoneNumber,
-        secondaryPhoneNumber: secondaryPhoneNumber,
-        email: email,
-        photo: photo,
-        userRole: userRole,
-      };
-      //? Encrypt user object
-      const encryptedAuthUser = encrypt(
-        user,
-        process.env.ENCRYPTION_KEY,
-        process.env.ENCRYPTION_IV
-      );
       return res.status(200).json({
         success: true,
         isAuthenticated: true,
         method: req.method,
-        message: `${displayName} is authenticated!`,
-        user: encryptedAuthUser,
+        message: "User is authenticated!",
+        user: {
+          id,
+          lastName,
+          firstName,
+          middleName,
+          displayName,
+          primaryPhoneNumber,
+          secondaryPhoneNumber,
+          email,
+          userName,
+          role,
+          photo,
+        },
       });
     }
   } catch (err) {
@@ -251,7 +215,7 @@ const RefreshToken = asyncHandler(async (req, res, next) => {
         newAccessToken,
       });
   } catch (err) {
-    Logger.error("Refreshing Token: Status failed!");
+    Logger.info("Refreshing Token: Status failed!");
     return next(HTTPErrors(401, "Refresh token expired or invalid!"));
   }
 });
@@ -259,33 +223,16 @@ const RefreshToken = asyncHandler(async (req, res, next) => {
 //? Forget User Password
 const ForgetUserPassword = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
-  const { encryptedData } = req.body;
-
-  //? Decrypt the encryptedData
-  const decryptedEmail = decrypt(
-    encryptedData,
-    process.env.ENCRYPTION_KEY,
-    process.env.ENCRYPTION_IV
-  );
-
-  //? Destructure decryptedEmail
-  const { email } = decryptedEmail;
-
+  const { email } = req.body;
   try {
-    Logger.info("Resetting User Password: Status success!");
+    Logger.info("Resetting User Password: Status is OK");
     const forgetPassword = await forgetUserPassword(email);
-    //? Encrypt the forgetPassword data
-    const encryptedForgetPassword = encrypt(
-      forgetPassword,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
     return res.status(200).json({
       success: true,
       isAuthenticated: false,
       method: req.method,
       message: "A password reset link has been sent to your email address!",
-      encryptedForgetPassword: encryptedForgetPassword,
+      forgetPassword: forgetPassword,
     });
   } catch (err) {
     Logger.error("Resetting User Password: Status failed!");
@@ -296,38 +243,21 @@ const ForgetUserPassword = asyncHandler(async (req, res, next) => {
 //? Reset User Password
 const ResetUserPassword = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
-  const { encryptedData } = req.body;
-
-  //? Decrypt the encryptedData
-  const decryptedResetPassword = decrypt(
-    encryptedData,
-    process.env.ENCRYPTION_KEY,
-    process.env.ENCRYPTION_IV
-  );
-
-  //? Destructure decryptedResetPassword
-  const { userId, token, password, confirmPassword } = decryptedResetPassword;
-
+  const { userId, token, password, confirmPassword } = req.body;
   try {
-    Logger.info("Resetting User Password: Status success!");
+    Logger.info("Resetting User Password: Status is OK");
     const resetPassword = await resetUserPassword(
       userId,
       token,
       password,
       confirmPassword
     );
-    //? Encrypt the resetPassword data
-    const encryptedResetPassword = encrypt(
-      resetPassword,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
     return res.status(200).json({
       success: true,
       isAuthenticated: false,
       method: req.method,
       message: "Password reset successfully!",
-      encryptedResetPassword: encryptedResetPassword,
+      resetPassword: resetPassword,
     });
   } catch (err) {
     Logger.error("Resetting User Password: Status failed!");

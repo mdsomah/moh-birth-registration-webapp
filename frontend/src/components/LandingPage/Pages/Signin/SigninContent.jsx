@@ -98,8 +98,7 @@ const SigninContent = () => {
       rememberMe: false,
     },
     validationSchema: validateUserLoginSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: () => {
       handleUserLogin();
     },
   });

@@ -1,14 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Paper, Avatar, Button, Badge } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { MdCancel } from "react-icons/md";
 import Copyright from "../Dashboard/internals/components/Copyright";
 import ApplicantDetailsSection from "./ApplicantDetailsSection/ApplicantDetailsSection";
 import NavbarBreadcrumbs from "../Dashboard/components/NavbarBreadcrumbs";
 import { Row_Data } from "./QueriesTable/QueriesTable";
 import { useSelector, useDispatch } from "react-redux";
-import { removeViewApplicant } from "../../../../app/slices/querySlice";
+// import { removeViewApplicant } from "../../../../app/slices/querySlice";
 
 //? Formik and Yup
 import { useFormik } from "formik";
@@ -123,7 +123,7 @@ const MainViewApplicantDetailsGrid = () => {
 
   //? Handle Close Applicant Details Function
   const handleCloseApplicantDetails = () => {
-    dispatch(removeViewApplicant());
+    // dispatch(removeViewApplicant());
     navigate("/all-queries", { replace: true });
   };
 

@@ -16,7 +16,7 @@ import { LuRefreshCw } from "react-icons/lu";
 import { ImEye } from "react-icons/im";
 import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
-import { setViewApplicant } from "../../../../../app/slices/querySlice";
+// import { setViewApplicant } from "../../../../../app/slices/querySlice";
 
 export let Row_Data;
 export let Close_Menu;
@@ -40,7 +40,7 @@ const QueriesTable = (props) => {
   //? View Applicant Details Function
   const handleOpenViewApplicantDetails = (row) => {
     if (row) {
-      dispatch(setViewApplicant(row?.original));
+      // dispatch(setViewApplicant(row?.original));
       navigate(
         {
           pathname: "/all-queries/view-applicant-details",

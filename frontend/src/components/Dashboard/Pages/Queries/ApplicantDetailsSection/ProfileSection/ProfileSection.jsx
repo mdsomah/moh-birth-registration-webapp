@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography, Paper, FormControl, TextField } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import dayjs from "dayjs";
 
 const ProfileSection = ({ formikViewApplicantDetailsForm }) => {

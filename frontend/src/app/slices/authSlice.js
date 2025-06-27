@@ -6,6 +6,8 @@ import { authActions } from "../actions/authActions";
 //? Token Actions
 export const setToken = createAction("setToken");
 export const removeToken = createAction("removeToken");
+// export const setRememberMeToken = createAction("setRememberMeToken");
+export const removeRememberMeToken = createAction("removeRememberMeToken");
 
 //? User Profile Actions
 export const setUserProfile = createAction("setUserProfile");
@@ -16,6 +18,7 @@ const initialState = {
   isAuthenticated: false,
   user: null,
   token: null,
+  rememberMeToken: null,
   userProfile: null,
 };
 
@@ -30,6 +33,9 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.user;
         state.token = user.accessToken;
+        if (user.rememberMe === true) {
+          state.rememberMeToken = user.rememberMe_Token;
+        }
       })
       .addCase(authActions.login.rejected, (state, _action) => {
         state.isAuthenticated = false;
@@ -57,6 +63,12 @@ const authSlice = createSlice({
       })
       .addCase(removeToken, (state, _action) => {
         state.token = null;
+      })
+      // .addCase(setRememberMeToken, (state, action) => {
+      //   state.rememberMeToken = action.payload;
+      // })
+      .addCase(removeRememberMeToken, (state, _action) => {
+        state.rememberMeToken = null;
       })
       .addCase(setUserProfile, (state, action) => {
         state.userProfile = action.payload;

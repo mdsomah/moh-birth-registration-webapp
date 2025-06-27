@@ -23,7 +23,7 @@ import OptionsMenu from "./OptionsMenu";
 import { useFormik } from "formik";
 
 //? NSA Logo
-import logo from "../../../../../images/NSA_Logo/NSA-LOGO.png";
+import MOHLogo from "../../../../../images/MOH_Logo/MOH-LOGO.png";
 
 //? Get Profile
 import GetProfile from "../../../../../apis/GetProfile";
@@ -158,8 +158,8 @@ const SideMenu = () => {
           }}
         >
           <Avatar
-            src={logo}
-            alt="NSA Logo"
+            src={MOHLogo}
+            alt="MOH Logo"
             sx={{ width: 100, height: 100 }}
             slotProps={{
               img: { loading: "lazy" },

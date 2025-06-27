@@ -12,10 +12,10 @@ import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import SideMenuMobile from "./SideMenuMobile";
 import MenuButton from "./MenuButton";
 import ColorModeIconDropdown from "../shared-theme/ColorModeIconDropdown";
-// import CustomDatePicker from "./CustomDatePicker";
+import CustomDatePicker from "./CustomDatePicker";
 
 //? NSA Logo
-import logo from "../../../../../images/NSA_Logo/NSA-LOGO.png";
+import MOHLogo from "../../../../../images/MOH_Logo/MOH-LOGO.png";
 
 const Toolbar = styled(MuiToolbar)({
   width: "100%",
@@ -77,7 +77,7 @@ export default function AppNavbar() {
             </MenuButton>
             <SideMenuMobile open={open} toggleCloseDrawer={toggleCloseDrawer} />
             <ColorModeIconDropdown />
-            {/* <CustomDatePicker /> */}
+            <CustomDatePicker />
           </Stack>
           <CustomIcon />
           {/* <Typography
@@ -114,8 +114,8 @@ export function CustomIcon() {
         }}
       >
         <Avatar
-          src={logo}
-          alt="MICAT Logo"
+          src={MOHLogo}
+          alt="MOH Logo"
           slotProps={{
             img: { loading: "lazy" },
           }}

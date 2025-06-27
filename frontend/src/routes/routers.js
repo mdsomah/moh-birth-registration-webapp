@@ -33,9 +33,6 @@ const ResetPassword = React.lazy(() =>
 const Dashboard = React.lazy(() =>
   import("../components/Dashboard/Pages/Dashboard/Dashboard")
 );
-const Analytics = React.lazy(() =>
-  import("../components/Dashboard/Pages/Analytics/Analytics")
-);
 const Queries = React.lazy(() =>
   import("../components/Dashboard/Pages/Queries/Queries")
 );
@@ -137,16 +134,6 @@ export const router = createBrowserRouter([
       <PrivateRoute>
         <ErrorBoundary FallbackComponent={ErrorsHandler}>
           <Dashboard />
-        </ErrorBoundary>
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/analytics",
-    element: (
-      <PrivateRoute>
-        <ErrorBoundary FallbackComponent={ErrorsHandler}>
-          <Analytics />
         </ErrorBoundary>
       </PrivateRoute>
     ),

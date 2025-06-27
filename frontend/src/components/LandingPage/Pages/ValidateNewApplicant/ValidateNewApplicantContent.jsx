@@ -20,6 +20,7 @@ import { LuAsterisk } from "react-icons/lu";
 import { FaArrowLeft } from "react-icons/fa";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import ButtonLoader from "../../../ButtonLoader/ButtonLoader";
 import { setApplicant } from "../../../../app/slices/querySlice";
 import { encrypt } from "../../../../utils/encrypt";
 import { decrypt } from "../../../../utils/decrypt";
@@ -251,6 +252,7 @@ const ValidateNewApplicantContent = () => {
             variant="contained"
             size="large"
             loading={loading}
+            loadingIndicator={<ButtonLoader />}
             loadingPosition="end"
             endIcon={<IoMdCheckmarkCircleOutline size={20} color="#fff" />}
             sx={{ mt: 3, mb: 2, bgcolor: "buttonBGColor.main" }}

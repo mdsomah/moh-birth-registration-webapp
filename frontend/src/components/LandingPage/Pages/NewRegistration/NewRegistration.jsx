@@ -34,6 +34,7 @@ import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import ButtonLoader from "../../../ButtonLoader/ButtonLoader";
 import CopyRights from "../../CopyRights/CopyRights";
 import { responsiveTheme } from "../../../../utils/muiUtils";
 import {
@@ -1141,12 +1142,17 @@ const NewRegistration = () => {
                       variant="contained"
                       size="large"
                       loading={loading}
+                      loadingIndicator={<ButtonLoader />}
                       loadingPosition="end"
                       endIcon={<SendIcon />}
                       sx={{ mt: 3, ml: 1, bgcolor: "primary.main" }}
                       onClick={handleSubmit}
                     >
-                      <span>Submit</span>
+                      {loading ? (
+                        <span style={{ color: "#fff" }}>Submitting</span>
+                      ) : (
+                        <spa>Submit</spa>
+                      )}
                     </LoadingButton>
                   ) : (
                     <Button

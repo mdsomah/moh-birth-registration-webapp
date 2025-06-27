@@ -17,8 +17,8 @@ const CopyRights = (props) => {
       ]}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://www.nsa.gov.lr/" target="_blank">
-        Ministry of Health
+      <Link color="inherit" href="https://moh.gov.lr/" target="_blank">
+        Ministry of Health, Republic of Liberia
       </Link>{" "}
       {new Date().getFullYear()}
     </Typography>

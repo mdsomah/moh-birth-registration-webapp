@@ -13,7 +13,6 @@ import Drawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import ColorModeIconDropdown from "../../../shared-theme/ColorModeIconDropdown";
-import Sitemark from "../SitemarkIcon/SitemarkIcon";
 
 //? MOH Logo
 import MOHLogo from "../../../images/MOH_Logo/MOH-LOGO.png";

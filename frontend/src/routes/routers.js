@@ -22,6 +22,9 @@ const ValidateNewApplicant = React.lazy(() =>
 const NewRegistration = React.lazy(() =>
   import("../components/LandingPage/Pages/NewRegistration/NewRegistration")
 );
+const Signin = React.lazy(() =>
+  import("../components/LandingPage/Pages/Signin/Signin")
+);
 
 //? 404 Error Component import
 const Error404 = React.lazy(() => import("../components/404/Erorr404"));
@@ -59,6 +62,17 @@ export const router = createBrowserRouter([
           <NewRegistration />
         </ErrorBoundary>
       </ProtectedRegistration>
+    ),
+  },
+  {
+    path: "/sign-in",
+    index: true,
+    element: (
+      <UnPrivateRoute>
+        <ErrorBoundary FallbackComponent={ErrorsHandler}>
+          <Signin />
+        </ErrorBoundary>
+      </UnPrivateRoute>
     ),
   },
   {

@@ -6,7 +6,7 @@ const override = {
   margin: "0 auto",
 };
 
-const color = "#d4bf79";
+const color = "#fff";
 
 const ButtonLoader = () => {
   return (

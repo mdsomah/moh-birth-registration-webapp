@@ -1,4 +1,5 @@
 const Yup = require("yup");
+require("yup-phone-lite");
 
 //? Photo upload formats
 const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];

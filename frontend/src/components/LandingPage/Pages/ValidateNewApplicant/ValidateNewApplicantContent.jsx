@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link as URLLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import {
   Box,
   Typography,
@@ -22,8 +22,8 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import ButtonLoader from "../../../ButtonLoader/ButtonLoader";
 import { setApplicant } from "../../../../app/slices/querySlice";
-import { encrypt } from "../../../../utils/encrypt";
-import { decrypt } from "../../../../utils/decrypt";
+import { encryptAPI } from "../../../../utils/encryptAPI";
+import { decryptAPI } from "../../../../utils/decryptAPI";
 
 //? Formik and Yup
 import { useFormik } from "formik";
@@ -103,7 +103,9 @@ const ValidateNewApplicantContent = () => {
   //? Validate Applicant Data
   const ValidateApplicantData = {};
   if (formikValidateApplicantForm.values.NIN !== "") {
-    ValidateApplicantData.NIN = encrypt(formikValidateApplicantForm.values.NIN);
+    ValidateApplicantData.NIN = encryptAPI(
+      formikValidateApplicantForm.values.NIN
+    );
   }
   console.log(ValidateApplicantData);
 
@@ -119,7 +121,7 @@ const ValidateNewApplicantContent = () => {
     onSuccess: (data) => {
       if (data) {
         const cipherText = data;
-        const decryptedData = decrypt(
+        const decryptedData = decryptAPI(
           cipherText.encryptedPayload,
           cipherText.encryptedSessionKey
         );

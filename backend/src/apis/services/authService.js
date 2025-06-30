@@ -5,7 +5,7 @@ const { prisma } = require("../models/db/database");
 const { mailTemplate, passwordResetEmail } = require("../emails/resetPassword");
 
 //? Remember Me Token
-const rememberMeToken = async (id, generateToken) => {
+const rememberMeToken = async (id, rememberMe_Token) => {
   //? Check if user id exist
   const user = await prisma.user.findUnique({
     where: { id: id },
@@ -31,7 +31,7 @@ const rememberMeToken = async (id, generateToken) => {
   const rememberMe = await prisma.rememberToken.create({
     data: {
       userId: id,
-      token: generateToken,
+      token: rememberMe_Token,
       expiresAt: `${tokenExpiresAt}`,
     },
   });

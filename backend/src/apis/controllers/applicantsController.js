@@ -15,8 +15,26 @@ const { decrypt } = require("../utils/decryptUtils");
 //? Register New Applicant
 const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
+  const { encryptedData } = req.body;
+
+  //? Decrypt the encryptedData
+  const decryptedData = decrypt(
+    encryptedData,
+    process.env.ENCRYPTION_KEY,
+    process.env.ENCRYPTION_IV
+  );
+
+  //? Define Applicant & Guardian Photo
+  const applicantPhoto = req.files
+    ? req.files.decryptedData.applicantPhoto[0].path
+    : decryptedData.applicantPhoto;
+
+  const parentOrGuardianPhoto = req.files
+    ? req.files.decryptedData.parentOrGuardianPhoto[0].path
+    : decryptedData.parentOrGuardianPhoto;
+
+  //? Destructure decryptedData
   const {
-    // applicantPhoto,
     formNumber,
     applicantSex,
     dateOfApplication,
@@ -65,13 +83,7 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
     address,
     relationship,
     contactNumber,
-    // parentOrGuardianPhoto,
-  } = req.body;
-
-  //? Define Applicant & Guardian Photo
-  const applicantPhoto = req.files.applicantPhoto[0].path;
-
-  const parentOrGuardianPhoto = req.files.parentOrGuardianPhoto[0].path;
+  } = decryptedData;
 
   try {
     Logger.info("Registering New Applicant: Status success!");
@@ -127,12 +139,18 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
       contactNumber,
       parentOrGuardianPhoto
     );
+    //? Encrypt the newApplicant data
+    const encryptedNewApplicant = encrypt(
+      newApplicant,
+      process.env.ENCRYPTION_KEY,
+      process.env.ENCRYPTION_IV
+    );
     return res.status(201).json({
       success: true,
       isAuthenticated: false,
       method: req.method,
       message: "Registration completed successfully!",
-      newApplicant: newApplicant,
+      encryptedNewApplicant: encryptedNewApplicant,
     });
   } catch (err) {
     Logger.error("Registering New Applicant: Status failed!");

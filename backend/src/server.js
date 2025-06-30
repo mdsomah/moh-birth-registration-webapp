@@ -1,5 +1,5 @@
 require("dotenv").config();
-// const { Debug } = require("./apis/helpers/debug");
+const { Debug } = require("./apis/helpers/debug");
 const { errorsHandler } = require("./apis/middlewares/errorMiddleware");
 const express = require("express");
 const { createServer } = require("node:http");
@@ -36,7 +36,7 @@ const { prisma } = require("./apis/models/db/database");
 //? CORS Configuration Options
 const corsOptions = {
   origins: `${process.env.FRONTEND_URL}`,
-  methods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"],
   optionsSuccessStatus: 200,
   credentials: true,
 };
@@ -79,9 +79,11 @@ async function main() {
   app.use(passport.session());
 
   //? Debugging Route
-  // app.use("/api/v1/debugs", Debug);
+  if (process.env.NODE_ENV === "development") {
+    app.use("/api/v1/debugs", Debug);
+  }
 
-  //? Rate Limit Test
+  //? Rate Limit & Slowdown Test
   app.get("/api/v1/rate-limit-test", rateLimitter, rateSlowdown, (req, res) => {
     res.send({
       success: true,
@@ -97,6 +99,7 @@ async function main() {
   app.use("/api/v1/user/roles", userRolesRoute);
   app.use("/api/v1/applicants", applicantsRoute);
   app.use("/api/v1/images", express.static("images"));
+  app.use("/api/v1/uploads", express.static("uploads"));
 
   //? Catch All Unregistered APIs Routes
   app.all("/*splat", (req, res) => {
@@ -122,7 +125,7 @@ async function main() {
 
   //? Check if the URL is production
   if (process.env.NODE_ENV === "production") {
-    const prodBaseURL = `https://online.moh.com/:${PORT}`;
+    const prodBaseURL = `https://birth-registration.moh.gov.lr/:${PORT}`;
 
     //? Listening on Port 5000
     server.listen(PORT, () =>

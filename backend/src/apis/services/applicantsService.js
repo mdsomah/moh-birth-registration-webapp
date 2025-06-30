@@ -3,7 +3,7 @@ const { customAlphabet } = require("nanoid");
 const { prisma } = require("../models/db/database");
 
 //? Generate NanoId for Form_Number
-const nanoidFormNumber = customAlphabet("0123456789", 4);
+const nanoidFormNumber = customAlphabet("0123456789", 10);
 const Form_Number = () => nanoidFormNumber();
 
 //? Register New Applicant

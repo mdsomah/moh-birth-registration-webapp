@@ -49,7 +49,7 @@ import {
   removeFinalStepForm,
 } from "../../../../app/slices/newRegistrationSlice";
 import { removeApplicant } from "../../../../app/slices/querySlice";
-// import { encrypt } from "../../../../utils/encrypt";
+import { encrypt } from "../../../../utils/encrypt";
 
 //? React Responsive Media Queries
 import { useMediaQuery } from "react-responsive";
@@ -412,8 +412,8 @@ const NewRegistration = () => {
   });
   const isBigScreen = useMediaQuery({ query: "(min-width: 1824px)" });
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
-  const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
-  const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
+  // const isPortrait = useMediaQuery({ query: "(orientation: portrait)" });
+  // const isRetina = useMediaQuery({ query: "(min-resolution: 2dppx)" });
 
   //? useDispatch
   const dispatch = useDispatch();
@@ -828,8 +828,14 @@ const NewRegistration = () => {
     formData.append("contactNumber", contactNumber);
     formData.append("parentOrGuardianPhoto", parentOrGuardianPhoto);
 
+    const encryptedData = encrypt(
+      formData,
+      process.env.REACT_APP_ENCRYPTION_KEY,
+      process.env.REACT_APP_ENCRYPTION_IV
+    );
+
     if (isLastStep) {
-      Mutation.mutate(formData);
+      Mutation.mutate(encryptedData);
     }
   };
 

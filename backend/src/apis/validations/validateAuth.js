@@ -18,6 +18,9 @@ const validateUserLoginSchema = Yup.object()
         return true;
       }),
     Password: Yup.string().required("Password required!"),
+    rememberMe: Yup.boolean()
+      .required("Please select one!")
+      .oneOf([true, false]),
   })
   .required();
 

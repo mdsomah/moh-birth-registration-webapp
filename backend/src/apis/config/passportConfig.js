@@ -107,13 +107,19 @@ passport.use(
         })
         .then((user) => {
           if (!user) {
-            return done(HTTPErrors(406, "Invalid username!"), false);
+            return done(
+              HTTPErrors(406, "Invalid username or password!"),
+              false
+            );
           }
           bcrypt.compare(decryptedPassword, user.password).then((result) => {
             if (result) {
               return done(null, user);
             } else {
-              return done(HTTPErrors(406, "Invalid password!"), false);
+              return done(
+                HTTPErrors(406, "Invalid username or password!"),
+                false
+              );
             }
           });
         })

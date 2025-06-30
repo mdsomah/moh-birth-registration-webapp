@@ -30,6 +30,12 @@ const imagesProxy = {
   changeOrigin: true,
 };
 
+//? Uploads Upload
+const uploadsProxy = {
+  target: `${process.env.REACT_APP_BACKEND_URL}/api/v1`,
+  changeOrigin: true,
+};
+
 //? NIR APIs
 const nirAPIsProxy = {
   target: `${process.env.REACT_APP_NIR_APIS_URL}`,
@@ -42,5 +48,6 @@ module.exports = function (app) {
   app.use("/user/roles", createProxyMiddleware(userRolesProxy));
   app.use("/applicants", createProxyMiddleware(applicantsProxy));
   app.use("/images", createProxyMiddleware(imagesProxy));
+  app.use("/uploads", createProxyMiddleware(uploadsProxy));
   app.use("/api", createProxyMiddleware(nirAPIsProxy));
 };

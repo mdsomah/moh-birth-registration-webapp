@@ -28,6 +28,8 @@ import ForgotPassword from "./ForgetPassword/ForgotPassword";
 import ButtonLoader from "../../../ButtonLoader/ButtonLoader";
 import { authActions } from "../../../../app/actions/authActions";
 import { setUserProfile } from "../../../../app/slices/authSlice";
+import { encrypt } from "../../../../utils/encrypt";
+import { decrypt } from "../../../../utils/decrypt";
 
 //? Formik and Yup
 import { useFormik } from "formik";
@@ -111,9 +113,21 @@ const SigninContent = () => {
 
   //? User Login Data
   const UserLoginData = {
-    Username: formikUserLoginForm.values.Username,
-    Password: formikUserLoginForm.values.Password,
-    rememberMe: formikUserLoginForm.values.rememberMe,
+    Username: encrypt(
+      formikUserLoginForm.values.Username,
+      process.env.REACT_APP_ENCRYPTION_KEY,
+      process.env.REACT_APP_ENCRYPTION_IV
+    ),
+    Password: encrypt(
+      formikUserLoginForm.values.Password,
+      process.env.REACT_APP_ENCRYPTION_KEY,
+      process.env.REACT_APP_ENCRYPTION_IV
+    ),
+    rememberMe: encrypt(
+      formikUserLoginForm.values.rememberMe,
+      process.env.REACT_APP_ENCRYPTION_KEY,
+      process.env.REACT_APP_ENCRYPTION_IV
+    ),
   };
 
   console.log(UserLoginData);
@@ -125,23 +139,29 @@ const SigninContent = () => {
     mutationFn: (newData) => dispatch(login(newData)),
     onSuccess: (data) => {
       const { user } = data?.payload?.user;
+      const decryptedUser = decrypt(
+        user,
+        process.env.REACT_APP_ENCRYPTION_KEY,
+        process.env.REACT_APP_ENCRYPTION_IV
+      );
       const loginUserProfile = {
-        id: user?.id,
-        lastName: user?.lastName,
-        firstName: user?.firstName,
-        middleName: user?.middleName,
-        displayName: user?.displayName,
-        primaryPhoneNumber: user?.primaryPhoneNumber,
-        secondaryPhoneNumber: user?.secondaryPhoneNumber,
-        email: user?.email,
-        userName: user?.userName,
-        role: user?.role,
-        photo: user?.photo,
+        id: decryptedUser?.id,
+        lastName: decryptedUser?.lastName,
+        firstName: decryptedUser?.firstName,
+        middleName: decryptedUser?.middleName,
+        displayName: decryptedUser?.displayName,
+        primaryPhoneNumber: decryptedUser?.primaryPhoneNumber,
+        secondaryPhoneNumber: decryptedUser?.secondaryPhoneNumber,
+        email: decryptedUser?.email,
+        userName: decryptedUser?.userName,
+        rememberMe: decryptedUser?.rememberMe,
+        role: decryptedUser?.role,
+        photo: decryptedUser?.photo,
       };
       if (formikUserLoginForm.values.rememberMe === true) {
         localStorage.setItem(
           "rememberMe_token",
-          JSON.stringify(user?.accessToken)
+          JSON.stringify(decryptedUser?.accessToken)
         );
       } else {
         localStorage.removeItem("rememberMe_token");

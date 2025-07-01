@@ -21,8 +21,8 @@ import Copyright from "../Dashboard/internals/components/Copyright";
 import QueriesTable from "./QueriesTable/QueriesTable";
 import ButtonLoader from "../../../ButtonLoader/ButtonLoader";
 import NavbarBreadcrumbs from "../Dashboard/components/NavbarBreadcrumbs";
-import { encrypt } from "../../../../utils/encrypt";
-import { decrypt } from "../../../../utils/decrypt";
+import { encryptAPI } from "../../../../utils/encryptAPI";
+import { decryptAPI } from "../../../../utils/decryptAPI";
 
 //? Formik
 import { useFormik } from "formik";
@@ -119,23 +119,25 @@ const MainUsersGrid = () => {
   //? Applicant Data Object
   const ApplicantData = {};
   if (formikApplicantQueryForm.values.NIN !== "") {
-    ApplicantData.NIN = encrypt(formikApplicantQueryForm.values.NIN);
+    ApplicantData.NIN = encryptAPI(formikApplicantQueryForm.values.NIN);
   }
   if (formikApplicantQueryForm.values.FirstName !== "") {
-    ApplicantData.FirstName = encrypt(
+    ApplicantData.FirstName = encryptAPI(
       formikApplicantQueryForm.values.FirstName
     );
   }
   if (formikApplicantQueryForm.values.LastName !== "") {
-    ApplicantData.LastName = encrypt(formikApplicantQueryForm.values.LastName);
+    ApplicantData.LastName = encryptAPI(
+      formikApplicantQueryForm.values.LastName
+    );
   }
   if (formikApplicantQueryForm.values.MobileNumber !== "") {
-    ApplicantData.MobileNumber = encrypt(
+    ApplicantData.MobileNumber = encryptAPI(
       formikApplicantQueryForm.values.MobileNumber
     );
   }
   if (formikApplicantQueryForm.values.DateOfBirth !== "") {
-    ApplicantData.DateOfBirth = encrypt(
+    ApplicantData.DateOfBirth = encryptAPI(
       formikApplicantQueryForm.values.DateOfBirth
     );
   }
@@ -153,7 +155,7 @@ const MainUsersGrid = () => {
     onSuccess: (data) => {
       if (data) {
         const cipherText = data;
-        const decryptedData = decrypt(
+        const decryptedData = decryptAPI(
           cipherText.encryptedPayload,
           cipherText.encryptedSessionKey
         );

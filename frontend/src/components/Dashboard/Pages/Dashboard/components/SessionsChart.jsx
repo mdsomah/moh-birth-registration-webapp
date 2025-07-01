@@ -41,7 +41,7 @@ function getDaysInMonth(month, year) {
 
 const SessionsChart = (props) => {
   //? Destructure props
-  const { applicantsLoading, applicantsData } = props;
+  // const { applicantsLoading, applicantsData } = props;
 
   //? Month Name
   const monthName = [

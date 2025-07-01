@@ -118,17 +118,7 @@ const GetUserProfile = asyncHandler(async (req, res, next) => {
 //? Update User Profile Password
 const UpdateUserProfilePassword = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
-  const { encryptedData } = req.body;
-
-  //? Decrypt the encryptedData
-  const decryptedProfilePassword = decrypt(
-    encryptedData,
-    process.env.ENCRYPTION_KEY,
-    process.env.ENCRYPTION_IV
-  );
-
-  //? Destructure decryptedUpdateRole data
-  const { password, confirmPassword } = decryptedProfilePassword;
+  const { password, confirmPassword } = req.body;
 
   //? Destructure id from req.user
   const { id } = req.user;
@@ -140,18 +130,12 @@ const UpdateUserProfilePassword = asyncHandler(async (req, res, next) => {
       password,
       confirmPassword
     );
-    //? Encrypt the updatedProfilePassword data
-    const encryptedProfilePassword = encrypt(
-      updateProfilePassword,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
     return res.status(200).json({
       success: true,
       isAuthenticated: true,
       method: req.method,
       message: "Password updated successfully!",
-      encryptedProfilePassword: encryptedProfilePassword,
+      updateProfilePassword: updateProfilePassword,
     });
   } catch (err) {
     Logger.info("Updating User Profile Password: Status failed!");

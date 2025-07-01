@@ -16,44 +16,31 @@ import { decrypt } from "../../../../../utils/decrypt";
 //? React Responsive Media Queries
 import { useMediaQuery } from "react-responsive";
 
-//? Get All NIR Data
-import GetAllApplicants from "../../../../../apis/NIR-APIs/GetAllApplicants";
+//? Get All Data
+import GetAllData from "../../../../../apis/GetAllData";
 
 //? Endpoints
-const getAllApplicantsURL = "/api/Applicant/encrypted-bulkrecords";
+const getAllApplicantsURL = "/applicants";
 
 const MainGrid = () => {
   //? Tablet or Mobile Responsive Media Queries
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
-  const page = 1;
-  const size = 100;
-
   //? Destructure useQuery
-  const {
-    isLoading: applicantsLoading,
-    data: applicantsData,
-    refetch: applicantsRefecthing,
-  } = useQuery({
-    queryKey: ["applicantsData", page, size],
-    queryFn: ({ queryKey }) =>
-      GetAllApplicants(
-        `${getAllApplicantsURL}?page=${queryKey[1]}&size=${queryKey[2]}`
-      ),
+  const { isLoading: applicantsLoading, data: applicantsData } = useQuery({
+    queryKey: ["applicantsData"],
+    queryFn: () => GetAllData(`${getAllApplicantsURL}`),
   });
 
   //? Data Definition
   const ResponseData = useMemo(() => applicantsData ?? [], [applicantsData]);
 
-  //? Cipher Text
-  const cipherText = ResponseData;
-  console.log(cipherText);
-
   //? Decrypted Data
-  const decryptedData =
-    cipherText && Object.keys(cipherText).length !== 0
-      ? decrypt(cipherText.encryptedPayload, cipherText.encryptedSessionKey)
-      : [];
+  const decryptedData = decrypt(
+    ResponseData,
+    process.env.REACT_APP_ENCRYPTION_KEY,
+    process.env.REACT_APP_ENCRYPTION_IV
+  );
   console.log(decryptedData);
 
   //? Total Registered Applicants

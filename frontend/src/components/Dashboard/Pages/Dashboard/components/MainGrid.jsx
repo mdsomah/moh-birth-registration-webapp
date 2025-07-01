@@ -20,6 +20,7 @@ import GetAllData from "../../../../../apis/GetAllData";
 
 //? Endpoints
 const getAllApplicantsURL = "/applicants";
+const getAllUsersURL = "/users";
 
 const MainGrid = () => {
   //? Tablet or Mobile Responsive Media Queries
@@ -31,54 +32,59 @@ const MainGrid = () => {
     queryFn: () => GetAllData(`${getAllApplicantsURL}`),
   });
 
+  const { isLoading: usersLoading, data: usersData } = useQuery({
+    queryKey: ["usersData"],
+    queryFn: () => GetAllData(`${getAllUsersURL}`),
+  });
+
   //? Data Definition
-  const ResponseData = useMemo(() => applicantsData ?? [], [applicantsData]);
-  console.log(ResponseData);
+  const ApplicantsData = useMemo(() => applicantsData ?? [], [applicantsData]);
+  console.log(ApplicantsData);
+
+  const UsersData = useMemo(() => usersData ?? [], [usersData]);
+  console.log(UsersData);
 
   //? Total Registered Applicants
-  const totalRegisteredApplicants = 770687;
-  // decryptedData && decryptedData?.length !== 0 ? cipherText?.totalRecords : 0;
-
-  //? Total Registered Citizens
-  const totalRegisteredCitizens = 769589;
-  // decryptedData && decryptedData?.length !== 0 ? cipherText?.totalRecords : 0;
-
-  //? Total Registered Residents
-  const totalRegisteredResidents = 1098;
-  // decryptedData && decryptedData?.length !== 0 ? cipherText?.totalRecords : 0;
+  const totalRegisteredApplicants = applicantsLoading
+    ? 0
+    : ApplicantsData?.length;
 
   //? Total Registered Males
-  const totalRegisteredMales = 437608;
-  // decryptedData && decryptedData?.length !== 0
-  //   ? decryptedData?.filter((applicant) => applicant?.Gender === "Male")
-  //       .length
-  //   : 0;
+  const totalRegisteredMales = applicantsLoading
+    ? 0
+    : ApplicantsData?.filter((applicant) => applicant?.applicantSex === "Male")
+        .length;
 
   //? Total Registered Females
-  const totalRegisteredFemales = 333079;
-  // decryptedData && decryptedData?.length !== 0
-  //   ? decryptedData?.filter((applicant) => applicant?.Gender === "Female")
-  //       .length
-  //   : 0;
+  const totalRegisteredFemales = applicantsLoading
+    ? 0
+    : ApplicantsData?.filter(
+        (applicant) => applicant?.applicantSex === "Female"
+      ).length;
 
-  //? Total NIN Generated
-  const totalNINGenerated = 704742;
+  //? Total Accepted Applicants
+  const totalAcceptedApplicants = 0;
+  // decryptedData && decryptedData?.length !== 0 ? cipherText?.totalRecords : 0;
+
+  //? Total Rejected Applicants
+  const totalRejectedApplicants = 0;
+  // decryptedData && decryptedData?.length !== 0 ? cipherText?.totalRecords : 0;
+
+  //? Total Appointments
+  const totalAppointments = 0;
   // decryptedData && decryptedData?.length !== 0
   //   ? decryptedData?.filter((applicant) => applicant?.NIN !== "").length
   //   : 0;
 
-  //? Total Duplicates
-  const totalDuplicates = 2810;
+  //? Total Payments
+  const totalPayments = 0;
   // decryptedData && decryptedData?.length !== 0
   //   ? decryptedData?.filter((applicant) => applicant?.EnrollmentId === "")
   //       .length
   //   : 0;
 
-  //? Total Printed Cards
-  const totalPrintedCards = 704742;
-  // decryptedData && decryptedData?.length !== 0
-  //   ? decryptedData?.filter((applicant) => applicant?.NIN === "").length
-  //   : 0;
+  //? Total Users
+  const totalUsers = usersLoading ? 0 : UsersData?.length;
 
   //? Dashboard Data
   const data = [
@@ -87,28 +93,6 @@ const MainGrid = () => {
       value: `${totalRegisteredApplicants}`,
       interval: "Last 30 days",
       trend: "totalApplicants",
-      data: [
-        2000, 200, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
-        2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
-        2000, 2000, 2000, 2000, 2000, 2000,
-      ],
-    },
-    {
-      title: "Total Registered Citizens",
-      value: `${totalRegisteredCitizens}`,
-      interval: "Last 30 days",
-      trend: "totalCitizens",
-      data: [
-        2000, 200, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
-        2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
-        2000, 2000, 2000, 2000, 2000, 2000,
-      ],
-    },
-    {
-      title: "Total Registered Residents",
-      value: `${totalRegisteredResidents}`,
-      interval: "Last 30 days",
-      trend: "totalResidents",
       data: [
         2000, 200, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
         2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
@@ -138,10 +122,10 @@ const MainGrid = () => {
       ],
     },
     {
-      title: "Total NIN Generated",
-      value: `${totalNINGenerated}`,
+      title: "Total Accepted Applicants",
+      value: `${totalAcceptedApplicants}`,
       interval: "Last 30 days",
-      trend: "totalNIN",
+      trend: "totalAccepted",
       data: [
         2000, 200, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
         2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
@@ -149,10 +133,10 @@ const MainGrid = () => {
       ],
     },
     {
-      title: "Total Duplicates",
-      value: `${totalDuplicates}`,
+      title: "Total Rejected Applicants",
+      value: `${totalRejectedApplicants}`,
       interval: "Last 30 days",
-      trend: "totalDuplicates",
+      trend: "totalRejected",
       data: [
         2000, 200, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
         2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
@@ -160,10 +144,32 @@ const MainGrid = () => {
       ],
     },
     {
-      title: "Total Printed Cards",
-      value: `${totalPrintedCards}`,
+      title: "Total Appointments",
+      value: `${totalAppointments}`,
       interval: "Last 30 days",
-      trend: "totalPrintedCards",
+      trend: "totalAppointments",
+      data: [
+        2000, 200, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
+        2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
+        2000, 2000, 2000, 2000, 2000, 2000,
+      ],
+    },
+    {
+      title: "Total Payments",
+      value: `${totalPayments}`,
+      interval: "Last 30 days",
+      trend: "totalPayments",
+      data: [
+        2000, 200, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
+        2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
+        2000, 2000, 2000, 2000, 2000, 2000,
+      ],
+    },
+    {
+      title: "Total Users",
+      value: `${totalUsers}`,
+      interval: "Last 30 days",
+      trend: "totalUsers",
       data: [
         2000, 200, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,
         2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000,

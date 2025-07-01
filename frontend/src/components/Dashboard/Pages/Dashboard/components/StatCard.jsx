@@ -118,31 +118,31 @@ const StatCard = ({ title, value, interval, trend, data }) => {
       theme.palette.mode === "light"
         ? theme.palette.success.main
         : theme.palette.success.dark,
-    totalCitizens:
-      theme.palette.mode === "light"
-        ? theme.palette.error.main
-        : theme.palette.error.dark,
-    totalResidents:
-      theme.palette.mode === "light"
-        ? theme.palette.grey[400]
-        : theme.palette.grey[700],
     totalMales:
       theme.palette.mode === "light"
         ? theme.palette.info.main
         : theme.palette.info.dark,
     totalFemales:
       theme.palette.mode === "light"
+        ? theme.palette.primary[400]
+        : theme.palette.primary[700],
+    totalAccepted:
+      theme.palette.mode === "light"
         ? theme.palette.secondary.main
         : theme.palette.secondary.dark,
-    totalNIN:
+    totalRejected:
+      theme.palette.mode === "light"
+        ? theme.palette.error.main
+        : theme.palette.error.dark,
+    totalAppointments:
       theme.palette.mode === "light"
         ? theme.palette.warning.main
         : theme.palette.warning.dark,
-    totalDuplicates:
+    totalPayments:
       theme.palette.mode === "light"
         ? theme.palette.grey[400]
         : theme.palette.grey[700],
-    totalPrintedCards:
+    totalUsers:
       theme.palette.mode === "light"
         ? theme.palette.grey[400]
         : theme.palette.grey[700],
@@ -150,26 +150,26 @@ const StatCard = ({ title, value, interval, trend, data }) => {
 
   const labelColors = {
     totalApplicants: "success",
-    totalCitizens: "error",
-    totalResidents: "default",
     totalMales: "info",
-    totalFemales: "secondary",
-    totalNIN: "warning",
-    totalDuplicates: "grey",
-    totalPrintedCards: "grey",
+    totalFemales: "primary",
+    totalAccepted: "secondary",
+    totalRejected: "error",
+    totalAppointments: "warning",
+    totalPayments: "grey",
+    totalUsers: "grey",
   };
 
   const color = labelColors[trend];
   const chartColor = trendColors[trend];
   const trendValues = {
     totalApplicants: "+14.82%",
-    totalCitizens: "+14.8%",
-    totalResidents: "+0.0211%",
-    totalMales: "+8.416%",
-    totalFemales: "+6.4%",
-    totalNIN: "+13.55%",
-    totalDuplicates: "+0.054%",
-    totalPrintedCards: "+13.55%",
+    totalMales: "+14.82%",
+    totalFemales: "+14.82%",
+    totalAccepted: "+14.82%",
+    totalRejected: "+14.82%",
+    totalAppointments: "+14.82%",
+    totalPayments: "+14.82%",
+    totalUsers: "+14.82%",
   };
 
   return (
@@ -228,13 +228,13 @@ StatCard.propTypes = {
   title: PropTypes.string.isRequired,
   trend: PropTypes.oneOf([
     "totalApplicants",
-    "totalCitizens",
-    "totalResidents",
     "totalMales",
     "totalFemales",
-    "totalNIN",
-    "totalDuplicates",
-    "totalPrintedCards",
+    "totalAccepted",
+    "totalRejected",
+    "totalAppointments",
+    "totalPayments",
+    "totalUsers",
   ]).isRequired,
   value: PropTypes.string.isRequired,
 };

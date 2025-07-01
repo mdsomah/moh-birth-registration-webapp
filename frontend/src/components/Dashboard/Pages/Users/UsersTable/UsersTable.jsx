@@ -37,8 +37,8 @@ import DeleteSingleData from "../../../../../apis/DeleteSingleData";
 const MySwal = withReactContent(Swal);
 
 //? Endpoints
-const getAllUsersURL = "/users/";
-const deleteUserURL = "/users/";
+const getAllUsersURL = "/users";
+const deleteUserURL = "/users";
 
 export let Row_Data;
 export let Close_Menu;

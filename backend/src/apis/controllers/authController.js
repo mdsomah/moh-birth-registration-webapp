@@ -14,8 +14,6 @@ const {
   forgetUserPassword,
   resetUserPassword,
 } = require("../services/authService");
-const { encrypt } = require("../utils/encryptUtils");
-const { decrypt } = require("../utils/decryptUtils");
 
 //? Creating 30 days from milliseconds
 const cookieExpiresAt = new Date(
@@ -43,19 +41,12 @@ const Login = asyncHandler(async (req, res, next) => {
       photo,
     } = req.user;
 
-    //? Decrypt rememberMe from req.body
-    const decryptedRememberMe = decrypt(
-      req.body.rememberMe,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
-
     if (req.isAuthenticated()) {
       const accessToken = Access_Token(id);
       const refreshToken = Refresh_Token(id);
       let rememberMe_Token = null;
 
-      if (decryptedRememberMe === true) {
+      if (req.body.rememberMe === true) {
         rememberMe_Token = Remember_Me_Token(id);
         await rememberMeToken(id, rememberMe_Token);
         res.cookie(`${process.env.REMEMBER_TOKEN_NAME}`, rememberMe_Token, {
@@ -65,31 +56,6 @@ const Login = asyncHandler(async (req, res, next) => {
           maxAge: cookieExpiresAt,
         });
       }
-
-      //? User Object
-      const userOBJ = {
-        id: id,
-        lastName: lastName,
-        firstName: firstName,
-        middleName: middleName,
-        displayName: displayName,
-        primaryPhoneNumber: primaryPhoneNumber,
-        secondaryPhoneNumber: secondaryPhoneNumber,
-        email: email,
-        userName: userName,
-        rememberMe: rememberMe,
-        role: role,
-        photo: photo,
-        accessToken: accessToken,
-        rememberMe_Token: rememberMe_Token,
-      };
-
-      //? Encrypt the userOBJ data
-      const encryptedUserOBJ = encrypt(
-        userOBJ,
-        process.env.ENCRYPTION_KEY,
-        process.env.ENCRYPTION_IV
-      );
 
       req.session[`${process.env.TOKEN_NAME}`] = refreshToken;
       return res
@@ -106,7 +72,22 @@ const Login = asyncHandler(async (req, res, next) => {
           isAuthenticated: true,
           method: req.method,
           message: "User login successfully!",
-          user: encryptedUserOBJ,
+          user: {
+            id: id,
+            lastName: lastName,
+            firstName: firstName,
+            middleName: middleName,
+            displayName: displayName,
+            primaryPhoneNumber: primaryPhoneNumber,
+            secondaryPhoneNumber: secondaryPhoneNumber,
+            email: email,
+            userName: userName,
+            rememberMe: rememberMe,
+            role: role,
+            photo: photo,
+            accessToken: accessToken,
+            rememberMe_Token: rememberMe_Token,
+          },
         });
     }
   } catch (err) {

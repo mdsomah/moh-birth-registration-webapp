@@ -49,7 +49,6 @@ import {
   removeFinalStepForm,
 } from "../../../../app/slices/newRegistrationSlice";
 import { removeApplicant } from "../../../../app/slices/querySlice";
-import { encrypt } from "../../../../utils/encrypt";
 
 //? React Responsive Media Queries
 import { useMediaQuery } from "react-responsive";
@@ -828,14 +827,8 @@ const NewRegistration = () => {
     formData.append("contactNumber", contactNumber);
     formData.append("parentOrGuardianPhoto", parentOrGuardianPhoto);
 
-    const encryptedData = encrypt(
-      formData,
-      process.env.REACT_APP_ENCRYPTION_KEY,
-      process.env.REACT_APP_ENCRYPTION_IV
-    );
-
     if (isLastStep) {
-      Mutation.mutate(encryptedData);
+      Mutation.mutate(formData);
     }
   };
 

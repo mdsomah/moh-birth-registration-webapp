@@ -19,9 +19,9 @@ const authController = require("../controllers/authController");
 
 router.post(
   "/login",
+  validateInputs(validateUserLoginSchema),
   passportAuthenticateLocal,
   passportAuthenticateRememberMe,
-  validateInputs(validateUserLoginSchema),
   authController.Login
 );
 router.post(

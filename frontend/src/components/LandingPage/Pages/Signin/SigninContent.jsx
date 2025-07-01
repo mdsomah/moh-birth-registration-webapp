@@ -17,7 +17,7 @@ import {
   InputAdornment,
   OutlinedInput,
 } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
+// import { LoadingButton } from "@mui/lab";
 import { BsFillInfoCircleFill } from "react-icons/bs";
 import { IoMdSend } from "react-icons/io";
 import { LuAsterisk } from "react-icons/lu";
@@ -28,8 +28,6 @@ import ForgotPassword from "./ForgetPassword/ForgotPassword";
 import ButtonLoader from "../../../ButtonLoader/ButtonLoader";
 import { authActions } from "../../../../app/actions/authActions";
 import { setUserProfile } from "../../../../app/slices/authSlice";
-import { encrypt } from "../../../../utils/encrypt";
-import { decrypt } from "../../../../utils/decrypt";
 
 //? Formik and Yup
 import { useFormik } from "formik";
@@ -113,21 +111,9 @@ const SigninContent = () => {
 
   //? User Login Data
   const UserLoginData = {
-    Username: encrypt(
-      formikUserLoginForm.values.Username,
-      process.env.REACT_APP_ENCRYPTION_KEY,
-      process.env.REACT_APP_ENCRYPTION_IV
-    ),
-    Password: encrypt(
-      formikUserLoginForm.values.Password,
-      process.env.REACT_APP_ENCRYPTION_KEY,
-      process.env.REACT_APP_ENCRYPTION_IV
-    ),
-    rememberMe: encrypt(
-      formikUserLoginForm.values.rememberMe,
-      process.env.REACT_APP_ENCRYPTION_KEY,
-      process.env.REACT_APP_ENCRYPTION_IV
-    ),
+    Username: formikUserLoginForm.values.Username,
+    Password: formikUserLoginForm.values.Password,
+    rememberMe: formikUserLoginForm.values.rememberMe,
   };
 
   console.log(UserLoginData);
@@ -139,29 +125,24 @@ const SigninContent = () => {
     mutationFn: (newData) => dispatch(login(newData)),
     onSuccess: (data) => {
       const { user } = data?.payload?.user;
-      const decryptedUser = decrypt(
-        user,
-        process.env.REACT_APP_ENCRYPTION_KEY,
-        process.env.REACT_APP_ENCRYPTION_IV
-      );
       const loginUserProfile = {
-        id: decryptedUser?.id,
-        lastName: decryptedUser?.lastName,
-        firstName: decryptedUser?.firstName,
-        middleName: decryptedUser?.middleName,
-        displayName: decryptedUser?.displayName,
-        primaryPhoneNumber: decryptedUser?.primaryPhoneNumber,
-        secondaryPhoneNumber: decryptedUser?.secondaryPhoneNumber,
-        email: decryptedUser?.email,
-        userName: decryptedUser?.userName,
-        rememberMe: decryptedUser?.rememberMe,
-        role: decryptedUser?.role,
-        photo: decryptedUser?.photo,
+        id: user?.id,
+        lastName: user?.lastName,
+        firstName: user?.firstName,
+        middleName: user?.middleName,
+        displayName: user?.displayName,
+        primaryPhoneNumber: user?.primaryPhoneNumber,
+        secondaryPhoneNumber: user?.secondaryPhoneNumber,
+        email: user?.email,
+        userName: user?.userName,
+        rememberMe: user?.rememberMe,
+        role: user?.role,
+        photo: user?.photo,
       };
       if (formikUserLoginForm.values.rememberMe === true) {
         localStorage.setItem(
           "rememberMe_token",
-          JSON.stringify(decryptedUser?.accessToken)
+          JSON.stringify(user?.accessToken)
         );
       } else {
         localStorage.removeItem("rememberMe_token");
@@ -327,7 +308,7 @@ const SigninContent = () => {
             label="Remember me on this device"
           />
           <ForgotPassword open={open} handleClose={handleClose} />
-          <LoadingButton
+          <Button
             type="submit"
             fullWidth
             variant="contained"
@@ -341,9 +322,9 @@ const SigninContent = () => {
             {loading ? (
               <span style={{ color: "#fff" }}>Signing In</span>
             ) : (
-              <spa>Sign In</spa>
+              <span>Sign In</span>
             )}
-          </LoadingButton>
+          </Button>
           <URLLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
             <Button
               sx={{ p: 1, mt: 1, color: "#4169E1" }}

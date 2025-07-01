@@ -11,7 +11,6 @@ import PageViewsBarChart from "./PageViewsBarChart";
 import SessionsChart from "./SessionsChart";
 import StatCard from "./StatCard";
 import NavbarBreadcrumbs from "./NavbarBreadcrumbs";
-import { decrypt } from "../../../../../utils/decrypt";
 
 //? React Responsive Media Queries
 import { useMediaQuery } from "react-responsive";
@@ -34,14 +33,7 @@ const MainGrid = () => {
 
   //? Data Definition
   const ResponseData = useMemo(() => applicantsData ?? [], [applicantsData]);
-
-  //? Decrypted Data
-  const decryptedData = decrypt(
-    ResponseData,
-    process.env.REACT_APP_ENCRYPTION_KEY,
-    process.env.REACT_APP_ENCRYPTION_IV
-  );
-  console.log(decryptedData);
+  console.log(ResponseData);
 
   //? Total Registered Applicants
   const totalRegisteredApplicants = 770687;

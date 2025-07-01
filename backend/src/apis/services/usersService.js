@@ -55,6 +55,7 @@ const createNewUser = async (
     },
     include: { userRole: true },
   });
+
   return newUser;
 };
 
@@ -67,6 +68,7 @@ const getUserProfile = async (id) => {
   if (!userProfile) {
     throw new Error(`User profile with this id: ${id} not found!`);
   }
+
   return userProfile;
 };
 
@@ -85,6 +87,7 @@ const updateUserProfilePassword = async (id, password, confirmPassword) => {
   if (!updateProfilePassword) {
     throw new Error(`User with this id: ${id} not found!`);
   }
+
   return updateProfilePassword;
 };
 
@@ -100,6 +103,7 @@ const updateUserProfilePhoto = async (id, photo) => {
   if (!updateProfilePhoto) {
     throw new Error(`User with this id: ${id} not found!`);
   }
+
   return updateProfilePhoto;
 };
 
@@ -141,6 +145,7 @@ const updateUserProfile = async (
   if (!updateProfile) {
     throw new Error(`User with this id: ${id} not found!`);
   }
+
   return updateProfile;
 };
 
@@ -152,6 +157,7 @@ const getAllUsers = async () => {
   if (!users) {
     throw new Error("Users not found!");
   }
+
   return users;
 };
 
@@ -164,6 +170,7 @@ const getUserById = async (id) => {
   if (!user) {
     throw new Error(`User with this id: ${id} not found!`);
   }
+
   return user;
 };
 
@@ -182,6 +189,7 @@ const updateUserPassword = async (id, password, confirmPassword) => {
   if (!updatePassword) {
     throw new Error(`User with this id: ${id} not found!`);
   }
+
   return updatePassword;
 };
 
@@ -197,6 +205,7 @@ const updateUserPhoto = async (id, photo) => {
   if (!updatePhoto) {
     throw new Error(`User with this id: ${id} not found!`);
   }
+
   return updatePhoto;
 };
 
@@ -238,6 +247,7 @@ const updateUserById = async (
   if (!updateUser) {
     throw new Error(`User with this id: ${id} not found!`);
   }
+
   return updateUser;
 };
 
@@ -250,6 +260,7 @@ const deleteUserById = async (id) => {
   if (!deleteUser) {
     throw new Error(`User with this id: ${id} not found!`);
   }
+
   return deleteUser;
 };
 

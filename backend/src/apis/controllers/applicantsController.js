@@ -9,31 +9,10 @@ const {
   updateApplicantById,
   deleteApplicantById,
 } = require("../services/applicantsService");
-const { encrypt } = require("../utils/encryptUtils");
-const { decrypt } = require("../utils/decryptUtils");
 
 //? Register New Applicant
 const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
-  const { encryptedData } = req.body;
-
-  //? Decrypt the encryptedData
-  const decryptedData = decrypt(
-    encryptedData,
-    process.env.ENCRYPTION_KEY,
-    process.env.ENCRYPTION_IV
-  );
-
-  //? Define Applicant & Guardian Photo
-  const applicantPhoto = req.files
-    ? req.files.decryptedData.applicantPhoto[0].path
-    : decryptedData.applicantPhoto;
-
-  const parentOrGuardianPhoto = req.files
-    ? req.files.decryptedData.parentOrGuardianPhoto[0].path
-    : decryptedData.parentOrGuardianPhoto;
-
-  //? Destructure decryptedData
   const {
     formNumber,
     applicantSex,
@@ -83,7 +62,12 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
     address,
     relationship,
     contactNumber,
-  } = decryptedData;
+  } = req.body;
+
+  //? Define Applicant & Guardian Photo
+  const applicantPhoto = req.files.applicantPhoto[0].path;
+
+  const parentOrGuardianPhoto = req.files.parentOrGuardianPhoto[0].path;
 
   try {
     Logger.info("Registering New Applicant: Status success!");
@@ -139,18 +123,12 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
       contactNumber,
       parentOrGuardianPhoto
     );
-    //? Encrypt the newApplicant data
-    const encryptedNewApplicant = encrypt(
-      newApplicant,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
     return res.status(201).json({
       success: true,
       isAuthenticated: false,
       method: req.method,
       message: "Registration completed successfully!",
-      encryptedNewApplicant: encryptedNewApplicant,
+      ewApplicant: newApplicant,
     });
   } catch (err) {
     Logger.error("Registering New Applicant: Status failed!");
@@ -163,13 +141,7 @@ const GetAllApplicants = asyncHandler(async (_req, res, next) => {
   try {
     Logger.info("Getting All Applicants: Status success!");
     const applicants = await getAllApplicants();
-    //? Encrypt the applicants data
-    const encryptedApplicants = encrypt(
-      applicants,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
-    return res.status(200).json(encryptedApplicants);
+    return res.status(200).json(applicants);
   } catch (err) {
     Logger.info("Getting All Applicants: Status failed!");
     return next(HTTPErrors(404, `${err}`));
@@ -184,13 +156,7 @@ const GetApplicantById = asyncHandler(async (req, res, next) => {
   try {
     Logger.info("Getting Applicant ById: Status success!");
     const applicant = await getApplicantById(id);
-    //? Encrypt the applicant data
-    const encryptedApplicant = encrypt(
-      applicant,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
-    return res.status(200).json(encryptedApplicant);
+    return res.status(200).json(applicant);
   } catch (err) {
     Logger.info("Getting Applicant ById: Status failed!");
     return next(HTTPErrors(404, `${err}`));
@@ -200,22 +166,12 @@ const GetApplicantById = asyncHandler(async (req, res, next) => {
 //? Update Applicant ById
 const UpdateApplicantById = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
-  const { encryptedData } = req.body;
-
-  //? Decrypt the encryptedData
-  const decryptedUpdateApplicant = decrypt(
-    encryptedData,
-    process.env.ENCRYPTION_KEY,
-    process.env.ENCRYPTION_IV
-  );
-
-  //? Destructure decryptedUpdateApplicant data
   const {
     applicantFirstName,
     applicantMiddleName,
     applicantLastName,
     applicantSex,
-  } = decryptedUpdateApplicant;
+  } = req.body;
 
   //? Destructure id from req.params
   const { id } = req.params;
@@ -229,16 +185,10 @@ const UpdateApplicantById = asyncHandler(async (req, res, next) => {
       applicantLastName,
       applicantSex
     );
-    //? Encrypt the updateApplicant data
-    const encryptedUpdateApplicant = encrypt(
-      updateApplicant,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
     return res.status(200).json({
       success: true,
       message: "Applicant updated successfully!",
-      encryptedUpdateApplicant: encryptedUpdateApplicant,
+      updateApplicant: updateApplicant,
     });
   } catch (err) {
     Logger.info("Updating Applicant ById: Status failed!");
@@ -254,16 +204,10 @@ const DeleteApplicantById = asyncHandler(async (req, res, next) => {
   try {
     Logger.info("Deleting Applicant ById: Status success!");
     const deleteApplicant = await deleteApplicantById(id);
-    //? Encrypt the deleteApplicant data
-    const encryptedDeleteApplicant = encrypt(
-      deleteApplicant,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
     return res.status(200).json({
       success: true,
       message: "Applicant deleted successfully!",
-      encryptedDeleteApplicant: encryptedDeleteApplicant,
+      deleteApplicant: deleteApplicant,
     });
   } catch (err) {
     Logger.info("Deleting Applicant ById: Status failed!");

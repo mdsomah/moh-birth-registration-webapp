@@ -21,7 +21,6 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import MenuContent from "./MenuContent";
 import CardAlert from "./CardAlert";
-import { decrypt } from "../../../../../utils/decrypt";
 
 //? Formik
 import { useFormik } from "formik";
@@ -34,12 +33,6 @@ const getUserProfileURL = "/users/profile";
 
 //? React Sweet Alert Initialization
 const MySwal = withReactContent(Swal);
-
-// const ENCRYPTION_KEY =
-//   "3d933adb15497dc0e02dde56f7d160d87518e3b62e88685f633847a75a5977d0e297f32d828a0068e7e9cff14264852bf95565d7539e5b7e6ee8aa4137892f83";
-
-// const ENCRYPTION_IV =
-//   "1730da9135d2c7f54503549cb96d7a762122023f3e1223afe9bbf884d4b5f3f753b19d8bf8f43c81f9c1f73ce3661809579ae8ef3a5e8ef3a507b3a33f3ca098ddef83e";
 
 const SideMenuMobile = ({ open, toggleCloseDrawer }) => {
   //? Destructure authActions
@@ -75,23 +68,17 @@ const SideMenuMobile = ({ open, toggleCloseDrawer }) => {
     enabled: !!currentUser?.id,
   });
 
-  //? Decrypt userProfileData
-  const decryptedUser = decrypt(
-    userProfileData,
-    process.env.REACT_APP_ENCRYPTION_KEY,
-    process.env.REACT_APP_ENCRYPTION_IV
-  );
-
   //? My Account Object
   const MyAccountOBJ = {
-    lastName: () => decryptedUser?.lastName ?? currentUserProfile?.lastName,
-    firstName: () => decryptedUser?.firstName ?? currentUserProfile?.firstName,
+    lastName: () => userProfileData?.lastName ?? currentUserProfile?.lastName,
+    firstName: () =>
+      userProfileData?.firstName ?? currentUserProfile?.firstName,
     middleName: () =>
-      decryptedUser?.middleName ?? currentUserProfile?.middleName,
+      userProfileData?.middleName ?? currentUserProfile?.middleName,
     displayName: () =>
-      decryptedUser?.displayName ?? currentUserProfile?.displayName,
-    role: () => decryptedUser?.role ?? currentUserProfile?.role,
-    email: () => decryptedUser?.email ?? currentUserProfile?.email,
+      userProfileData?.displayName ?? currentUserProfile?.displayName,
+    role: () => userProfileData?.role ?? currentUserProfile?.role,
+    email: () => userProfileData?.email ?? currentUserProfile?.email,
   };
 
   //? Formik View User Profile Form

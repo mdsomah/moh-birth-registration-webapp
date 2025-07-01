@@ -18,7 +18,6 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import MenuContent from "./MenuContent";
 import OptionsMenu from "./OptionsMenu";
-import { decrypt } from "../../../../../utils/decrypt";
 
 //? Formik
 import { useFormik } from "formik";
@@ -81,24 +80,17 @@ const SideMenu = () => {
 
   console.log(userProfileData);
 
-  //? Decrypt userProfileData
-  const decryptedUser = decrypt(
-    userProfileData,
-    process.env.REACT_APP_ENCRYPTION_KEY,
-    process.env.REACT_APP_ENCRYPTION_IV
-  );
-  console.log(decryptedUser);
-
   //? My Account Object
   const MyAccountOBJ = {
-    lastName: () => decryptedUser?.lastName ?? currentUserProfile?.lastName,
-    firstName: () => decryptedUser?.firstName ?? currentUserProfile?.firstName,
+    lastName: () => userProfileData?.lastName ?? currentUserProfile?.lastName,
+    firstName: () =>
+      userProfileData?.firstName ?? currentUserProfile?.firstName,
     middleName: () =>
-      decryptedUser?.middleName ?? currentUserProfile?.middleName,
+      userProfileData?.middleName ?? currentUserProfile?.middleName,
     displayName: () =>
-      decryptedUser?.displayName ?? currentUserProfile?.displayName,
-    role: () => decryptedUser?.role ?? currentUserProfile?.role,
-    email: () => decryptedUser?.email ?? currentUserProfile?.email,
+      userProfileData?.displayName ?? currentUserProfile?.displayName,
+    role: () => userProfileData?.role ?? currentUserProfile?.role,
+    email: () => userProfileData?.email ?? currentUserProfile?.email,
   };
 
   //? Formik View User Profile Form

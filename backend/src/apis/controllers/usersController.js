@@ -15,8 +15,6 @@ const {
   updateUserById,
   deleteUserById,
 } = require("../services/usersService");
-const { encrypt } = require("../utils/encryptUtils");
-const { decrypt } = require("../utils/decryptUtils");
 
 //? Delete User Photo
 const deleteUserPhoto = (fullPath) => {
@@ -30,16 +28,6 @@ const deleteUserPhoto = (fullPath) => {
 //? Create New User
 const CreateNewUser = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
-  const { encryptedData } = req.body;
-
-  //? Decrypt the encryptedData
-  const decryptedNewUser = decrypt(
-    encryptedData,
-    process.env.ENCRYPTION_KEY,
-    process.env.ENCRYPTION_IV
-  );
-
-  //? Destructure decryptedNewUser data
   const {
     lastName,
     firstName,
@@ -53,7 +41,7 @@ const CreateNewUser = asyncHandler(async (req, res, next) => {
     password,
     confirmPassword,
     userRoleId,
-  } = decryptedNewUser;
+  } = req.body;
 
   try {
     //? Define photo
@@ -75,18 +63,12 @@ const CreateNewUser = asyncHandler(async (req, res, next) => {
       photo,
       userRoleId
     );
-    //? Encrypt the newUser data
-    const encryptedNewUser = encrypt(
-      newUser,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
     return res.status(201).json({
       success: true,
       isAuthenticated: true,
       method: req.method,
       message: "User created successfully!",
-      encryptedNewUser: encryptedNewUser,
+      newUser: newUser,
     });
   } catch (err) {
     Logger.info("Creating New User: Status failed!");
@@ -102,13 +84,7 @@ const GetUserProfile = asyncHandler(async (req, res, next) => {
   try {
     Logger.info("Getting User Profile: Status success!");
     const userProfile = await getUserProfile(id);
-    //? Encrypt the userProfile data
-    const encryptedUserProfile = encrypt(
-      userProfile,
-      process.env.ENCRYPTION_KEY,
-      process.env.ENCRYPTION_IV
-    );
-    return res.status(200).json(encryptedUserProfile);
+    return res.status(200).json(userProfile);
   } catch (err) {
     Logger.info("Getting User Profile: Status failed!");
     return next(HTTPErrors(404, `${err}`));

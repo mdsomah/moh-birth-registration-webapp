@@ -1,4 +1,4 @@
-// import * as React from "react";
+import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
 import Card from "@mui/material/Card";
@@ -41,7 +41,11 @@ function getDaysInMonth(month, year) {
 
 const SessionsChart = (props) => {
   //? Destructure props
-  // const { applicantsLoading, applicantsData } = props;
+  const { applicantsLoading, applicantsData } = props;
+
+  //? Data Definition
+  const ApplicantsData = useMemo(() => applicantsData ?? [], [applicantsData]);
+  console.log(ApplicantsData);
 
   //? Month Name
   const monthName = [
@@ -120,15 +124,14 @@ const SessionsChart = (props) => {
     theme.palette.primary.dark,
   ];
 
-  //? Daily Enrollment
-  const dailyEnrollment = 2000;
-  // const dailyEnrollment = applicantsLoading ? 0 : applicantsData?.length;
+  //? Daily Registration
+  const dailyRegistration = applicantsLoading ? 0 : ApplicantsData?.length;
 
   return (
     <Card variant="outlined" sx={{ width: "100%" }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Daily Enrollment
+          Daily Registration
         </Typography>
         <Stack sx={{ justifyContent: "space-between" }}>
           <Stack
@@ -140,18 +143,18 @@ const SessionsChart = (props) => {
             }}
           >
             <Typography variant="h4" component="p">
-              {dailyEnrollment}
+              {dailyRegistration}
             </Typography>
             <Chip
               size="small"
               color="success"
-              label={`+${Number((dailyEnrollment / 5200000) * 100).toFixed(
+              label={`+${Number((dailyRegistration / 5200000) * 100).toFixed(
                 2
               )}%`}
             />
           </Stack>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
-            Enrollment per day for the last 30 days
+            Registration per day for the last 30 days
           </Typography>
         </Stack>
         <LineChart

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useMemo } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
@@ -9,7 +9,11 @@ import { useTheme } from "@mui/material/styles";
 
 const PageViewsBarChart = (props) => {
   //? Destructure props
-  // const { applicantsLoading, applicantsData } = props;
+  const { applicantsLoading, applicantsData } = props;
+
+  //? Data Definition
+  const ApplicantsData = useMemo(() => applicantsData ?? [], [applicantsData]);
+  console.log(ApplicantsData);
 
   const theme = useTheme();
   const colorPalette = [
@@ -18,15 +22,14 @@ const PageViewsBarChart = (props) => {
     (theme.vars || theme).palette.primary.light,
   ];
 
-  //? Monthly Enrollment
-  const monthlyEnrollment = 24000;
-  // const monthlyEnrollment = applicantsLoading ? 0 : applicantsData?.length;
+  //? Monthly Registration
+  const monthlyRegistration = applicantsLoading ? 0 : ApplicantsData?.length;
 
   return (
     <Card variant="outlined" sx={{ width: "100%" }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Monthly Enrollment
+          Monthly Registration
         </Typography>
         <Stack sx={{ justifyContent: "space-between" }}>
           <Stack
@@ -38,18 +41,18 @@ const PageViewsBarChart = (props) => {
             }}
           >
             <Typography variant="h4" component="p">
-              {monthlyEnrollment}
+              {monthlyRegistration}
             </Typography>
             <Chip
               size="small"
               color="error"
-              label={`+${Number((monthlyEnrollment / 5200000) * 100).toFixed(
+              label={`+${Number((monthlyRegistration / 5200000) * 100).toFixed(
                 2
               )}%`}
             />
           </Stack>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
-            Enrollment per month for the last 12 months
+            Registration per month for the last 12 months
           </Typography>
         </Stack>
         <BarChart

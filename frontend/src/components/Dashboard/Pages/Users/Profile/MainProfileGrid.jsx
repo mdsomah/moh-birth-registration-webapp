@@ -30,6 +30,7 @@ import Copyright from "../../Dashboard/internals/components/Copyright";
 import EditPhotoUpload from "./EditPhotoUpload/EditPhotoUpload";
 import ButtonLoader from "../../../../ButtonLoader/ButtonLoader";
 import NavbarBreadcrumbs from "../../Dashboard/components/NavbarBreadcrumbs";
+import { decrypt } from "../../../../../utils/decrypt";
 
 //? Formik and Yup
 import { useFormik } from "formik";
@@ -92,6 +93,13 @@ const MainProfileGrid = () => {
     enabled: !!currentUser?.id,
   });
 
+  //? Decrypt userProfileData
+  const decryptedUser = decrypt(
+    userProfileData,
+    process.env.REACT_APP_ENCRYPTION_KEY,
+    process.env.REACT_APP_ENCRYPTION_IV
+  );
+
   //? Loading State
   const [loading, setLoading] = useState(false);
 
@@ -128,20 +136,19 @@ const MainProfileGrid = () => {
 
   //? My Account Object
   const MyAccountOBJ = {
-    lastName: () => userProfileData?.lastName ?? currentUserProfile?.lastName,
-    firstName: () =>
-      userProfileData?.firstName ?? currentUserProfile?.firstName,
+    lastName: () => decryptedUser?.lastName ?? currentUserProfile?.lastName,
+    firstName: () => decryptedUser?.firstName ?? currentUserProfile?.firstName,
     middleName: () =>
-      userProfileData?.middleName ?? currentUserProfile?.middleName,
+      decryptedUser?.middleName ?? currentUserProfile?.middleName,
     displayName: () =>
-      userProfileData?.displayName ?? currentUserProfile?.displayName,
-    role: () => userProfileData?.role ?? currentUserProfile?.role,
-    email: () => userProfileData?.email ?? currentUserProfile?.email,
+      decryptedUser?.displayName ?? currentUserProfile?.displayName,
+    role: () => decryptedUser?.role ?? currentUserProfile?.role,
+    email: () => decryptedUser?.email ?? currentUserProfile?.email,
     primaryPhoneNumber: () =>
-      userProfileData?.primaryPhoneNumber ??
+      decryptedUser?.primaryPhoneNumber ??
       currentUserProfile?.primaryPhoneNumber,
     secondaryPhoneNumber: () =>
-      userProfileData?.secondaryPhoneNumber ??
+      decryptedUser?.secondaryPhoneNumber ??
       currentUserProfile?.secondaryPhoneNumber,
   };
 

@@ -5,27 +5,13 @@ import {
   Box,
   Grid,
   Typography,
-  Container,
-  CssBaseline,
   Paper,
-  Toolbar,
-  FormGroup,
   Radio,
   RadioGroup,
   FormControlLabel,
   FormControl,
   TextField,
   Button,
-  Checkbox,
-  Switch,
-  Table,
-  TableBody,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Select,
-  MenuItem,
-  Chip,
   Autocomplete,
   Tooltip,
   IconButton,
@@ -65,7 +51,7 @@ import "yup-phone-lite";
 import PostApplicant from "../../../../../apis/PostApplicant";
 
 //? Endpoints
-const postApplicantURL = "/applicants/register-new-applicant";
+const postApplicantURL = "/applicants/add-new-applicant";
 
 //? Photo upload formats
 const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
@@ -73,8 +59,8 @@ const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
 //? Photo upload size
 const FILE_SIZE = 1024 * 1024 * 25;
 
-//? Validate Applicant Schema
-const validateApplicantSchema = Yup.object()
+//? Validate Add Applicant Schema
+const validateAddApplicantSchema = Yup.object()
   .shape({
     applicantPhoto: Yup.mixed()
       .required("Please select a photo!")
@@ -91,7 +77,7 @@ const validateApplicantSchema = Yup.object()
       ),
     formNumber: Yup.string().notRequired(),
     applicantSex: Yup.mixed()
-      .required("Please select one!")
+      .required("Please select sex!")
       .oneOf(["Male", "Female"]),
     dateOfApplication: Yup.string().required("Application date required!"),
     applicantFirstName: Yup.string().required("Applicant first name required!"),
@@ -213,7 +199,7 @@ const MainAddApplicantGrid = () => {
     navigate("/all-applicants", { replace: true });
   };
 
-  //? Applicant Photo Edit State
+  //? Applicant Photo State
   const [openApplicantPhoto, setOpenApplicantPhoto] = useState(false);
 
   //? Applicant Photo Dialog Functions
@@ -241,7 +227,7 @@ const MainAddApplicantGrid = () => {
   const formikApplicantForm = useFormik({
     initialValues: {
       applicantPhoto: "",
-      formNumber: "",
+      formNumber: "MOH-8467254679",
       applicantSex: "",
       dateOfApplication: "",
       applicantFirstName: "",
@@ -254,7 +240,7 @@ const MainAddApplicantGrid = () => {
       applicantDateOfBirth: "",
       fatherName: "",
       fatherNationality: "",
-      fatherAge: 0,
+      fatherAge: "",
       fatherTownOrCity: "",
       fatherCounty: "",
       fatherCountry: "",
@@ -266,7 +252,7 @@ const MainAddApplicantGrid = () => {
       fatherTelephoneNumber: "",
       motherName: "",
       motherNationality: "",
-      motherAge: 0,
+      motherAge: "",
       motherTownOrCity: "",
       motherCounty: "",
       motherCountry: "",
@@ -291,16 +277,22 @@ const MainAddApplicantGrid = () => {
       contactNumber: "",
       parentOrGuardianPhoto: "",
     },
-    validationSchema: validateApplicantSchema,
+    validationSchema: validateAddApplicantSchema,
     onSubmit: () => {
-      registerNewApplicant();
+      addNewApplicant();
     },
   });
 
-  //? Handle Submit
-  const handleSubmit = (e) => {
+  //? Handle Submit Form
+  const handleSubmitForm = (e) => {
     e.preventDefault();
     formikApplicantForm.handleSubmit();
+  };
+
+  //? Handle Reset Form
+  const handleResetForm = (e) => {
+    e.preventDefault();
+    formikApplicantForm.handleReset();
   };
 
   //? Handle Applicant Country Change
@@ -386,6 +378,8 @@ const MainAddApplicantGrid = () => {
     mutationFn: (newData) => PostApplicant(`${postApplicantURL}`, newData),
     onSuccess: (data) => {
       if (data) {
+        handleCloseAddApplicant();
+        handleResetForm();
         queryClient.invalidateQueries({
           queryKey: ["applicantsData"],
         });
@@ -409,8 +403,8 @@ const MainAddApplicantGrid = () => {
     }
   }, [Mutation]);
 
-  //? Register New Applicant
-  const registerNewApplicant = async () => {
+  //? Add New Applicant
+  const addNewApplicant = async () => {
     //? Destructure ApplicantData
     const {
       applicantPhoto,
@@ -543,6 +537,10 @@ const MainAddApplicantGrid = () => {
         Add Applicant
       </Typography>
       <Grid
+        component="form"
+        noValidate
+        autoComplete="on"
+        encType="multipart/form-data"
         container
         spacing={2}
         columns={12}
@@ -552,16 +550,140 @@ const MainAddApplicantGrid = () => {
           {/* Start Applicant Information */}
           <Paper sx={{ pt: 2, pb: 2, pl: 2, pr: 2 }}>
             <Box sx={{ mb: 3 }}>
-              <Typography
+              <Box
                 sx={{
-                  color: "#4169E1",
-                  fontWeight: "bold",
-                  fontSize: "1rem",
-                  textTransform: "uppercase",
+                  display: { md: "flex", lg: "flex" },
+                  justifyContent: "space-between",
                 }}
               >
-                Applicant Information
-              </Typography>
+                <Typography
+                  sx={{
+                    color: "#4169E1",
+                    fontWeight: "bold",
+                    fontSize: "1rem",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Applicant Information
+                </Typography>
+                <Typography
+                  sx={{
+                    color: "#000",
+                    fontWeight: "bold",
+                    mt: { xs: 2, sm: 2, md: 0, lg: 0 },
+                  }}
+                >
+                  Form No: {formikApplicantForm.values.formNumber}
+                </Typography>
+              </Box>
+              <Box sx={{ display: { md: "flex", lg: "flex" }, gap: 2, mt: 3 }}>
+                <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+                  <Typography sx={{ mb: 2 }}>
+                    Sex
+                    <span>
+                      <LuAsterisk size={10} color="#C41E3A" />
+                    </span>
+                    <Tooltip
+                      title="This field is required!"
+                      placement="bottom"
+                      arrow
+                    >
+                      <IconButton
+                        sx={{
+                          cursor: "default",
+                          position: "relative",
+                          bottom: 2,
+                        }}
+                      >
+                        <BsFillInfoCircleFill size={14} color="#acb5c3" />
+                      </IconButton>
+                    </Tooltip>
+                  </Typography>
+                  <FormControl fullWidth>
+                    <Autocomplete
+                      id="applicantSex"
+                      clearOnEscape
+                      value={formikApplicantForm.values.applicantSex}
+                      onBlur={formikApplicantForm.handleBlur}
+                      onChange={(_event, newValue) => {
+                        formikApplicantForm.setFieldValue(
+                          "applicantSex",
+                          newValue
+                        );
+                      }}
+                      error={
+                        formikApplicantForm.touched.applicantSex &&
+                        Boolean(formikApplicantForm.errors.applicantSex)
+                      }
+                      options={["Male", "Female"]}
+                      renderInput={(params) => (
+                        <TextField {...params} placeholder="Select sex..." />
+                      )}
+                    />
+                    <Typography
+                      variant="inherit"
+                      color="error.main"
+                      sx={{ mt: 1 }}
+                    >
+                      {formikApplicantForm.touched.applicantSex &&
+                        formikApplicantForm.errors.applicantSex}
+                    </Typography>
+                  </FormControl>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+                  <Typography sx={{ mb: 2 }}>
+                    Application Date
+                    <span>
+                      <LuAsterisk size={10} color="#C41E3A" />
+                    </span>
+                    <Tooltip
+                      title="This field is required!"
+                      placement="bottom"
+                      arrow
+                    >
+                      <IconButton
+                        sx={{
+                          cursor: "default",
+                          position: "relative",
+                          bottom: 2,
+                        }}
+                      >
+                        <BsFillInfoCircleFill size={14} color="#acb5c3" />
+                      </IconButton>
+                    </Tooltip>
+                  </Typography>
+                  <FormControl fullWidth>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        disablePast
+                        disableFuture
+                        value={dayjs(
+                          formikApplicantForm.values.dateOfApplication
+                        )}
+                        onChange={(newValue) => {
+                          formikApplicantForm.setFieldValue(
+                            "dateOfApplication",
+                            newValue
+                          );
+                        }}
+                        onBlur={formikApplicantForm.handleBlur}
+                        error={
+                          formikApplicantForm.touched.dateOfApplication &&
+                          Boolean(formikApplicantForm.errors.dateOfApplication)
+                        }
+                      />
+                    </LocalizationProvider>
+                    <Typography
+                      variant="inherit"
+                      color="error.main"
+                      sx={{ mt: 1 }}
+                    >
+                      {formikApplicantForm.touched.dateOfApplication &&
+                        formikApplicantForm.errors.dateOfApplication}
+                    </Typography>
+                  </FormControl>
+                </Grid>
+              </Box>
               <Box sx={{ display: { md: "flex", lg: "flex" }, gap: 2, mt: 3 }}>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
                   <Typography>
@@ -592,18 +714,22 @@ const MainAddApplicantGrid = () => {
                       name="applicantFirstName"
                       type="text"
                       value={formikApplicantForm.values.applicantFirstName}
-                      // onChange={formik.handleChange}
-                      // onBlur={formik.handleBlur}
-                      // error={
-                      //   formik.touched.applicantFirstName &&
-                      //   Boolean(formik.errors.applicantFirstName)
-                      // }
+                      onChange={formikApplicantForm.handleChange}
+                      onBlur={formikApplicantForm.handleBlur}
+                      error={
+                        formikApplicantForm.touched.applicantFirstName &&
+                        Boolean(formikApplicantForm.errors.applicantFirstName)
+                      }
                       placeholder="Enter first name..."
                     />
-                    {/* <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-                          {formik.touched.applicantFirstName &&
-                            formik.errors.applicantFirstName}
-                        </Typography> */}
+                    <Typography
+                      variant="inherit"
+                      color="error.main"
+                      sx={{ mt: 1 }}
+                    >
+                      {formikApplicantForm.touched.applicantFirstName &&
+                        formikApplicantForm.errors.applicantFirstName}
+                    </Typography>
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -615,7 +741,7 @@ const MainAddApplicantGrid = () => {
                       name="applicantMiddleName"
                       type="text"
                       value={formikApplicantForm.values.applicantMiddleName}
-                      // onChange={formik.handleChange}
+                      onChange={formikApplicantForm.handleChange}
                       placeholder="Enter middle name..."
                     />
                   </FormControl>
@@ -651,18 +777,22 @@ const MainAddApplicantGrid = () => {
                       name="applicantLastName"
                       type="text"
                       value={formikApplicantForm.values.applicantLastName}
-                      // onChange={formik.handleChange}
-                      // onBlur={formik.handleBlur}
-                      // error={
-                      //   formik.touched.applicantLastName &&
-                      //   Boolean(formik.errors.applicantLastName)
-                      // }
+                      onChange={formikApplicantForm.handleChange}
+                      onBlur={formikApplicantForm.handleBlur}
+                      error={
+                        formikApplicantForm.touched.applicantLastName &&
+                        Boolean(formikApplicantForm.errors.applicantLastName)
+                      }
                       placeholder="Enter last name..."
                     />
-                    {/* <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-                           {formik.touched.applicantLastName &&
-                             formik.errors.applicantLastName}
-                         </Typography> */}
+                    <Typography
+                      variant="inherit"
+                      color="error.main"
+                      sx={{ mt: 1 }}
+                    >
+                      {formikApplicantForm.touched.applicantLastName &&
+                        formikApplicantForm.errors.applicantLastName}
+                    </Typography>
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -888,7 +1018,7 @@ const MainAddApplicantGrid = () => {
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
-                  <Typography sx={{ mt: 1, mb: 2 }}>
+                  <Typography sx={{ mb: 2 }}>
                     Date of Birth
                     <span>
                       <LuAsterisk size={10} color="#C41E3A" />
@@ -916,20 +1046,29 @@ const MainAddApplicantGrid = () => {
                         value={dayjs(
                           formikApplicantForm.values.applicantDateOfBirth
                         )}
-                        // onChange={(newValue) => {
-                        //   formikApplicantForm.setFieldValue("applicantDateOfBirth", newValue);
-                        // }}
-                        // onBlur={formikApplicantForm.handleBlur}
-                        // error={
-                        //   formikApplicantForm.touched.applicantDateOfBirth &&
-                        //   Boolean(formikApplicantForm.errors.applicantDateOfBirth)
-                        // }
+                        onChange={(newValue) => {
+                          formikApplicantForm.setFieldValue(
+                            "applicantDateOfBirth",
+                            newValue
+                          );
+                        }}
+                        onBlur={formikApplicantForm.handleBlur}
+                        error={
+                          formikApplicantForm.touched.applicantDateOfBirth &&
+                          Boolean(
+                            formikApplicantForm.errors.applicantDateOfBirth
+                          )
+                        }
                       />
                     </LocalizationProvider>
-                    {/* <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-                            {formikApplicantForm.touched.applicantDateOfBirth &&
-                              formikApplicantForm.errors.applicantDateOfBirth}
-                          </Typography> */}
+                    <Typography
+                      variant="inherit"
+                      color="error.main"
+                      sx={{ mt: 1 }}
+                    >
+                      {formikApplicantForm.touched.applicantDateOfBirth &&
+                        formikApplicantForm.errors.applicantDateOfBirth}
+                    </Typography>
                   </FormControl>
                 </Grid>
               </Box>
@@ -2911,7 +3050,7 @@ const MainAddApplicantGrid = () => {
                       }}
                       badgeContent={
                         <Tooltip title="Upload Photo" placement="right" arrow>
-                          <IconButton onClick={handleOpenApplicantPhoto}>
+                          <IconButton onClick={handleOpenGuardianPhoto}>
                             <FaCamera size={30} />
                           </IconButton>
                         </Tooltip>
@@ -2946,7 +3085,7 @@ const MainAddApplicantGrid = () => {
                       }}
                       badgeContent={
                         <Tooltip title="Upload Photo" placement="right" arrow>
-                          <IconButton onClick={handleOpenApplicantPhoto}>
+                          <IconButton onClick={handleOpenGuardianPhoto}>
                             <FaCamera size={30} />
                           </IconButton>
                         </Tooltip>
@@ -3002,8 +3141,8 @@ const MainAddApplicantGrid = () => {
                 mt: 3,
                 mb: 2,
                 mr: 2,
-                bgcolor: "#acb5c3",
-                color: "#fff",
+                // bgcolor: "#acb5c3",
+                // color: "#fff",
               }}
               endIcon={<MdCancel size={20} />}
               onClick={() => {
@@ -3017,7 +3156,7 @@ const MainAddApplicantGrid = () => {
               size="large"
               loading={loading}
               loadingIndicator={<ButtonLoader />}
-              onClick={handleSubmit}
+              onClick={handleSubmitForm}
               loadingPosition="end"
               endIcon={<IoMdSave size={20} color="#fff" />}
               sx={{ mt: 3, mb: 2 }}
@@ -3025,7 +3164,7 @@ const MainAddApplicantGrid = () => {
               {loading ? (
                 <span style={{ color: "#fff" }}>Saving</span>
               ) : (
-                <spa>Save</spa>
+                <span>Save</span>
               )}
             </Button>
           </Box>
@@ -3043,8 +3182,8 @@ const MainAddApplicantGrid = () => {
 
       {/* Start AddUploadGuardianPhoto Dialog */}
       <AddUploadGuardianPhoto
-        open={openApplicantPhoto}
-        handleClose={handleCloseApplicantPhoto}
+        open={openGuardianPhoto}
+        handleClose={handleCloseGuardianPhoto}
         formikApplicantForm={formikApplicantForm}
       />
       {/* End AddUploadGuardianPhoto Dialog */}

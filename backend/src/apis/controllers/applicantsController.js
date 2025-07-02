@@ -65,9 +65,9 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
   } = req.body;
 
   //? Define Applicant & Guardian Photo
-  const applicantPhoto = req.files.applicantPhoto[0].path;
+  const applicantPhoto = req.files.applicantPhoto[0].filename;
 
-  const parentOrGuardianPhoto = req.files.parentOrGuardianPhoto[0].path;
+  const parentOrGuardianPhoto = req.files.parentOrGuardianPhoto[0].filename;
 
   try {
     Logger.info("Registering New Applicant: Status success!");
@@ -128,7 +128,7 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
       isAuthenticated: false,
       method: req.method,
       message: "Registration completed successfully!",
-      ewApplicant: newApplicant,
+      newApplicant: newApplicant,
     });
   } catch (err) {
     Logger.error("Registering New Applicant: Status failed!");

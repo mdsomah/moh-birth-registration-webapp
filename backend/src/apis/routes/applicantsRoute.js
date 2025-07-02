@@ -8,6 +8,9 @@ const {
   validateRegisterApplicantSchema,
 } = require("../validations/validateRegisterApplicant");
 const {
+  validateAddApplicantSchema,
+} = require("../validations/validateAddApplicant");
+const {
   validateEditApplicantSchema,
 } = require("../validations/validateEditApplicant");
 const applicantsController = require("../controllers/applicantsController");
@@ -15,6 +18,23 @@ const applicantsController = require("../controllers/applicantsController");
 router.post(
   "/register-new-applicant",
   validateInputs(validateRegisterApplicantSchema),
+  uploads.fields([
+    {
+      name: "applicantPhoto",
+      maxCount: 1,
+    },
+    {
+      name: "parentOrGuardianPhoto",
+      maxCount: 1,
+    },
+  ]),
+  applicantsController.RegisterNewApplicant
+);
+router.post(
+  "/add-new-applicant",
+  passportAuthenticateJWT,
+  verifyToken,
+  validateInputs(validateAddApplicantSchema),
   uploads.fields([
     {
       name: "applicantPhoto",

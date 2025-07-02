@@ -328,7 +328,7 @@ const ChangeUserPasswordDialog = ({ row, closeMenu, open, handleClose }) => {
             {loading ? (
               <span style={{ color: "#d4bf79" }}>Saving</span>
             ) : (
-              <spa>Save</spa>
+              <span>Save</span>
             )}
           </LoadingButton>
         </DialogActions>

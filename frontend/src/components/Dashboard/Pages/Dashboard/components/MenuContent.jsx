@@ -8,13 +8,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
+import Groups2Icon from "@mui/icons-material/Groups2";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-// import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
 import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
-// import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-// import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
-// import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 
 //? RBAC
 import { IfAnyGranted } from "react-authorization";
@@ -24,24 +21,6 @@ import GetAllData from "../../../../../apis/GetAllData";
 
 //? Endpoints
 const getAllUsersURL = "/users/";
-
-// const mainListItems = [
-//   { text: "Home", icon: <HomeRoundedIcon />, link: "/dashboard" },
-//   { text: "Analytics", icon: <AnalyticsRoundedIcon />, link: "/analytics" },
-//   { text: "Queries", icon: <PeopleRoundedIcon />, link: "/all-queries" },
-//   { text: "Users", icon: <PeopleRoundedIcon />, link: "/all-users" },
-//   {
-//     text: "Reports",
-//     icon: <AssignmentRoundedIcon />,
-//     link: "/all-reports",
-//   },
-// ];
-
-// const secondaryListItems = [
-//   { text: "Settings", icon: <SettingsRoundedIcon /> },
-//   { text: "About", icon: <InfoRoundedIcon /> },
-//   { text: "Feedback", icon: <HelpRoundedIcon /> },
-// ];
 
 //? ListItemButton Hover State
 const listItemButtonSX = {
@@ -170,12 +149,12 @@ const MenuContent = () => {
             )}
           </NavLink>
         </IfAnyGranted>
-        {/* <IfAnyGranted
+        <IfAnyGranted
           expected={["SuperAdmin", "Administrator", "User"]}
           actual={isSuperAdminOrisAdminOrisUser}
         >
           <NavLink
-            to="/analytics"
+            to="/all-applicants"
             style={{ textDecoration: "none", color: "inherit" }}
           >
             {({ isActive }) => (
@@ -187,10 +166,10 @@ const MenuContent = () => {
                     sx={{ color: `${isActive ? "#000" : "#7B8396"}` }}
                     className={`${isActive ? "" : "listItemIcon"}`}
                   >
-                    <AnalyticsRoundedIcon />
+                    <Groups2Icon />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Analytics"
+                    primary="Applicants"
                     sx={{ color: `${isActive ? "#000" : "#7B8396"}` }}
                     className={`${isActive ? "" : "listItemText"}`}
                   />
@@ -198,13 +177,13 @@ const MenuContent = () => {
               </ListItem>
             )}
           </NavLink>
-        </IfAnyGranted> */}
+        </IfAnyGranted>
         <IfAnyGranted
           expected={["SuperAdmin", "Administrator", "User"]}
           actual={isSuperAdminOrisAdminOrisUser}
         >
           <NavLink
-            to="/all-queries"
+            to="/all-appointments"
             style={{ textDecoration: "none", color: "inherit" }}
           >
             {({ isActive }) => (
@@ -216,10 +195,39 @@ const MenuContent = () => {
                     sx={{ color: `${isActive ? "#000" : "#7B8396"}` }}
                     className={`${isActive ? "" : "listItemIcon"}`}
                   >
-                    <PeopleRoundedIcon />
+                    <Groups2Icon />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Queries"
+                    primary="Appointments"
+                    sx={{ color: `${isActive ? "#000" : "#7B8396"}` }}
+                    className={`${isActive ? "" : "listItemText"}`}
+                  />
+                </ListItemButton>
+              </ListItem>
+            )}
+          </NavLink>
+        </IfAnyGranted>
+        <IfAnyGranted
+          expected={["SuperAdmin", "Administrator", "User"]}
+          actual={isSuperAdminOrisAdminOrisUser}
+        >
+          <NavLink
+            to="/all-payments"
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            {({ isActive }) => (
+              <ListItem disablePadding>
+                <ListItemButton
+                  sx={isActive ? listItemButtonBgColor : listItemButtonSX}
+                >
+                  <ListItemIcon
+                    sx={{ color: `${isActive ? "#000" : "#7B8396"}` }}
+                    className={`${isActive ? "" : "listItemIcon"}`}
+                  >
+                    <Groups2Icon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Payments"
                     sx={{ color: `${isActive ? "#000" : "#7B8396"}` }}
                     className={`${isActive ? "" : "listItemText"}`}
                   />
@@ -286,39 +294,7 @@ const MenuContent = () => {
             )}
           </NavLink>
         </IfAnyGranted>
-        {/* {mainListItems.map((item, index) => (
-          <IfAnyGranted
-            expected={["SuperAdmin", "Administrator", "User"]}
-            actual={isSuperAdminOrisAdminOrisUser}
-          >
-            <Link
-              to={item.link}
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-                cursor: "pointer",
-              }}
-            >
-              <ListItem key={index} disablePadding sx={{ display: "block" }}>
-                <ListItemButton selected={index === 0}>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          </IfAnyGranted>
-        ))} */}
       </List>
-      {/* <List dense>
-        {secondaryListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: "block" }}>
-            <ListItemButton>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List> */}
     </Stack>
   );
 };

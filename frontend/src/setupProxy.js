@@ -24,6 +24,18 @@ const applicantsProxy = {
   changeOrigin: true,
 };
 
+//? Appointments
+const appointmentsProxy = {
+  target: `${process.env.REACT_APP_BACKEND_URL}/api/v1`,
+  changeOrigin: true,
+};
+
+//? Payments
+const paymentsProxy = {
+  target: `${process.env.REACT_APP_BACKEND_URL}/api/v1`,
+  changeOrigin: true,
+};
+
 //? Images Upload
 const imagesProxy = {
   target: `${process.env.REACT_APP_BACKEND_URL}/api/v1`,
@@ -47,6 +59,8 @@ module.exports = function (app) {
   app.use("/users", createProxyMiddleware(usersProxy));
   app.use("/user/roles", createProxyMiddleware(userRolesProxy));
   app.use("/applicants", createProxyMiddleware(applicantsProxy));
+  app.use("/appointments", createProxyMiddleware(appointmentsProxy));
+  app.use("/payments", createProxyMiddleware(paymentsProxy));
   app.use("/images", createProxyMiddleware(imagesProxy));
   app.use("/uploads", createProxyMiddleware(uploadsProxy));
   app.use("/api", createProxyMiddleware(nirAPIsProxy));

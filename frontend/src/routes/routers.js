@@ -33,8 +33,23 @@ const ResetPassword = React.lazy(() =>
 const Dashboard = React.lazy(() =>
   import("../components/Dashboard/Pages/Dashboard/Dashboard")
 );
-const Queries = React.lazy(() =>
-  import("../components/Dashboard/Pages/Queries/Queries")
+const Applicants = React.lazy(() =>
+  import("../components/Dashboard/Pages/Applicants/Applicants")
+);
+const AddApplicant = React.lazy(() =>
+  import("../components/Dashboard/Pages/Applicants/AddApplicant/AddApplicant")
+);
+const ViewApplicant = React.lazy(() =>
+  import("../components/Dashboard/Pages/Applicants/ViewApplicant/ViewApplicant")
+);
+const EditApplicant = React.lazy(() =>
+  import("../components/Dashboard/Pages/Applicants/EditApplicant/EditApplicant")
+);
+const Appointments = React.lazy(() =>
+  import("../components/Dashboard/Pages/Appointments/Appointments")
+);
+const Payments = React.lazy(() =>
+  import("../components/Dashboard/Pages/Payments/Payments")
 );
 const ViewApplicantDetails = React.lazy(() =>
   import("../components/Dashboard/Pages/Queries/ViewApplicantDetails")
@@ -139,11 +154,61 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/all-queries",
+    path: "/all-applicants",
     element: (
       <PrivateRoute>
         <ErrorBoundary FallbackComponent={ErrorsHandler}>
-          <Queries />
+          <Applicants />
+        </ErrorBoundary>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/all-applicants/add",
+    element: (
+      <PrivateRoute>
+        <ErrorBoundary FallbackComponent={ErrorsHandler}>
+          <AddApplicant />
+        </ErrorBoundary>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/all-applicants/view",
+    element: (
+      <PrivateRoute>
+        <ErrorBoundary FallbackComponent={ErrorsHandler}>
+          <ViewApplicant />
+        </ErrorBoundary>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/all-applicants/edit",
+    element: (
+      <PrivateRoute>
+        <ErrorBoundary FallbackComponent={ErrorsHandler}>
+          <EditApplicant />
+        </ErrorBoundary>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/all-appointments",
+    element: (
+      <PrivateRoute>
+        <ErrorBoundary FallbackComponent={ErrorsHandler}>
+          <Appointments />
+        </ErrorBoundary>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/all-payments",
+    element: (
+      <PrivateRoute>
+        <ErrorBoundary FallbackComponent={ErrorsHandler}>
+          <Payments />
         </ErrorBoundary>
       </PrivateRoute>
     ),

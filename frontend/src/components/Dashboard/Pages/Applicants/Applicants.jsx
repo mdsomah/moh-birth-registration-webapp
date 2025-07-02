@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import AppNavbar from "../Dashboard/components/AppNavbar";
 import Header from "../Dashboard/components/Header";
-import MainReportsGrid from "./MainReportsGrid";
+import MainApplicantsGrid from "./MainApplicantsGrid";
 import SideMenu from "../Dashboard/components/SideMenu";
 import AppTheme from "../Dashboard/shared-theme/AppTheme";
 import {
@@ -26,14 +26,14 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
-const Reports = (props) => {
+const Applicants = (props) => {
   return (
     <React.Fragment>
       <Helmet>
         <meta charSet="utf-8" />
         <title>
-          Reports | Ministry of Health (MOH) Online Delayed Birth Registration
-          Platform
+          Applicants | Ministry of Health (MOH) Online Delayed Birth
+          Registration Platform
         </title>
       </Helmet>
       <AppTheme {...props} themeComponents={xThemeComponents}>
@@ -41,7 +41,6 @@ const Reports = (props) => {
         <Box sx={{ display: "flex" }}>
           <SideMenu />
           <AppNavbar />
-          {/* Main content */}
           <Box
             component="main"
             sx={(theme) => ({
@@ -61,7 +60,7 @@ const Reports = (props) => {
               }}
             >
               <Header />
-              <MainReportsGrid />
+              <MainApplicantsGrid />
             </Stack>
           </Box>
         </Box>
@@ -71,4 +70,4 @@ const Reports = (props) => {
   );
 };
 
-export default Reports;
+export default Applicants;

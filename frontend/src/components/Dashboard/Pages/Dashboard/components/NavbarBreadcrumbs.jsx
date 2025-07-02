@@ -21,10 +21,12 @@ const NavbarBreadcrumbs = () => {
     switch (window.location.pathname) {
       case "/dashboard":
         return "Home";
-      // case "/analytics":
-      //   return "Analytics";
-      case "/all-queries":
-        return "Queries";
+      case "/all-applicants":
+        return "Applicants";
+      case "/all-appointments":
+        return "Appointments";
+      case "/all-payments":
+        return "Payments";
       case "/all-queries/view-applicant-details":
         return "Applicant Details";
       case "/all-users":

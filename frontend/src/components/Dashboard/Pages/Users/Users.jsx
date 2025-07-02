@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Helmet } from "react-helmet-async";
 import { alpha } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -28,6 +29,13 @@ const xThemeComponents = {
 const Users = (props) => {
   return (
     <React.Fragment>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>
+          Users | Ministry of Health (MOH) Online Delayed Birth Registration
+          Platform
+        </title>
+      </Helmet>
       <AppTheme {...props} themeComponents={xThemeComponents}>
         <CssBaseline enableColorScheme />
         <Box sx={{ display: "flex" }}>

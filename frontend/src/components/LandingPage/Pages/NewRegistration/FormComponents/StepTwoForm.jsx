@@ -441,75 +441,75 @@ const StepTwoForm = (props) => {
         </FormControl>
       </Grid>
       {formik.values.isFatherLiving === "YES" && (
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Typography sx={{ mt: 2 }}>
-            Father's Present Address
-            <span>
-              <LuAsterisk size={10} color="#C41E3A" />
-            </span>
-            <Tooltip title="This field is required!" placement="bottom" arrow>
-              <IconButton
-                sx={{
-                  cursor: "default",
-                  position: "relative",
-                  bottom: 2,
-                }}
-              >
-                <BsFillInfoCircleFill size={14} color="#acb5c3" />
-              </IconButton>
-            </Tooltip>
-          </Typography>
-          <FormControl fullWidth>
-            <TextField
-              margin="normal"
-              id="fatherPresentAddress"
-              name="fatherPresentAddress"
-              type="text"
-              value={formik.values.fatherPresentAddress}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.fatherPresentAddress &&
-                Boolean(formik.errors.fatherPresentAddress)
-              }
-              placeholder="Enter father's present address..."
-            />
-            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-              {formik.touched.fatherPresentAddress &&
-                formik.errors.fatherPresentAddress}
+        <>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Typography sx={{ mt: 2 }}>
+              Father's Present Address
+              <span>
+                <LuAsterisk size={10} color="#C41E3A" />
+              </span>
+              <Tooltip title="This field is required!" placement="bottom" arrow>
+                <IconButton
+                  sx={{
+                    cursor: "default",
+                    position: "relative",
+                    bottom: 2,
+                  }}
+                >
+                  <BsFillInfoCircleFill size={14} color="#acb5c3" />
+                </IconButton>
+              </Tooltip>
             </Typography>
-          </FormControl>
-        </Grid>
-      )}
-      {formik.values.isFatherLiving === "YES" && (
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Typography>
-            Father's Telephone Number
-            <span>
-              <LuAsterisk size={10} color="#C41E3A" />
-            </span>
-            <Tooltip title="This field is required!" placement="bottom" arrow>
-              <IconButton
-                sx={{
-                  cursor: "default",
-                  position: "relative",
-                  bottom: 2,
-                }}
-              >
-                <BsFillInfoCircleFill size={14} color="#acb5c3" />
-              </IconButton>
-            </Tooltip>
-          </Typography>
-          <FormControl fullWidth>
-            <FormControl sx={{ width: "100%" }}>
-              <StepTwoPhoneInputField formik={formik} />
+            <FormControl fullWidth>
+              <TextField
+                margin="normal"
+                id="fatherPresentAddress"
+                name="fatherPresentAddress"
+                type="text"
+                value={formik.values.fatherPresentAddress}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.fatherPresentAddress &&
+                  Boolean(formik.errors.fatherPresentAddress)
+                }
+                placeholder="Enter father's present address..."
+              />
               <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-                {formik.touched.fatherTelephoneNumber &&
-                  formik.errors.fatherTelephoneNumber}
+                {formik.touched.fatherPresentAddress &&
+                  formik.errors.fatherPresentAddress}
               </Typography>
             </FormControl>
-          </FormControl>
-        </Grid>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Typography>
+              Father's Telephone Number
+              <span>
+                <LuAsterisk size={10} color="#C41E3A" />
+              </span>
+              <Tooltip title="This field is required!" placement="bottom" arrow>
+                <IconButton
+                  sx={{
+                    cursor: "default",
+                    position: "relative",
+                    bottom: 2,
+                  }}
+                >
+                  <BsFillInfoCircleFill size={14} color="#acb5c3" />
+                </IconButton>
+              </Tooltip>
+            </Typography>
+            <FormControl fullWidth>
+              <FormControl sx={{ width: "100%" }}>
+                <StepTwoPhoneInputField formik={formik} />
+                <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+                  {formik.touched.fatherTelephoneNumber &&
+                    formik.errors.fatherTelephoneNumber}
+                </Typography>
+              </FormControl>
+            </FormControl>
+          </Grid>
+        </>
       )}
       <ScrollToTop />
     </React.Fragment>

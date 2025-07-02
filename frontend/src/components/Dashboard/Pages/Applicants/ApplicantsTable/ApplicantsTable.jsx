@@ -69,11 +69,6 @@ const ApplicantsTable = () => {
     navigate("/all-applicants/add", { replace: true });
   };
 
-  // const handleCloseAddApplicant = () => {
-  //   navigate("/all-applicants", { replace: true });
-  //   setOpenAddApplicant(false);
-  // };
-
   //? View Applicant Function
   const handleOpenViewApplicant = (applicantId) => {
     if (applicantId) {

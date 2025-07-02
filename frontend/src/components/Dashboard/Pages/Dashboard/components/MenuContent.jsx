@@ -9,6 +9,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Groups2Icon from "@mui/icons-material/Groups2";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import PaymentIcon from "@mui/icons-material/Payment";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
 import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
@@ -195,7 +197,7 @@ const MenuContent = () => {
                     sx={{ color: `${isActive ? "#000" : "#7B8396"}` }}
                     className={`${isActive ? "" : "listItemIcon"}`}
                   >
-                    <Groups2Icon />
+                    <EventAvailableIcon />
                   </ListItemIcon>
                   <ListItemText
                     primary="Appointments"
@@ -224,7 +226,7 @@ const MenuContent = () => {
                     sx={{ color: `${isActive ? "#000" : "#7B8396"}` }}
                     className={`${isActive ? "" : "listItemIcon"}`}
                   >
-                    <Groups2Icon />
+                    <PaymentIcon />
                   </ListItemIcon>
                   <ListItemText
                     primary="Payments"

@@ -35,7 +35,7 @@ const MySwal = withReactContent(Swal);
 
 //? Endpoints
 const getAllApplicantsURL = "/applicants";
-const deleteApplicantURL = "/users";
+const deleteApplicantURL = "/applicants";
 
 export let Row_Data;
 export let Close_Menu;
@@ -82,11 +82,6 @@ const ApplicantsTable = () => {
     }
   };
 
-  // const handleCloseViewApplicant = () => {
-  //   navigate("/all-applicants", { replace: true });
-  //   setOpenViewApplicant(false);
-  // };
-
   //? Edit Applicant Function
   const handleOpenEditApplicant = (applicantId) => {
     if (applicantId) {
@@ -99,11 +94,6 @@ const ApplicantsTable = () => {
       );
     }
   };
-
-  // const handleCloseEditApplicant = () => {
-  //   navigate("/all-applicants", { replace: true });
-  //   setOpenEditApplicant(false);
-  // };
 
   //? Data Definition
   const data = useMemo(

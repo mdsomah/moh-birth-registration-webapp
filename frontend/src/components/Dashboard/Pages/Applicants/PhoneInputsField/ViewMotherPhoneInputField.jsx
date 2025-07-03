@@ -33,18 +33,17 @@ const ViewMotherPhoneInputField = (props) => {
 
   return (
     <TextField
+      disabled
       margin="normal"
       id="motherTelephoneNumber"
       name="motherTelephoneNumber"
       type="tel"
-      placeholder="Enter mother's telephone number..."
       value={inputValue}
-      onChange={handlePhoneValueChange}
-      onBlur={formikViewApplicantForm.handleBlur}
-      error={
-        formikViewApplicantForm.touched.motherTelephoneNumber &&
-        Boolean(formikViewApplicantForm.errors.motherTelephoneNumber)
-      }
+      sx={{
+        "& .MuiInputBase-input.Mui-disabled:hover": {
+          cursor: "not-allowed",
+        },
+      }}
       inputRef={inputRef}
       InputProps={{
         startAdornment: (
@@ -53,6 +52,7 @@ const ViewMotherPhoneInputField = (props) => {
             style={{ marginRight: "2px", marginLeft: "-8px" }}
           >
             <Select
+              disabled
               MenuProps={{
                 style: {
                   height: "300px",

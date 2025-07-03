@@ -34,8 +34,8 @@ const Error_Alert = (message) => {
   });
 };
 
-const POST_APPLICANT = async (url, newData) => {
-  const resp = await API.post(`${url}`, newData)
+const UPDATE_APPLICANT = async (url, updatedData) => {
+  const resp = await API.put(`${url}`, updatedData)
     .then((response) => {
       if (response?.data) {
         store.dispatch(setMessage(Success_Alert(response?.data?.message)));
@@ -52,4 +52,4 @@ const POST_APPLICANT = async (url, newData) => {
   return resp;
 };
 
-export default POST_APPLICANT;
+export default UPDATE_APPLICANT;

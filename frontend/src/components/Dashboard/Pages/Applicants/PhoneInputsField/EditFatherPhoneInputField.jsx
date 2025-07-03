@@ -14,36 +14,37 @@ import {
   usePhoneInput,
 } from "react-international-phone";
 
-const ViewContactPhoneInputField = (props) => {
+const EditFatherPhoneInputField = (props) => {
   //? Destructure props
-  const { formikViewApplicantForm } = props;
+  const { formikEditApplicantForm } = props;
 
   //? Handle Phone Input Change
   const handlePhoneInputChange = (event) => {
-    formikViewApplicantForm.setFieldValue("contactNumber", event);
+    formikEditApplicantForm.setFieldValue("fatherTelephoneNumber", event);
   };
 
   const { inputValue, handlePhoneValueChange, inputRef, country, setCountry } =
     usePhoneInput({
       defaultCountry: "lr",
-      value: formikViewApplicantForm.values.contactNumber,
+      value: formikEditApplicantForm.values.fatherTelephoneNumber,
       countries: defaultCountries,
       onChange: (data) => handlePhoneInputChange(data?.phone),
     });
 
   return (
     <TextField
-      disabled
       margin="normal"
-      id="contactNumber"
-      name="contactNumber"
+      id="fatherTelephoneNumber"
+      name="fatherTelephoneNumber"
       type="tel"
+      placeholder="Enter father's telephone number..."
       value={inputValue}
-      sx={{
-        "& .MuiInputBase-input.Mui-disabled:hover": {
-          cursor: "not-allowed",
-        },
-      }}
+      onChange={handlePhoneValueChange}
+      onBlur={formikEditApplicantForm.handleBlur}
+      error={
+        formikEditApplicantForm.touched.fatherTelephoneNumber &&
+        Boolean(formikEditApplicantForm.errors.fatherTelephoneNumber)
+      }
       inputRef={inputRef}
       InputProps={{
         startAdornment: (
@@ -52,7 +53,6 @@ const ViewContactPhoneInputField = (props) => {
             style={{ marginRight: "2px", marginLeft: "-8px" }}
           >
             <Select
-              disabled
               MenuProps={{
                 style: {
                   height: "300px",
@@ -117,4 +117,4 @@ const ViewContactPhoneInputField = (props) => {
   );
 };
 
-export default React.memo(ViewContactPhoneInputField);
+export default React.memo(EditFatherPhoneInputField);

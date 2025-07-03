@@ -34,7 +34,7 @@ router.post(
   "/add-new-applicant",
   passportAuthenticateJWT,
   verifyToken,
-  validateInputs(validateAddApplicantSchema),
+  // validateInputs(validateAddApplicantSchema),
   uploads.fields([
     {
       name: "applicantPhoto",

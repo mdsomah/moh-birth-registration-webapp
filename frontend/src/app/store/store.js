@@ -5,6 +5,7 @@ import authReducer from "../slices/authSlice";
 import messageReducer from "../slices/messageSlice";
 import newRegistrationReducer from "../slices/newRegistrationSlice";
 import queryReducer from "../slices/querySlice";
+import applicantReducer from "../slices/applicantSlice";
 import userReducer from "../slices/userSlice";
 import nirAPIsTokenReducer from "../slices/nirAPIsTokenSlice";
 
@@ -14,6 +15,7 @@ const reducers = combineReducers({
   message: messageReducer,
   queryApplicant: queryReducer,
   newRegistration: newRegistrationReducer,
+  applicant: applicantReducer,
   user: userReducer,
   nirAPIs: nirAPIsTokenReducer,
 });

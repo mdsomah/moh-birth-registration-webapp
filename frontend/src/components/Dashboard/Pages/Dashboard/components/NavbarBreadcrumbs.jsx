@@ -25,6 +25,8 @@ const NavbarBreadcrumbs = () => {
         return "Applicants";
       case "/all-applicants/add":
         return "Add Applicant";
+      case "/all-applicants/view":
+        return "View Applicant";
       case "/all-appointments":
         return "Appointments";
       case "/all-payments":

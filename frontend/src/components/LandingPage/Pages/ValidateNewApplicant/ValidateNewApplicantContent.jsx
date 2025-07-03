@@ -22,8 +22,8 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import ButtonLoader from "../../../ButtonLoader/ButtonLoader";
 import { setApplicant } from "../../../../app/slices/querySlice";
-import { encryptAPI } from "../../../../utils/encryptAPI";
-import { decryptAPI } from "../../../../utils/decryptAPI";
+import { encrypt } from "../../../../utils/encrypt";
+import { decrypt } from "../../../../utils/decrypt";
 
 //? Formik and Yup
 import { useFormik } from "formik";
@@ -103,9 +103,7 @@ const ValidateNewApplicantContent = () => {
   //? Validate Applicant Data
   const ValidateApplicantData = {};
   if (formikValidateApplicantForm.values.NIN !== "") {
-    ValidateApplicantData.NIN = encryptAPI(
-      formikValidateApplicantForm.values.NIN
-    );
+    ValidateApplicantData.NIN = encrypt(formikValidateApplicantForm.values.NIN);
   }
   console.log(ValidateApplicantData);
 
@@ -121,7 +119,7 @@ const ValidateNewApplicantContent = () => {
     onSuccess: (data) => {
       if (data) {
         const cipherText = data;
-        const decryptedData = decryptAPI(
+        const decryptedData = decrypt(
           cipherText.encryptedPayload,
           cipherText.encryptedSessionKey
         );
@@ -200,7 +198,7 @@ const ValidateNewApplicantContent = () => {
         </Typography>
         <Box
           component="form"
-          onSubmit={handleSubmitForm}
+          // onSubmit={handleSubmitForm}
           noValidate
           autoComplete="off"
         >
@@ -249,7 +247,6 @@ const ValidateNewApplicantContent = () => {
             </Typography>
           </FormControl>
           <LoadingButton
-            type="submit"
             fullWidth
             variant="contained"
             size="large"
@@ -258,6 +255,7 @@ const ValidateNewApplicantContent = () => {
             loadingPosition="end"
             endIcon={<IoMdCheckmarkCircleOutline size={20} color="#fff" />}
             sx={{ mt: 3, mb: 2, bgcolor: "buttonBGColor.main" }}
+            onClick={handleSubmitForm}
           >
             {loading ? (
               <span style={{ color: "#fff" }}>Validating</span>

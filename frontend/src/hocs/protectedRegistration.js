@@ -2,9 +2,9 @@ import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const ProtectedRegistration = ({ children }) => {
-  const { query } = useSelector((state) => state.newRegistration);
+  const { query } = useSelector((state) => state.queryApplicant);
 
-  return query !== null ? (
+  return query === null ? (
     <Navigate to="/validate-new-applicant" replace />
   ) : (
     children

@@ -102,7 +102,6 @@ export const router = createBrowserRouter([
   },
   {
     path: "/validate-new-applicant",
-    index: true,
     element: (
       <UnPrivateRoute>
         <ErrorBoundary FallbackComponent={ErrorsHandler}>
@@ -113,7 +112,6 @@ export const router = createBrowserRouter([
   },
   {
     path: "/register-new-applicant",
-    index: true,
     element: (
       <ProtectedRegistration>
         <ErrorBoundary FallbackComponent={ErrorsHandler}>
@@ -124,7 +122,6 @@ export const router = createBrowserRouter([
   },
   {
     path: "/sign-in",
-    index: true,
     element: (
       <UnPrivateRoute>
         <ErrorBoundary FallbackComponent={ErrorsHandler}>

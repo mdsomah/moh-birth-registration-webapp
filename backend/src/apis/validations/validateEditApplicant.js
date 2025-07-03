@@ -6,7 +6,6 @@ const validateEditApplicantSchema = Yup.object()
     applicantFirstName: Yup.string().required("Applicant first name required!"),
     applicantMiddleName: Yup.string().notRequired(),
     applicantLastName: Yup.string().required("Applicant last name required!"),
-    applicantSex: Yup.string().required("Please choose one!"),
   })
   .required();
 

@@ -166,12 +166,8 @@ const GetApplicantById = asyncHandler(async (req, res, next) => {
 //? Update Applicant ById
 const UpdateApplicantById = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
-  const {
-    applicantFirstName,
-    applicantMiddleName,
-    applicantLastName,
-    applicantSex,
-  } = req.body;
+  const { applicantFirstName, applicantMiddleName, applicantLastName } =
+    req.body;
 
   //? Destructure id from req.params
   const { id } = req.params;
@@ -182,8 +178,7 @@ const UpdateApplicantById = asyncHandler(async (req, res, next) => {
       id,
       applicantFirstName,
       applicantMiddleName,
-      applicantLastName,
-      applicantSex
+      applicantLastName
     );
     return res.status(200).json({
       success: true,

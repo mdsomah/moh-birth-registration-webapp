@@ -35,9 +35,9 @@ import EditFatherPhoneInputField from "../PhoneInputsField/EditFatherPhoneInputF
 import EditMotherPhoneInputField from "../PhoneInputsField/EditMotherPhoneInputField";
 import EditContactPhoneInputField from "../PhoneInputsField/EditContactPhoneInputField";
 import EditContactNumberInputField from "../PhoneInputsField/EditContactNumberInputField";
-import AddUploadApplicantPhoto from "../PhotosUpload/AddPhotosUpload/AddUploadApplicantPhoto/AddUploadApplicantPhoto";
-import AddUploadGuardianPhoto from "../PhotosUpload/AddPhotosUpload/AddUploadGuardianPhoto/AddUploadGuardianPhoto";
-import AddApplicantSignature from "../SignatureDialog/AddApplicantSignature";
+import EditUploadApplicantPhoto from "../PhotosUpload/EditPhotosUpload/EditUploadApplicantPhoto/EditUploadApplicantPhoto";
+import EditUploadGuardianPhoto from "../PhotosUpload/EditPhotosUpload/EditUploadGuardianPhoto/EditUploadGuardianPhoto";
+import EditApplicantSignature from "../SignatureDialog/EditApplicantSignature";
 import ButtonLoader from "../../../../ButtonLoader/ButtonLoader";
 import { removeEditApplicant } from "../../../../../app/slices/applicantSlice";
 
@@ -59,139 +59,16 @@ import UpdateApplicant from "../../../../../apis/UpdateApplicant";
 const getApplicantURL = "/applicants";
 const updateApplicantURL = "/applicants";
 
-//? Photo upload formats
-const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
-
-//? Photo upload size
-const FILE_SIZE = 1024 * 1024 * 25;
-
 //? Validate Edit Applicant Schema
 const validateEditApplicantSchema = Yup.object()
   .shape({
-    applicantPhoto: Yup.mixed()
-      .required("Please select a photo!")
-      .test(
-        "fileFormat",
-        "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
-        (value) =>
-          !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
-      )
-      .test(
-        "fileSize",
-        "File is too large! Supported size: (2MB)",
-        (value) => !value || (value && value.size <= FILE_SIZE)
-      ),
-    formNumber: Yup.string().notRequired(),
-    applicantSex: Yup.mixed()
-      .required("Please select sex!")
-      .oneOf(["Male", "Female"]),
-    dateOfApplication: Yup.string().required("Application date required!"),
     applicantFirstName: Yup.string().required("Applicant first name required!"),
     applicantMiddleName: Yup.string().notRequired(),
     applicantLastName: Yup.string().required("Applicant last name required!"),
-    applicantFacility: Yup.string().required("Applicant facility required!"),
-    applicantTownOrCity: Yup.string().required(
-      "Applicant town or city required!"
-    ),
-    applicantCounty: Yup.string().required("Applicant county required!"),
-    applicantCountry: Yup.string().required("Applicant country required!"),
-    applicantDateOfBirth: Yup.string().required(
-      "Applicant date of birth required!"
-    ),
-    fatherName: Yup.string().required("Father name required!"),
-    fatherNationality: Yup.string().required("Father nationality required!"),
-    fatherAge: Yup.number()
-      .required("Father age required!")
-      .positive()
-      .integer(),
-    fatherTownOrCity: Yup.string().required("Father town or city required!"),
-    fatherCounty: Yup.string().required("Father county required!"),
-    fatherCountry: Yup.string().required("Father country required!"),
-    fatherCountyOfOrigin: Yup.string().required(
-      "Father county of origin required!"
-    ),
-    fatherOccupation: Yup.string().required("Father occupation required!"),
-    fatherDateOfNaturalization: Yup.string().notRequired(),
-    isFatherLiving: Yup.mixed()
-      .required("Please select one!")
-      .oneOf(["YES", "NO"]),
-    fatherPresentAddress: Yup.string().when("isFatherLiving", {
-      is: (val) => val === "YES",
-      then: () => Yup.string().required("Father present address required!"),
-      otherwise: () => Yup.string().notRequired(),
-    }),
-    fatherTelephoneNumber: Yup.string().when("isFatherLiving", {
-      is: (val) => val === "YES",
-      then: () =>
-        Yup.string()
-          .phone(null, "Please enter a valid phone number!")
-          .required("Father telephone number required!"),
-      otherwise: () => Yup.string().notRequired(),
-    }),
-    motherName: Yup.string().required("Mother name required!"),
-    motherNationality: Yup.string().required("Mother nationality required!"),
-    motherAge: Yup.number()
-      .required("Mother age required!")
-      .positive()
-      .integer(),
-    motherTownOrCity: Yup.string().required("Mother town or city required!"),
-    motherCounty: Yup.string().required("Mother county required!"),
-    motherCountry: Yup.string().required("Mother country required!"),
-    motherCountyOfOrigin: Yup.string().required(
-      "Mother county of origin required!"
-    ),
-    motherOccupation: Yup.string().required("Mother occupation required!"),
-    motherDateOfNaturalization: Yup.string().notRequired(),
-    isMotherLiving: Yup.mixed()
-      .required("Please select one!")
-      .oneOf(["YES", "NO"]),
-    motherPresentAddress: Yup.string().when("isMotherLiving", {
-      is: (val) => val === "YES",
-      then: () => Yup.string().required("Mother present address required!"),
-      otherwise: () => Yup.string().notRequired(),
-    }),
-    motherTelephoneNumber: Yup.string().when("isMotherLiving", {
-      is: (val) => val === "YES",
-      then: () =>
-        Yup.string()
-          .phone(null, "Please enter a valid phone number!")
-          .required("Mother telephone number required!"),
-      otherwise: () => Yup.string().notRequired(),
-    }),
-    applicantSignature: Yup.string().required("Applicant signature required!"),
-    applicantContactNumber: Yup.string()
-      .phone(null, "Please enter a valid phone number!")
-      .required("Applicant contact number required!"),
-    fullName: Yup.string().required("Full name required!"),
-    city: Yup.string().required("City required!"),
-    county: Yup.string().required("County required!"),
-    motherFullName: Yup.string().required("Mother full name required!"),
-    fatherFullName: Yup.string().required("Father full name required!"),
-    date: Yup.string().required("Date required!"),
-    cityOrTown: Yup.string().required("City or town required!"),
-    name: Yup.string().required("Name required!"),
-    address: Yup.string().required("Address required!"),
-    relationship: Yup.string().required("Relationship required!"),
-    contactNumber: Yup.string()
-      .phone(null, "Please enter a valid phone number!")
-      .required("Contact number required!"),
-    parentOrGuardianPhoto: Yup.mixed()
-      .required("Please select a photo!")
-      .test(
-        "fileFormat",
-        "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
-        (value) =>
-          !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
-      )
-      .test(
-        "fileSize",
-        "File is too large! Supported size: (2MB)",
-        (value) => !value || (value && value.size <= FILE_SIZE)
-      ),
   })
   .required();
 
-const MainEditApplicantsGrid = () => {
+const MainEditApplicantGrid = () => {
   //? Tablet or Mobile Responsive Media Queries
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
@@ -478,66 +355,16 @@ const MainEditApplicantsGrid = () => {
 
   //? Applicant Data
   const ApplicantData = {
-    // applicantPhoto: formikEditApplicantForm.values.applicantPhoto,
-    // formNumber: formikEditApplicantForm.values.formNumber,
-    // applicantSex: formikEditApplicantForm.values.applicantSex,
-    // dateOfApplication: formikEditApplicantForm.values.dateOfApplication,
     applicantFirstName: formikEditApplicantForm.values.applicantFirstName,
     applicantMiddleName: formikEditApplicantForm.values.applicantMiddleName,
     applicantLastName: formikEditApplicantForm.values.applicantLastName,
-    // applicantFacility: formikEditApplicantForm.values.applicantFacility,
-    // applicantTownOrCity: formikEditApplicantForm.values.applicantTownOrCity,
-    // applicantCounty: formikEditApplicantForm.values.applicantCounty,
-    // applicantCountry: formikEditApplicantForm.values.applicantCountry,
-    // applicantDateOfBirth: formikEditApplicantForm.values.applicantDateOfBirth,
-    // fatherName: formikEditApplicantForm.values.fatherName,
-    // fatherNationality: formikEditApplicantForm.values.fatherNationality,
-    // fatherAge: formikEditApplicantForm.values.fatherAge,
-    // fatherTownOrCity: formikEditApplicantForm.values.fatherTownOrCity,
-    // fatherCounty: formikEditApplicantForm.values.fatherCounty,
-    // fatherCountry: formikEditApplicantForm.values.fatherCountry,
-    // fatherCountyOfOrigin: formikEditApplicantForm.values.fatherCountyOfOrigin,
-    // fatherOccupation: formikEditApplicantForm.values.fatherOccupation,
-    // fatherDateOfNaturalization:
-    //   formikEditApplicantForm.values.fatherDateOfNaturalization,
-    // isFatherLiving: formikEditApplicantForm.values.isFatherLiving,
-    // fatherPresentAddress: formikEditApplicantForm.values.fatherPresentAddress,
-    // fatherTelephoneNumber: formikEditApplicantForm.values.fatherTelephoneNumber,
-    // motherName: formikEditApplicantForm.values.motherName,
-    // motherNationality: formikEditApplicantForm.values.motherNationality,
-    // motherAge: formikEditApplicantForm.values.motherAge,
-    // motherTownOrCity: formikEditApplicantForm.values.motherTownOrCity,
-    // motherCounty: formikEditApplicantForm.values.motherCounty,
-    // motherCountry: formikEditApplicantForm.values.motherCounty,
-    // motherCountyOfOrigin: formikEditApplicantForm.values.motherCountyOfOrigin,
-    // motherOccupation: formikEditApplicantForm.values.motherOccupation,
-    // motherDateOfNaturalization:
-    //   formikEditApplicantForm.values.motherDateOfNaturalization,
-    // isMotherLiving: formikEditApplicantForm.values.isMotherLiving,
-    // motherPresentAddress: formikEditApplicantForm.values.motherPresentAddress,
-    // motherTelephoneNumber: formikEditApplicantForm.values.motherTelephoneNumber,
-    // applicantSignature: formikEditApplicantForm.values.applicantSignature,
-    // applicantContactNumber:
-    //   formikEditApplicantForm.values.applicantContactNumber,
-    // fullName: formikEditApplicantForm.values.fullName,
-    // city: formikEditApplicantForm.values.city,
-    // county: formikEditApplicantForm.values.county,
-    // motherFullName: formikEditApplicantForm.values.motherFullName,
-    // fatherFullName: formikEditApplicantForm.values.fatherFullName,
-    // date: formikEditApplicantForm.values.date,
-    // cityOrTown: formikEditApplicantForm.values.cityOrTown,
-    // name: formikEditApplicantForm.values.name,
-    // address: formikEditApplicantForm.values.address,
-    // relationship: formikEditApplicantForm.values.relationship,
-    // contactNumber: formikEditApplicantForm.values.contactNumber,
-    // parentOrGuardianPhoto: formikEditApplicantForm.values.parentOrGuardianPhoto,
   };
 
   console.log(ApplicantData);
 
   const Mutation = useMutation({
     mutationFn: (updatedData) =>
-      UpdateApplicant(`${updateApplicantURL}`, updatedData),
+      UpdateApplicant(`${updateApplicantURL}/${applicantId}`, updatedData),
     onSuccess: (data) => {
       if (data) {
         handleCloseEditApplicant();
@@ -656,32 +483,41 @@ const MainEditApplicantsGrid = () => {
                   <FormControl fullWidth>
                     <Autocomplete
                       id="applicantSex"
+                      disabled
                       clearOnEscape
                       value={formikEditApplicantForm.values.applicantSex}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      onChange={(_event, newValue) => {
-                        formikEditApplicantForm.setFieldValue(
-                          "applicantSex",
-                          newValue
-                        );
-                      }}
-                      error={
-                        formikEditApplicantForm.touched.applicantSex &&
-                        Boolean(formikEditApplicantForm.errors.applicantSex)
-                      }
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // onChange={(_event, newValue) => {
+                      //   formikEditApplicantForm.setFieldValue(
+                      //     "applicantSex",
+                      //     newValue
+                      //   );
+                      // }}
+                      // error={
+                      //   formikEditApplicantForm.touched.applicantSex &&
+                      //   Boolean(formikEditApplicantForm.errors.applicantSex)
+                      // }
                       options={["Male", "Female"]}
                       renderInput={(params) => (
-                        <TextField {...params} placeholder="Select sex..." />
+                        <TextField
+                          {...params}
+                          placeholder="Select sex..."
+                          sx={{
+                            "& .MuiInputBase-input.Mui-disabled:hover": {
+                              cursor: "not-allowed",
+                            },
+                          }}
+                        />
                       )}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.applicantSex &&
                         formikEditApplicantForm.errors.applicantSex}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -709,34 +545,40 @@ const MainEditApplicantsGrid = () => {
                   <FormControl fullWidth>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
+                        disabled
                         disablePast
                         disableFuture
                         value={dayjs(
                           formikEditApplicantForm.values.dateOfApplication
                         )}
-                        onChange={(newValue) => {
-                          formikEditApplicantForm.setFieldValue(
-                            "dateOfApplication",
-                            newValue
-                          );
+                        // onChange={(newValue) => {
+                        //   formikEditApplicantForm.setFieldValue(
+                        //     "dateOfApplication",
+                        //     newValue
+                        //   );
+                        // }}
+                        // onBlur={formikEditApplicantForm.handleBlur}
+                        // error={
+                        //   formikEditApplicantForm.touched.dateOfApplication &&
+                        //   Boolean(
+                        //     formikEditApplicantForm.errors.dateOfApplication
+                        //   )
+                        // }
+                        sx={{
+                          "& .MuiInputBase-input.Mui-disabled:hover": {
+                            cursor: "not-allowed",
+                          },
                         }}
-                        onBlur={formikEditApplicantForm.handleBlur}
-                        error={
-                          formikEditApplicantForm.touched.dateOfApplication &&
-                          Boolean(
-                            formikEditApplicantForm.errors.dateOfApplication
-                          )
-                        }
                       />
                     </LocalizationProvider>
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.dateOfApplication &&
                         formikEditApplicantForm.errors.dateOfApplication}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -883,25 +725,31 @@ const MainEditApplicantsGrid = () => {
                       id="applicantFacility"
                       name="applicantFacility"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.applicantFacility}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.applicantFacility &&
-                        Boolean(
-                          formikEditApplicantForm.errors.applicantFacility
-                        )
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.applicantFacility &&
+                      //   Boolean(
+                      //     formikEditApplicantForm.errors.applicantFacility
+                      //   )
+                      // }
                       placeholder="Enter facility..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.applicantFacility &&
                         formikEditApplicantForm.errors.applicantFacility}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -934,25 +782,31 @@ const MainEditApplicantsGrid = () => {
                       id="applicantTownOrCity"
                       name="applicantTownOrCity"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.applicantTownOrCity}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.applicantTownOrCity &&
-                        Boolean(
-                          formikEditApplicantForm.errors.applicantTownOrCity
-                        )
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.applicantTownOrCity &&
+                      //   Boolean(
+                      //     formikEditApplicantForm.errors.applicantTownOrCity
+                      //   )
+                      // }
                       placeholder="Enter town/city..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.applicantTownOrCity &&
                         formikEditApplicantForm.errors.applicantTownOrCity}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -983,23 +837,29 @@ const MainEditApplicantsGrid = () => {
                       id="applicantCounty"
                       name="applicantCounty"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.applicantCounty}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.applicantCounty &&
-                        Boolean(formikEditApplicantForm.errors.applicantCounty)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.applicantCounty &&
+                      //   Boolean(formikEditApplicantForm.errors.applicantCounty)
+                      // }
                       placeholder="Enter county..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.applicantCounty &&
                         formikEditApplicantForm.errors.applicantCounty}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -1029,13 +889,14 @@ const MainEditApplicantsGrid = () => {
                   <FormControl fullWidth sx={{ mt: 2 }}>
                     <Autocomplete
                       id="applicantCountry"
+                      disabled
                       value={formikEditApplicantForm.values.applicantCountry}
-                      onChange={handleApplicantCountryChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.applicantCountry &&
-                        Boolean(formikEditApplicantForm.errors.applicantCountry)
-                      }
+                      // onChange={handleApplicantCountryChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.applicantCountry &&
+                      //   Boolean(formikEditApplicantForm.errors.applicantCountry)
+                      // }
                       options={Country_Lists ?? []}
                       filterSelectedOptions={true}
                       isOptionEqualToValue={(option, value) =>
@@ -1063,22 +924,28 @@ const MainEditApplicantsGrid = () => {
                       renderInput={(params) => (
                         <TextField
                           {...params}
+                          disabled
                           placeholder="Select country..."
                           inputProps={{
                             ...params.inputProps,
                             autoComplete: "country",
                           }}
+                          sx={{
+                            "& .MuiInputBase-input.Mui-disabled:hover": {
+                              cursor: "not-allowed",
+                            },
+                          }}
                         />
                       )}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.applicantCountry &&
                         formikEditApplicantForm.errors.applicantCountry}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -1106,34 +973,40 @@ const MainEditApplicantsGrid = () => {
                   <FormControl fullWidth>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
+                        disabled
                         disableFuture
                         value={dayjs(
                           formikEditApplicantForm.values.applicantDateOfBirth
                         )}
-                        onChange={(newValue) => {
-                          formikEditApplicantForm.setFieldValue(
-                            "applicantDateOfBirth",
-                            newValue
-                          );
+                        // onChange={(newValue) => {
+                        //   formikEditApplicantForm.setFieldValue(
+                        //     "applicantDateOfBirth",
+                        //     newValue
+                        //   );
+                        // }}
+                        // onBlur={formikEditApplicantForm.handleBlur}
+                        // error={
+                        //   formikEditApplicantForm.touched
+                        //     .applicantDateOfBirth &&
+                        //   Boolean(
+                        //     formikEditApplicantForm.errors.applicantDateOfBirth
+                        //   )
+                        // }
+                        sx={{
+                          "& .MuiInputBase-input.Mui-disabled:hover": {
+                            cursor: "not-allowed",
+                          },
                         }}
-                        onBlur={formikEditApplicantForm.handleBlur}
-                        error={
-                          formikEditApplicantForm.touched
-                            .applicantDateOfBirth &&
-                          Boolean(
-                            formikEditApplicantForm.errors.applicantDateOfBirth
-                          )
-                        }
                       />
                     </LocalizationProvider>
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.applicantDateOfBirth &&
                         formikEditApplicantForm.errors.applicantDateOfBirth}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -1183,23 +1056,29 @@ const MainEditApplicantsGrid = () => {
                       id="fatherName"
                       name="fatherName"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.fatherName}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.fatherName &&
-                        Boolean(formikEditApplicantForm.errors.fatherName)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.fatherName &&
+                      //   Boolean(formikEditApplicantForm.errors.fatherName)
+                      // }
                       placeholder="Enter father's name..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.fatherName &&
                         formikEditApplicantForm.errors.fatherName}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -1230,25 +1109,31 @@ const MainEditApplicantsGrid = () => {
                       id="fatherNationality"
                       name="fatherNationality"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.fatherNationality}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.fatherNationality &&
-                        Boolean(
-                          formikEditApplicantForm.errors.fatherNationality
-                        )
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.fatherNationality &&
+                      //   Boolean(
+                      //     formikEditApplicantForm.errors.fatherNationality
+                      //   )
+                      // }
                       placeholder="Enter father's nationality..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.fatherNationality &&
                         formikEditApplicantForm.errors.fatherNationality}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -1281,23 +1166,29 @@ const MainEditApplicantsGrid = () => {
                       id="fatherAge"
                       name="fatherAge"
                       type="number"
+                      disabled
                       value={formikEditApplicantForm.values.fatherAge}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.fatherAge &&
-                        Boolean(formikEditApplicantForm.errors.fatherAge)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.fatherAge &&
+                      //   Boolean(formikEditApplicantForm.errors.fatherAge)
+                      // }
                       placeholder="Enter father's age..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.fatherAge &&
                         formikEditApplicantForm.errors.fatherAge}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -1328,23 +1219,29 @@ const MainEditApplicantsGrid = () => {
                       id="fatherTownOrCity"
                       name="fatherTownOrCity"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.fatherTownOrCity}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.fatherTownOrCity &&
-                        Boolean(formikEditApplicantForm.errors.fatherTownOrCity)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.fatherTownOrCity &&
+                      //   Boolean(formikEditApplicantForm.errors.fatherTownOrCity)
+                      // }
                       placeholder="Enter father's town/city..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.fatherTownOrCity &&
                         formikEditApplicantForm.errors.fatherTownOrCity}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -1377,23 +1274,29 @@ const MainEditApplicantsGrid = () => {
                       id="fatherCounty"
                       name="fatherCounty"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.fatherCounty}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.fatherCounty &&
-                        Boolean(formikEditApplicantForm.errors.fatherCounty)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.fatherCounty &&
+                      //   Boolean(formikEditApplicantForm.errors.fatherCounty)
+                      // }
                       placeholder="Enter father's county..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.fatherCounty &&
                         formikEditApplicantForm.errors.fatherCounty}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -1421,13 +1324,14 @@ const MainEditApplicantsGrid = () => {
                   <FormControl fullWidth sx={{ mt: 2 }}>
                     <Autocomplete
                       id="fatherCountry"
+                      disabled
                       value={formikEditApplicantForm.values.fatherCountry}
-                      onChange={handleFatherCountryChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.fatherCountry &&
-                        Boolean(formikEditApplicantForm.errors.fatherCountry)
-                      }
+                      // onChange={handleFatherCountryChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.fatherCountry &&
+                      //   Boolean(formikEditApplicantForm.errors.fatherCountry)
+                      // }
                       options={Country_Lists ?? []}
                       filterSelectedOptions={true}
                       isOptionEqualToValue={(option, value) =>
@@ -1455,22 +1359,28 @@ const MainEditApplicantsGrid = () => {
                       renderInput={(params) => (
                         <TextField
                           {...params}
+                          disabled
                           placeholder="Select father's country..."
                           inputProps={{
                             ...params.inputProps,
                             autoComplete: "country",
                           }}
+                          sx={{
+                            "& .MuiInputBase-input.Mui-disabled:hover": {
+                              cursor: "not-allowed",
+                            },
+                          }}
                         />
                       )}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.fatherCountry &&
                         formikEditApplicantForm.errors.fatherCountry}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -1503,27 +1413,33 @@ const MainEditApplicantsGrid = () => {
                       id="fatherCountyOfOrigin"
                       name="fatherCountyOfOrigin"
                       type="text"
+                      disabled
                       value={
                         formikEditApplicantForm.values.fatherCountyOfOrigin
                       }
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.fatherCountyOfOrigin &&
-                        Boolean(
-                          formikEditApplicantForm.errors.fatherCountyOfOrigin
-                        )
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.fatherCountyOfOrigin &&
+                      //   Boolean(
+                      //     formikEditApplicantForm.errors.fatherCountyOfOrigin
+                      //   )
+                      // }
                       placeholder="Enter father's county of origin..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.fatherCountyOfOrigin &&
                         formikEditApplicantForm.errors.fatherCountyOfOrigin}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -1554,23 +1470,29 @@ const MainEditApplicantsGrid = () => {
                       id="fatherOccupation"
                       name="fatherOccupation"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.fatherOccupation}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.fatherOccupation &&
-                        Boolean(formikEditApplicantForm.errors.fatherOccupation)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.fatherOccupation &&
+                      //   Boolean(formikEditApplicantForm.errors.fatherOccupation)
+                      // }
                       placeholder="Enter father's occupation..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.fatherOccupation &&
                         formikEditApplicantForm.errors.fatherOccupation}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -1582,16 +1504,22 @@ const MainEditApplicantsGrid = () => {
                   <FormControl fullWidth>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
+                        disabled
                         disableFuture
                         value={dayjs(
                           formikEditApplicantForm.values
                             .fatherDateOfNaturalization
                         )}
-                        onChange={(newValue) => {
-                          formikEditApplicantForm.setFieldValue(
-                            "fatherDateOfNaturalization",
-                            newValue
-                          );
+                        // onChange={(newValue) => {
+                        //   formikEditApplicantForm.setFieldValue(
+                        //     "fatherDateOfNaturalization",
+                        //     newValue
+                        //   );
+                        // }}
+                        sx={{
+                          "& .MuiInputBase-input.Mui-disabled:hover": {
+                            cursor: "not-allowed",
+                          },
                         }}
                       />
                     </LocalizationProvider>
@@ -1612,20 +1540,25 @@ const MainEditApplicantsGrid = () => {
                       id="isFatherLiving"
                       name="isFatherLiving"
                       value={formikEditApplicantForm.values.isFatherLiving}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.isFatherLiving &&
-                        Boolean(formikEditApplicantForm.errors.isFatherLiving)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.isFatherLiving &&
+                      //   Boolean(formikEditApplicantForm.errors.isFatherLiving)
+                      // }
                     >
                       <FormControlLabel
+                        disabled
                         value="YES"
                         control={
                           <Radio
+                            disabled
                             sx={{
                               "& .MuiSvgIcon-root": {
                                 fontSize: 28,
+                              },
+                              "& .MuiInputBase-input.Mui-disabled:hover": {
+                                cursor: "not-allowed",
                               },
                             }}
                           />
@@ -1633,12 +1566,17 @@ const MainEditApplicantsGrid = () => {
                         label="YES"
                       />
                       <FormControlLabel
+                        disabled
                         value="NO"
                         control={
                           <Radio
+                            disabled
                             sx={{
                               "& .MuiSvgIcon-root": {
                                 fontSize: 28,
+                              },
+                              "& .MuiInputBase-input.Mui-disabled:hover": {
+                                cursor: "not-allowed",
                               },
                             }}
                           />
@@ -1646,14 +1584,14 @@ const MainEditApplicantsGrid = () => {
                         label="NO"
                       />
                     </RadioGroup>
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.isFatherLiving &&
                         formikEditApplicantForm.errors.isFatherLiving}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -1688,22 +1626,28 @@ const MainEditApplicantsGrid = () => {
                           id="fatherPresentAddress"
                           name="fatherPresentAddress"
                           type="text"
+                          disabled
                           value={
                             formikEditApplicantForm.values.fatherPresentAddress
                           }
-                          onChange={formikEditApplicantForm.handleChange}
-                          onBlur={formikEditApplicantForm.handleBlur}
-                          error={
-                            formikEditApplicantForm.touched
-                              .fatherPresentAddress &&
-                            Boolean(
-                              formikEditApplicantForm.errors
-                                .fatherPresentAddress
-                            )
-                          }
+                          // onChange={formikEditApplicantForm.handleChange}
+                          // onBlur={formikEditApplicantForm.handleBlur}
+                          // error={
+                          //   formikEditApplicantForm.touched
+                          //     .fatherPresentAddress &&
+                          //   Boolean(
+                          //     formikEditApplicantForm.errors
+                          //       .fatherPresentAddress
+                          //   )
+                          // }
                           placeholder="Enter father's present address..."
+                          sx={{
+                            "& .MuiInputBase-input.Mui-disabled:hover": {
+                              cursor: "not-allowed",
+                            },
+                          }}
                         />
-                        <Typography
+                        {/* <Typography
                           variant="inherit"
                           color="error.main"
                           sx={{ mt: 1 }}
@@ -1711,7 +1655,7 @@ const MainEditApplicantsGrid = () => {
                           {formikEditApplicantForm.touched
                             .fatherPresentAddress &&
                             formikEditApplicantForm.errors.fatherPresentAddress}
-                        </Typography>
+                        </Typography> */}
                       </FormControl>
                     </Grid>
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -1738,9 +1682,9 @@ const MainEditApplicantsGrid = () => {
                       </Typography>
                       <FormControl fullWidth sx={{ mt: 2 }}>
                         <EditFatherPhoneInputField
-                          formik={formikEditApplicantForm}
+                          formikEditApplicantForm={formikEditApplicantForm}
                         />
-                        <Typography
+                        {/* <Typography
                           variant="inherit"
                           color="error.main"
                           sx={{ mt: 1 }}
@@ -1749,7 +1693,7 @@ const MainEditApplicantsGrid = () => {
                             .fatherTelephoneNumber &&
                             formikEditApplicantForm.errors
                               .fatherTelephoneNumber}
-                        </Typography>
+                        </Typography> */}
                       </FormControl>
                     </Grid>
                   </>
@@ -1801,23 +1745,29 @@ const MainEditApplicantsGrid = () => {
                       id="motherName"
                       name="motherName"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.motherName}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.motherName &&
-                        Boolean(formikEditApplicantForm.errors.motherName)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.motherName &&
+                      //   Boolean(formikEditApplicantForm.errors.motherName)
+                      // }
                       placeholder="Enter mother's name..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.motherName &&
                         formikEditApplicantForm.errors.motherName}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -1848,25 +1798,31 @@ const MainEditApplicantsGrid = () => {
                       id="motherNationality"
                       name="motherNationality"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.motherNationality}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.motherNationality &&
-                        Boolean(
-                          formikEditApplicantForm.errors.motherNationality
-                        )
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.motherNationality &&
+                      //   Boolean(
+                      //     formikEditApplicantForm.errors.motherNationality
+                      //   )
+                      // }
                       placeholder="Enter mother's nationality..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.motherNationality &&
                         formikEditApplicantForm.errors.motherNationality}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -1899,23 +1855,29 @@ const MainEditApplicantsGrid = () => {
                       id="motherAge"
                       name="motherAge"
                       type="number"
+                      disabled
                       value={formikEditApplicantForm.values.motherAge}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.motherAge &&
-                        Boolean(formikEditApplicantForm.errors.motherAge)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.motherAge &&
+                      //   Boolean(formikEditApplicantForm.errors.motherAge)
+                      // }
                       placeholder="Enter mother's age..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.motherAge &&
                         formikEditApplicantForm.errors.motherAge}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -1946,14 +1908,20 @@ const MainEditApplicantsGrid = () => {
                       id="motherTownOrCity"
                       name="motherTownOrCity"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.motherTownOrCity}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.motherTownOrCity &&
-                        Boolean(formikEditApplicantForm.errors.motherTownOrCity)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.motherTownOrCity &&
+                      //   Boolean(formikEditApplicantForm.errors.motherTownOrCity)
+                      // }
                       placeholder="Enter mother's town/city..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
                     <Typography
                       variant="inherit"
@@ -1995,23 +1963,29 @@ const MainEditApplicantsGrid = () => {
                       id="motherCounty"
                       name="motherCounty"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.motherCounty}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.motherCounty &&
-                        Boolean(formikEditApplicantForm.errors.motherCounty)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.motherCounty &&
+                      //   Boolean(formikEditApplicantForm.errors.motherCounty)
+                      // }
                       placeholder="Enter mother's county..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.motherCounty &&
                         formikEditApplicantForm.errors.motherCounty}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -2039,13 +2013,14 @@ const MainEditApplicantsGrid = () => {
                   <FormControl fullWidth sx={{ mt: 2 }}>
                     <Autocomplete
                       id="motherCountry"
+                      disabled
                       value={formikEditApplicantForm.values.motherCountry}
-                      onChange={handleMotherCountryChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.motherCountry &&
-                        Boolean(formikEditApplicantForm.errors.motherCountry)
-                      }
+                      // onChange={handleMotherCountryChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.motherCountry &&
+                      //   Boolean(formikEditApplicantForm.errors.motherCountry)
+                      // }
                       options={Country_Lists ?? []}
                       filterSelectedOptions={true}
                       isOptionEqualToValue={(option, value) =>
@@ -2073,22 +2048,28 @@ const MainEditApplicantsGrid = () => {
                       renderInput={(params) => (
                         <TextField
                           {...params}
+                          disabled
                           placeholder="Select mother's country..."
                           inputProps={{
                             ...params.inputProps,
                             autoComplete: "country",
                           }}
+                          sx={{
+                            "& .MuiInputBase-input.Mui-disabled:hover": {
+                              cursor: "not-allowed",
+                            },
+                          }}
                         />
                       )}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.motherCountry &&
                         formikEditApplicantForm.errors.motherCountry}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -2121,27 +2102,33 @@ const MainEditApplicantsGrid = () => {
                       id="motherCountyOfOrigin"
                       name="motherCountyOfOrigin"
                       type="text"
+                      disabled
                       value={
                         formikEditApplicantForm.values.motherCountyOfOrigin
                       }
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.motherCountyOfOrigin &&
-                        Boolean(
-                          formikEditApplicantForm.errors.motherCountyOfOrigin
-                        )
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.motherCountyOfOrigin &&
+                      //   Boolean(
+                      //     formikEditApplicantForm.errors.motherCountyOfOrigin
+                      //   )
+                      // }
                       placeholder="Enter mother's county of origin..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.motherCountyOfOrigin &&
                         formikEditApplicantForm.errors.motherCountyOfOrigin}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -2172,23 +2159,29 @@ const MainEditApplicantsGrid = () => {
                       id="motherOccupation"
                       name="motherOccupation"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.motherOccupation}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.motherOccupation &&
-                        Boolean(formikEditApplicantForm.errors.motherOccupation)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.motherOccupation &&
+                      //   Boolean(formikEditApplicantForm.errors.motherOccupation)
+                      // }
                       placeholder="Enter mother's occupation..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.motherOccupation &&
                         formikEditApplicantForm.errors.motherOccupation}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -2200,16 +2193,22 @@ const MainEditApplicantsGrid = () => {
                   <FormControl fullWidth>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
+                        disabled
                         disableFuture
                         value={dayjs(
                           formikEditApplicantForm.values
                             .motherDateOfNaturalization
                         )}
-                        onChange={(newValue) => {
-                          formikEditApplicantForm.setFieldValue(
-                            "motherDateOfNaturalization",
-                            newValue
-                          );
+                        // onChange={(newValue) => {
+                        //   formikEditApplicantForm.setFieldValue(
+                        //     "motherDateOfNaturalization",
+                        //     newValue
+                        //   );
+                        // }}
+                        sx={{
+                          "& .MuiInputBase-input.Mui-disabled:hover": {
+                            cursor: "not-allowed",
+                          },
                         }}
                       />
                     </LocalizationProvider>
@@ -2230,20 +2229,25 @@ const MainEditApplicantsGrid = () => {
                       id="isMotherLiving"
                       name="isMotherLiving"
                       value={formikEditApplicantForm.values.isMotherLiving}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.isMotherLiving &&
-                        Boolean(formikEditApplicantForm.errors.isMotherLiving)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.isMotherLiving &&
+                      //   Boolean(formikEditApplicantForm.errors.isMotherLiving)
+                      // }
                     >
                       <FormControlLabel
+                        disabled
                         value="YES"
                         control={
                           <Radio
+                            disabled
                             sx={{
                               "& .MuiSvgIcon-root": {
                                 fontSize: 28,
+                              },
+                              "& .MuiInputBase-input.Mui-disabled:hover": {
+                                cursor: "not-allowed",
                               },
                             }}
                           />
@@ -2251,12 +2255,17 @@ const MainEditApplicantsGrid = () => {
                         label="YES"
                       />
                       <FormControlLabel
+                        disabled
                         value="NO"
                         control={
                           <Radio
+                            disabled
                             sx={{
                               "& .MuiSvgIcon-root": {
                                 fontSize: 28,
+                              },
+                              "& .MuiInputBase-input.Mui-disabled:hover": {
+                                cursor: "not-allowed",
                               },
                             }}
                           />
@@ -2264,14 +2273,14 @@ const MainEditApplicantsGrid = () => {
                         label="NO"
                       />
                     </RadioGroup>
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.isMotherLiving &&
                         formikEditApplicantForm.errors.isMotherLiving}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -2306,22 +2315,28 @@ const MainEditApplicantsGrid = () => {
                           id="motherPresentAddress"
                           name="motherPresentAddress"
                           type="text"
+                          disabled
                           value={
                             formikEditApplicantForm.values.motherPresentAddress
                           }
-                          onChange={formikEditApplicantForm.handleChange}
-                          onBlur={formikEditApplicantForm.handleBlur}
-                          error={
-                            formikEditApplicantForm.touched
-                              .motherPresentAddress &&
-                            Boolean(
-                              formikEditApplicantForm.errors
-                                .motherPresentAddress
-                            )
-                          }
+                          // onChange={formikEditApplicantForm.handleChange}
+                          // onBlur={formikEditApplicantForm.handleBlur}
+                          // error={
+                          //   formikEditApplicantForm.touched
+                          //     .motherPresentAddress &&
+                          //   Boolean(
+                          //     formikEditApplicantForm.errors
+                          //       .motherPresentAddress
+                          //   )
+                          // }
                           placeholder="Enter mother's present address..."
+                          sx={{
+                            "& .MuiInputBase-input.Mui-disabled:hover": {
+                              cursor: "not-allowed",
+                            },
+                          }}
                         />
-                        <Typography
+                        {/* <Typography
                           variant="inherit"
                           color="error.main"
                           sx={{ mt: 1 }}
@@ -2329,7 +2344,7 @@ const MainEditApplicantsGrid = () => {
                           {formikEditApplicantForm.touched
                             .motherPresentAddress &&
                             formikEditApplicantForm.errors.motherPresentAddress}
-                        </Typography>
+                        </Typography> */}
                       </FormControl>
                     </Grid>
                     <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -2356,9 +2371,9 @@ const MainEditApplicantsGrid = () => {
                       </Typography>
                       <FormControl fullWidth sx={{ mt: 2 }}>
                         <EditMotherPhoneInputField
-                          formik={formikEditApplicantForm}
+                          formikEditApplicantForm={formikEditApplicantForm}
                         />
-                        <Typography
+                        {/* <Typography
                           variant="inherit"
                           color="error.main"
                           sx={{ mt: 1 }}
@@ -2367,7 +2382,7 @@ const MainEditApplicantsGrid = () => {
                             .motherTelephoneNumber &&
                             formikEditApplicantForm.errors
                               .motherTelephoneNumber}
-                        </Typography>
+                        </Typography> */}
                       </FormControl>
                     </Grid>
                   </>
@@ -2418,7 +2433,7 @@ const MainEditApplicantsGrid = () => {
                       <EditContactPhoneInputField
                         formikEditApplicantForm={formikEditApplicantForm}
                       />
-                      <Typography
+                      {/* <Typography
                         variant="inherit"
                         color="error.main"
                         sx={{ mt: 1 }}
@@ -2426,7 +2441,7 @@ const MainEditApplicantsGrid = () => {
                         {formikEditApplicantForm.touched
                           .applicantContactNumber &&
                           formikEditApplicantForm.errors.applicantContactNumber}
-                      </Typography>
+                      </Typography> */}
                     </FormControl>
                   </FormControl>
                 </Grid>
@@ -2458,23 +2473,29 @@ const MainEditApplicantsGrid = () => {
                       id="fullName"
                       name="fullName"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.fullName}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.fullName &&
-                        Boolean(formikEditApplicantForm.errors.fullName)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.fullName &&
+                      //   Boolean(formikEditApplicantForm.errors.fullName)
+                      // }
                       placeholder="Enter full name..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.fullName &&
                         formikEditApplicantForm.errors.fullName}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -2507,23 +2528,29 @@ const MainEditApplicantsGrid = () => {
                       id="city"
                       name="city"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.city}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.city &&
-                        Boolean(formikEditApplicantForm.errors.city)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.city &&
+                      //   Boolean(formikEditApplicantForm.errors.city)
+                      // }
                       placeholder="Enter city..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.city &&
                         formikEditApplicantForm.errors.city}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -2554,23 +2581,29 @@ const MainEditApplicantsGrid = () => {
                       id="county"
                       name="county"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.county}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.county &&
-                        Boolean(formikEditApplicantForm.errors.county)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.county &&
+                      //   Boolean(formikEditApplicantForm.errors.county)
+                      // }
                       placeholder="Enter county..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.county &&
                         formikEditApplicantForm.errors.county}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -2603,23 +2636,29 @@ const MainEditApplicantsGrid = () => {
                       id="motherFullName"
                       name="motherFullName"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.motherFullName}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.motherFullName &&
-                        Boolean(formikEditApplicantForm.errors.motherFullName)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.motherFullName &&
+                      //   Boolean(formikEditApplicantForm.errors.motherFullName)
+                      // }
                       placeholder="Enter mother's full name..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.motherFullName &&
                         formikEditApplicantForm.errors.motherFullName}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -2650,23 +2689,29 @@ const MainEditApplicantsGrid = () => {
                       id="fatherFullName"
                       name="fatherFullName"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.fatherFullName}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.fatherFullName &&
-                        Boolean(formikEditApplicantForm.errors.fatherFullName)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.fatherFullName &&
+                      //   Boolean(formikEditApplicantForm.errors.fatherFullName)
+                      // }
                       placeholder="Enter father's full name..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.fatherFullName &&
                         formikEditApplicantForm.errors.fatherFullName}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -2696,30 +2741,36 @@ const MainEditApplicantsGrid = () => {
                   <FormControl fullWidth>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
+                        disabled
                         disablePast
                         disableFuture
                         value={dayjs(formikEditApplicantForm.values.date)}
-                        onChange={(newValue) => {
-                          formikEditApplicantForm.setFieldValue(
-                            "date",
-                            newValue
-                          );
+                        // onChange={(newValue) => {
+                        //   formikEditApplicantForm.setFieldValue(
+                        //     "date",
+                        //     newValue
+                        //   );
+                        // }}
+                        // onBlur={formikEditApplicantForm.handleBlur}
+                        // error={
+                        //   formikEditApplicantForm.touched.date &&
+                        //   Boolean(formikEditApplicantForm.errors.date)
+                        // }
+                        sx={{
+                          "& .MuiInputBase-input.Mui-disabled:hover": {
+                            cursor: "not-allowed",
+                          },
                         }}
-                        onBlur={formikEditApplicantForm.handleBlur}
-                        error={
-                          formikEditApplicantForm.touched.date &&
-                          Boolean(formikEditApplicantForm.errors.date)
-                        }
                       />
                     </LocalizationProvider>
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.date &&
                         formikEditApplicantForm.errors.date}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -2750,23 +2801,29 @@ const MainEditApplicantsGrid = () => {
                       id="cityOrTown"
                       name="cityOrTown"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.cityOrTown}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.cityOrTown &&
-                        Boolean(formikEditApplicantForm.errors.cityOrTown)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.cityOrTown &&
+                      //   Boolean(formikEditApplicantForm.errors.cityOrTown)
+                      // }
                       placeholder="Enter city/town"
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.cityOrTown &&
                         formikEditApplicantForm.errors.cityOrTown}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -2799,23 +2856,29 @@ const MainEditApplicantsGrid = () => {
                       id="name"
                       name="name"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.name}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.name &&
-                        Boolean(formikEditApplicantForm.errors.name)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.name &&
+                      //   Boolean(formikEditApplicantForm.errors.name)
+                      // }
                       placeholder="Enter name..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.name &&
                         formikEditApplicantForm.errors.name}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -2846,23 +2909,29 @@ const MainEditApplicantsGrid = () => {
                       id="address"
                       name="address"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.address}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.address &&
-                        Boolean(formikEditApplicantForm.errors.address)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.address &&
+                      //   Boolean(formikEditApplicantForm.errors.address)
+                      // }
                       placeholder="Enter address..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.address &&
                         formikEditApplicantForm.errors.address}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
               </Box>
@@ -2895,23 +2964,29 @@ const MainEditApplicantsGrid = () => {
                       id="relationship"
                       name="relationship"
                       type="text"
+                      disabled
                       value={formikEditApplicantForm.values.relationship}
-                      onChange={formikEditApplicantForm.handleChange}
-                      onBlur={formikEditApplicantForm.handleBlur}
-                      error={
-                        formikEditApplicantForm.touched.relationship &&
-                        Boolean(formikEditApplicantForm.errors.relationship)
-                      }
+                      // onChange={formikEditApplicantForm.handleChange}
+                      // onBlur={formikEditApplicantForm.handleBlur}
+                      // error={
+                      //   formikEditApplicantForm.touched.relationship &&
+                      //   Boolean(formikEditApplicantForm.errors.relationship)
+                      // }
                       placeholder="Enter relationship..."
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled:hover": {
+                          cursor: "not-allowed",
+                        },
+                      }}
                     />
-                    <Typography
+                    {/* <Typography
                       variant="inherit"
                       color="error.main"
                       sx={{ mt: 1 }}
                     >
                       {formikEditApplicantForm.touched.relationship &&
                         formikEditApplicantForm.errors.relationship}
-                    </Typography>
+                    </Typography> */}
                   </FormControl>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
@@ -2941,14 +3016,14 @@ const MainEditApplicantsGrid = () => {
                       <EditContactNumberInputField
                         formikEditApplicantForm={formikEditApplicantForm}
                       />
-                      <Typography
+                      {/* <Typography
                         variant="inherit"
                         color="error.main"
                         sx={{ mt: 1 }}
                       >
                         {formikEditApplicantForm.touched.contactNumber &&
                           formikEditApplicantForm.errors.contactNumber}
-                      </Typography>
+                      </Typography> */}
                     </FormControl>
                   </FormControl>
                 </Grid>
@@ -2971,92 +3046,20 @@ const MainEditApplicantsGrid = () => {
               >
                 Applicant Photo
               </Typography>
-              <Box sx={{ mt: 4 }}>
-                {formikEditApplicantForm.values.applicantPhoto !== "" && (
-                  <Box>
-                    <Badge
-                      overlap="circular"
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      badgeContent={
-                        <Tooltip title="Upload Photo" placement="right" arrow>
-                          <IconButton onClick={handleOpenApplicantPhoto}>
-                            <FaCamera size={30} />
-                          </IconButton>
-                        </Tooltip>
-                      }
-                    >
-                      <Avatar
-                        alt={formikEditApplicantForm.values.applicantFirstName}
-                        src={
-                          formikEditApplicantForm.values.applicantPhoto.preview
-                        }
-                        variant="square"
-                        sx={{
-                          width: 130,
-                          height: 130,
-                        }}
-                        slotProps={{
-                          img: { loading: "lazy" },
-                        }}
-                      />
-                    </Badge>
-                  </Box>
-                )}
-
-                {formikEditApplicantForm.values.applicantPhoto === "" && (
-                  <Box>
-                    <Badge
-                      overlap="circular"
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      badgeContent={
-                        <Tooltip title="Upload Photo" placement="right" arrow>
-                          <IconButton onClick={handleOpenApplicantPhoto}>
-                            <FaCamera size={30} />
-                          </IconButton>
-                        </Tooltip>
-                      }
-                    >
-                      <Avatar
-                        alt=""
-                        src=""
-                        variant="square"
-                        sx={{
-                          width: 130,
-                          height: 130,
-                        }}
-                        slotProps={{
-                          img: { loading: "lazy" },
-                        }}
-                      >
-                        <Typography
-                          sx={{
-                            fontSize: 17,
-                            fontWeight: 500,
-                            color: "#fff",
-                            textAlign: "center",
-                            textTransform: "uppercase",
-                          }}
-                        >
-                          Applicant Photo
-                        </Typography>
-                      </Avatar>
-                    </Badge>
-                    <Typography
-                      variant="inherit"
-                      color="error.main"
-                      sx={{ mt: 1 }}
-                    >
-                      {formikEditApplicantForm.touched.applicantPhoto &&
-                        formikEditApplicantForm.errors.applicantPhoto}
-                    </Typography>
-                  </Box>
-                )}
+              <Box sx={{ mt: 4, textAlign: "center" }}>
+                <Avatar
+                  alt={formikEditApplicantForm.values.applicantFirstName}
+                  src={`/uploads/${formikEditApplicantForm.values.applicantPhoto}`}
+                  variant="square"
+                  sx={{
+                    width: 130,
+                    height: 130,
+                    display: "inline-block",
+                  }}
+                  slotProps={{
+                    img: { loading: "lazy" },
+                  }}
+                />
               </Box>
             </Box>
           </Paper>
@@ -3098,7 +3101,7 @@ const MainEditApplicantsGrid = () => {
                   </Tooltip>
                 </Typography>
                 <FormControl fullWidth>
-                  <AddApplicantSignature
+                  <EditApplicantSignature
                     formikEditApplicantForm={formikEditApplicantForm}
                   />
                   {formikEditApplicantForm.values.applicantSignature !== "" && (
@@ -3107,7 +3110,7 @@ const MainEditApplicantsGrid = () => {
                         width={60}
                         height={60}
                         src={formikEditApplicantForm.values.applicantSignature}
-                        alt="Applicant Signature"
+                        alt={`${formikEditApplicantForm.values.applicantFirstName} Signature`}
                       />
                     </Box>
                   )}
@@ -3138,95 +3141,20 @@ const MainEditApplicantsGrid = () => {
               >
                 Parent or Guardian Photo
               </Typography>
-              <Box sx={{ mt: 4 }}>
-                {formikEditApplicantForm.values.parentOrGuardianPhoto !==
-                  "" && (
-                  <Box>
-                    <Badge
-                      overlap="circular"
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      badgeContent={
-                        <Tooltip title="Upload Photo" placement="right" arrow>
-                          <IconButton onClick={handleOpenGuardianPhoto}>
-                            <FaCamera size={30} />
-                          </IconButton>
-                        </Tooltip>
-                      }
-                    >
-                      <Avatar
-                        alt={formikEditApplicantForm.values.applicantFirstName}
-                        src={
-                          formikEditApplicantForm.values.parentOrGuardianPhoto
-                            .preview
-                        }
-                        variant="square"
-                        sx={{
-                          width: 130,
-                          height: 130,
-                        }}
-                        slotProps={{
-                          img: { loading: "lazy" },
-                        }}
-                      />
-                    </Badge>
-                  </Box>
-                )}
-
-                {formikEditApplicantForm.values.parentOrGuardianPhoto ===
-                  "" && (
-                  <Box>
-                    <Badge
-                      overlap="circular"
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      badgeContent={
-                        <Tooltip title="Upload Photo" placement="right" arrow>
-                          <IconButton onClick={handleOpenGuardianPhoto}>
-                            <FaCamera size={30} />
-                          </IconButton>
-                        </Tooltip>
-                      }
-                    >
-                      <Avatar
-                        alt=""
-                        src=""
-                        variant="square"
-                        sx={{
-                          width: 130,
-                          height: 130,
-                        }}
-                        slotProps={{
-                          img: { loading: "lazy" },
-                        }}
-                      >
-                        <Typography
-                          sx={{
-                            fontSize: 17,
-                            fontWeight: 500,
-                            color: "#fff",
-                            textAlign: "center",
-                            textTransform: "uppercase",
-                          }}
-                        >
-                          Parent or Guardian Photo
-                        </Typography>
-                      </Avatar>
-                    </Badge>
-                    <Typography
-                      variant="inherit"
-                      color="error.main"
-                      sx={{ mt: 1 }}
-                    >
-                      {formikEditApplicantForm.touched.parentOrGuardianPhoto &&
-                        formikEditApplicantForm.errors.parentOrGuardianPhoto}
-                    </Typography>
-                  </Box>
-                )}
+              <Box sx={{ mt: 4, textAlign: "center" }}>
+                <Avatar
+                  alt="Parent or Guardian Photo"
+                  src={`/uploads/${formikEditApplicantForm.values.parentOrGuardianPhoto}`}
+                  variant="square"
+                  sx={{
+                    width: 130,
+                    height: 130,
+                    display: "inline-block",
+                  }}
+                  slotProps={{
+                    img: { loading: "lazy" },
+                  }}
+                />
               </Box>
             </Box>
           </Paper>
@@ -3274,23 +3202,23 @@ const MainEditApplicantsGrid = () => {
       </Grid>
       <Copyright sx={{ my: 4 }} />
 
-      {/* Start AddUploadApplicantPhoto Dialog */}
-      <AddUploadApplicantPhoto
+      {/* Start EditUploadApplicantPhoto Dialog */}
+      <EditUploadApplicantPhoto
         open={openApplicantPhoto}
         handleClose={handleCloseApplicantPhoto}
         formikEditApplicantForm={formikEditApplicantForm}
       />
-      {/* End AddUploadApplicantPhoto Dialog */}
+      {/* End EditUploadApplicantPhoto Dialog */}
 
-      {/* Start AddUploadGuardianPhoto Dialog */}
-      <AddUploadGuardianPhoto
+      {/* Start EditUploadGuardianPhoto Dialog */}
+      <EditUploadGuardianPhoto
         open={openGuardianPhoto}
         handleClose={handleCloseGuardianPhoto}
         formikEditApplicantForm={formikEditApplicantForm}
       />
-      {/* End AddUploadGuardianPhoto Dialog */}
+      {/* End EditUploadGuardianPhoto Dialog */}
     </Box>
   );
 };
 
-export default MainEditApplicantsGrid;
+export default MainEditApplicantGrid;

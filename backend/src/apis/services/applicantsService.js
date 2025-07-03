@@ -181,8 +181,7 @@ const updateApplicantById = async (
   id,
   applicantFirstName,
   applicantMiddleName,
-  applicantLastName,
-  applicantSex
+  applicantLastName
 ) => {
   const updateApplicant = await prisma.applicant.update({
     where: { id: id },
@@ -190,7 +189,6 @@ const updateApplicantById = async (
       applicantFirstName: applicantFirstName.trim(),
       applicantMiddleName: applicantMiddleName.trim(),
       applicantLastName: applicantLastName.trim(),
-      applicantSex: applicantSex.trim(),
     },
     include: {
       applicantFather: true,

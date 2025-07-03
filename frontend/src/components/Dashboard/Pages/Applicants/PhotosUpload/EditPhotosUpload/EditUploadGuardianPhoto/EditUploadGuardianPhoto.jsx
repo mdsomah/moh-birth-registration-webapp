@@ -69,7 +69,11 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const EditUploadGuardianPhoto = ({ open, handleClose, formik }) => {
+const EditUploadGuardianPhoto = ({
+  open,
+  handleClose,
+  formikEditApplicantForm,
+}) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -85,13 +89,16 @@ const EditUploadGuardianPhoto = ({ open, handleClose, formik }) => {
   //? Handle Cancel
   const handleCancel = () => {
     handleClose();
-    formik.setFieldValue("parentOrGuardianPhoto", "");
+    formikEditApplicantForm.setFieldValue("parentOrGuardianPhoto", "");
     setFiles([]);
   };
 
   const onDrop = useCallback(
     (acceptedFiles) => {
-      formik.setFieldValue("parentOrGuardianPhoto", acceptedFiles[0]);
+      formikEditApplicantForm.setFieldValue(
+        "parentOrGuardianPhoto",
+        acceptedFiles[0]
+      );
       setFiles(
         acceptedFiles.map((file) =>
           Object.assign(file, {
@@ -100,7 +107,7 @@ const EditUploadGuardianPhoto = ({ open, handleClose, formik }) => {
         )
       );
     },
-    [formik]
+    [formikEditApplicantForm]
   );
 
   const {
@@ -231,8 +238,10 @@ const EditUploadGuardianPhoto = ({ open, handleClose, formik }) => {
                   accept=".jpeg, .jpg, .png, .jif, .jfif"
                   {...getInputProps()}
                   error={
-                    formik.touched.parentOrGuardianPhoto &&
-                    Boolean(formik.errors.parentOrGuardianPhoto)
+                    formikEditApplicantForm.touched.parentOrGuardianPhoto &&
+                    Boolean(
+                      formikEditApplicantForm.errors.parentOrGuardianPhoto
+                    )
                   }
                 />
                 <Typography>Click here to upload photo</Typography>

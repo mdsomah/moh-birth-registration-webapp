@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import AppNavbar from "../../Dashboard/components/AppNavbar";
 import Header from "../../Dashboard/components/Header";
-import MainEditApplicantsGrid from "./MainEditApplicantsGrid";
+import MainEditApplicantGrid from "./MainEditApplicantGrid";
 import SideMenu from "../../Dashboard/components/SideMenu";
 import AppTheme from "../../Dashboard/shared-theme/AppTheme";
 import {
@@ -60,7 +60,7 @@ const EditApplicant = (props) => {
               }}
             >
               <Header />
-              <MainEditApplicantsGrid />
+              <MainEditApplicantGrid />
             </Stack>
           </Box>
         </Box>

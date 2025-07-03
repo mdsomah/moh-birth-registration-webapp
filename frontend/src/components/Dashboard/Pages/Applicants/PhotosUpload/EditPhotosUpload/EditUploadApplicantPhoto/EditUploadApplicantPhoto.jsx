@@ -69,7 +69,11 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const EditUploadApplicantPhoto = ({ open, handleClose, formikStepOneForm }) => {
+const EditUploadApplicantPhoto = ({
+  open,
+  handleClose,
+  formikEditApplicantForm,
+}) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -85,13 +89,13 @@ const EditUploadApplicantPhoto = ({ open, handleClose, formikStepOneForm }) => {
   //? Handle Cancel
   const handleCancel = () => {
     handleClose();
-    formikStepOneForm.setFieldValue("applicantPhoto", "");
+    formikEditApplicantForm.setFieldValue("applicantPhoto", "");
     setFiles([]);
   };
 
   const onDrop = useCallback(
     (acceptedFiles) => {
-      formikStepOneForm.setFieldValue("applicantPhoto", acceptedFiles[0]);
+      formikEditApplicantForm.setFieldValue("applicantPhoto", acceptedFiles[0]);
       setFiles(
         acceptedFiles.map((file) =>
           Object.assign(file, {
@@ -100,7 +104,7 @@ const EditUploadApplicantPhoto = ({ open, handleClose, formikStepOneForm }) => {
         )
       );
     },
-    [formikStepOneForm]
+    [formikEditApplicantForm]
   );
 
   const {
@@ -231,8 +235,8 @@ const EditUploadApplicantPhoto = ({ open, handleClose, formikStepOneForm }) => {
                   accept=".jpeg, .jpg, .png, .jif, .jfif"
                   {...getInputProps()}
                   error={
-                    formikStepOneForm.touched.applicantPhoto &&
-                    Boolean(formikStepOneForm.errors.applicantPhoto)
+                    formikEditApplicantForm.touched.applicantPhoto &&
+                    Boolean(formikEditApplicantForm.errors.applicantPhoto)
                   }
                 />
                 <Typography>Click here to upload photo</Typography>

@@ -2296,7 +2296,7 @@ const MainViewApplicantGrid = () => {
                         width={60}
                         height={60}
                         src={formikViewApplicantForm.values.applicantSignature}
-                        alt="Applicant Signature"
+                        alt={`${formikViewApplicantForm.values.applicantFirstName} Signature`}
                       />
                     </Box>
                   )}

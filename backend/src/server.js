@@ -29,8 +29,8 @@ const authRouter = require("./apis/routes/authRoute");
 const usersRoute = require("./apis/routes/usersRoute");
 const userRolesRoute = require("./apis/routes/userRolesRoute");
 const applicantsRoute = require("./apis/routes/applicantsRoute");
-const paymentsRoute = require("./apis/routes/paymentsRoute");
 const appointmentsRoute = require("./apis/routes/appointmentsRoute");
+const paymentsRoute = require("./apis/routes/paymentsRoute");
 
 //? Prisma Client Model
 const { prisma } = require("./apis/models/db/database");
@@ -100,8 +100,8 @@ async function main() {
   app.use("/api/v1/users", usersRoute);
   app.use("/api/v1/user/roles", userRolesRoute);
   app.use("/api/v1/applicants", applicantsRoute);
-  app.use("/api/v1/payments", paymentsRoute);
   app.use("/api/v1/appointments", appointmentsRoute);
+  app.use("/api/v1/payments", paymentsRoute);
   app.use("/api/v1/images", express.static("images"));
   app.use("/api/v1/uploads", express.static("uploads"));
 

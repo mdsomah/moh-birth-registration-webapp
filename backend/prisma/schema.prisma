@@ -95,6 +95,8 @@ model Applicant {
   applicantContactNumber String           @db.VarChar(14)
   attestation            Attestation?
   parentOrGuardianPhoto  String
+  payments               Payment[]
+  appointments           Appointment[]
   createdAt              DateTime         @default(now())
   updatedAt              DateTime         @updatedAt
 
@@ -170,4 +172,35 @@ model Attestation {
 
   @@index([applicantId])
   @@map(name: "attestation")
+}
+
+//? Payment Model
+model Payment {
+  id          String     @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  paymentType String     @db.VarChar(255)
+  currency    String     @db.VarChar(255)
+  amountPay   Int
+  paymentDate String
+  applicant   Applicant? @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  applicantId String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([applicantId])
+  @@map(name: "payment")
+}
+
+//? Appointment Model
+model Appointment {
+  id                   String     @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  appointmentDate      String
+  appointmentTime      String
+  reasonForAppointment String
+  applicant            Applicant? @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  applicantId          String?
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+
+  @@index([applicantId])
+  @@map(name: "appointment")
 }

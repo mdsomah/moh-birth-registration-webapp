@@ -9,7 +9,8 @@ const Form_Number = () => nanoidFormNumber();
 //? Register New Applicant
 const registerNewApplicant = async (
   ninNumber,
-  applicantPhoto,
+  ApplicantPhoto,
+  // applicantPhoto,
   formNumber,
   applicantSex,
   dateOfApplication,
@@ -58,12 +59,14 @@ const registerNewApplicant = async (
   address,
   relationship,
   contactNumber,
-  parentOrGuardianPhoto
+  ParentOrGuardianPhoto
+  // parentOrGuardianPhoto
 ) => {
   const newApplicant = await prisma.applicant.create({
     data: {
       ninNumber: ninNumber.trim(),
-      applicantPhoto: applicantPhoto.trim(),
+      applicantPhoto: ApplicantPhoto.trim(),
+      // applicantPhoto: applicantPhoto.trim(),
       formNumber:
         formNumber === "" ? `MOH-${Form_Number()}` : formNumber.trim(),
       applicantSex: applicantSex.trim(),
@@ -133,7 +136,8 @@ const registerNewApplicant = async (
           contactNumber: contactNumber.trim(),
         },
       },
-      parentOrGuardianPhoto: parentOrGuardianPhoto.trim(),
+      parentOrGuardianPhoto: ParentOrGuardianPhoto.trim(),
+      // parentOrGuardianPhoto: parentOrGuardianPhoto.trim(),
     },
     include: {
       applicantFather: true,

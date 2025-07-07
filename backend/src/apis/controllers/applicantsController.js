@@ -16,6 +16,7 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
   const {
     ninNumber,
+    applicantPhoto,
     formNumber,
     applicantSex,
     dateOfApplication,
@@ -64,18 +65,28 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
     address,
     relationship,
     contactNumber,
+    parentOrGuardianPhoto,
   } = req.body;
 
   //? Define Applicant & Guardian Photo
-  const applicantPhoto = req.files.applicantPhoto[0].filename;
+  const ApplicantPhoto =
+    req.files && req.files.applicantPhoto
+      ? req.files.applicantPhoto[0].filename
+      : applicantPhoto;
+  // const applicantPhoto = req.files.applicantPhoto[0].filename;
 
-  const parentOrGuardianPhoto = req.files.parentOrGuardianPhoto[0].filename;
+  const ParentOrGuardianPhoto =
+    req.files && req.files.parentOrGuardianPhoto
+      ? req.files.parentOrGuardianPhoto[0].filename
+      : parentOrGuardianPhoto;
+  // const parentOrGuardianPhoto = req.files.parentOrGuardianPhoto[0].filename;
 
   try {
     Logger.info("Registering New Applicant: Status success!");
     const newApplicant = await registerNewApplicant(
       ninNumber,
-      applicantPhoto,
+      // applicantPhoto,
+      ApplicantPhoto,
       formNumber,
       applicantSex,
       dateOfApplication,
@@ -124,7 +135,8 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
       address,
       relationship,
       contactNumber,
-      parentOrGuardianPhoto
+      ParentOrGuardianPhoto
+      // parentOrGuardianPhoto
     );
     return res.status(201).json({
       success: true,

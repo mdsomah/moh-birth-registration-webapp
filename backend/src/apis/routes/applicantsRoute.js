@@ -72,5 +72,11 @@ router.delete(
   verifyToken,
   applicantsController.DeleteApplicantById
 );
+router.post(
+  "/generate-reports",
+  passportAuthenticateJWT,
+  verifyToken,
+  applicantsController.GenerateApplicantReports
+);
 
 module.exports = router;

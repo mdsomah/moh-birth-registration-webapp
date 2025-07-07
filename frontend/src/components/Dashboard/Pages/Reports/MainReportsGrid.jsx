@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Box,
   Typography,
@@ -12,184 +12,175 @@ import {
 import Grid from "@mui/material/Grid";
 import { LoadingButton } from "@mui/lab";
 import { FaSearch } from "react-icons/fa";
+import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
-import dayjs from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import Copyright from "../Dashboard/internals/components/Copyright";
-// import ReactDateRange from "./ReactDateRange/ReactDateRange";
 import ReportsTable from "./ReportsTable/ReportsTable";
 import ButtonLoader from "../../../ButtonLoader/ButtonLoader";
 import NavbarBreadcrumbs from "../Dashboard/components/NavbarBreadcrumbs";
+import { Country_Lists } from "./CountryLists/CountryLists";
+import { County_Lists } from "./CountyLists/CountyLists";
 
 //? Formik
 import { useFormik } from "formik";
 
-//? County Flag
-import bomiFlag from "../../../../images/Counties-Flags/Flag_of_Bomi_County.svg.png";
-import bongFlag from "../../../../images/Counties-Flags/Flag_of_Bong_County.svg.png";
-import gbarpoluFlag from "../../../../images/Counties-Flags/Flag_of_Gbarpolu_County.svg.png";
-import grandBassFlag from "../../../../images/Counties-Flags/Flag_of_Grand_Bassa_County.svg.png";
-import grandCapeMountFlag from "../../../../images/Counties-Flags/Flag_of_Grand_Cape_Mount_County.svg.png";
-import grandGedehFlag from "../../../../images/Counties-Flags/Flag_of_Grand_Gedeh_County.svg.png";
-import grandKruFlag from "../../../../images/Counties-Flags/Flag_of_Grand_Kru_County.svg.png";
-import lofaFlag from "../../../../images/Counties-Flags/Flag_of_Lofa_County.svg.png";
-import margibiFlag from "../../../../images/Counties-Flags/Flag_of_Margibi_County.svg.png";
-import marylandFlag from "../../../../images/Counties-Flags/Flag_of_Maryland_County.svg.png";
-import montserradoFlag from "../../../../images/Counties-Flags/Flag_of_Montserrado_County.svg.png";
-import nimbaFlag from "../../../../images/Counties-Flags/Flag_of_Nimba_County.svg.png";
-import rivergeeFlag from "../../../../images/Counties-Flags/Flag_of_River_Gee_County.svg.png";
-import rivercessFlag from "../../../../images/Counties-Flags/Flag_of_Rivercess_County.svg.png";
-import sinoeFlag from "../../../../images/Counties-Flags/Flag_of_Sinoe_County.svg.png";
-
 //? React Responsive Media Queries
 import { useMediaQuery } from "react-responsive";
 
-//? Get All NIR Data
-import GetALLNIRData from "../../../../apis/NIR-APIs/GetAllApplicants";
+//? Generate Reports
+import PostReport from "../../../../apis/PostReport";
 
-//? NIR APIs Endpoints
-const getAllReportsURL = "/applicants";
+//? Endpoints
+const postReportURL = "/applicants/generate-reports";
+
+//? React Sweet Alert Initialization
+const MySwal = withReactContent(Swal);
+
+//? Sweet Alert Error
+const Error_Alert = (message) => {
+  MySwal.fire({
+    title: "ERROR...",
+    text: `${message}`,
+    icon: "error",
+  });
+};
 
 const MainReportsGrid = () => {
   //? Tablet or Mobile Responsive Media Queries
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
-  //? Card Types Array
-  const Card_Types = ["Citizen Card", "Resident Card", "ECOWAS Card"];
-
-  //? Application Types Array
-  const Application_Types = ["New", "Renewal", "Replacement"];
-
-  //? Genders Array
-  const Genders = ["Male", "Female"];
-
-  //? Counties Array
-  const Counties = [
-    { countyName: "Bomi", countyFlag: `${bomiFlag}` },
-    { countyName: "Bong", countyFlag: `${bongFlag}` },
-    { countyName: "Gbarpolu", countyFlag: `${gbarpoluFlag}` },
-    { countyName: "Grand Bassa", countyFlag: `${grandBassFlag}` },
-    { countyName: "Grand Cape Mount", countyFlag: `${grandCapeMountFlag}` },
-    { countyName: "Grand Gedeh", countyFlag: `${grandGedehFlag}` },
-    { countyName: "Grand Kru", countyFlag: `${grandKruFlag}` },
-    { countyName: "Lofa", countyFlag: `${lofaFlag}` },
-    { countyName: "Margibi", countyFlag: `${margibiFlag}` },
-    { countyName: "Maryland", countyFlag: `${marylandFlag}` },
-    { countyName: "Montserrado", countyFlag: `${montserradoFlag}` },
-    { countyName: "Nimba", countyFlag: `${nimbaFlag}` },
-    { countyName: "River Gee", countyFlag: `${rivergeeFlag}` },
-    { countyName: "Rivercess", countyFlag: `${rivercessFlag}` },
-    { countyName: "Sinoe", countyFlag: `${sinoeFlag}` },
-  ];
-
   //? Loading State
   const [loading, setLoading] = useState(false);
 
-  //? Enable Fetch Query State
-  const [enabled, setEnabled] = useState(false);
-
-  //? Generate Applicants Reports State
-  const [generateReports, setGenerateReports] = useState([]);
-
-  //? Destructure useQuery
-  const {
-    isLoading: reportsLoading,
-    data: reportsData,
-    error: reportsError,
-    refetch: reportsRefetch,
-    isRefetching: reportsRefetching,
-  } = useQuery({
-    queryKey: ["reportsData"],
-    queryFn: () => GetALLNIRData(`${getAllReportsURL}`),
-    enabled: enabled,
-  });
+  //? Report Results State
+  const [reportResults, setReportResults] = useState([]);
 
   //? Formik Reports Form
   const formikReportsForm = useFormik({
     initialValues: {
-      cardType: "",
-      applicationType: "",
-      countyName: "",
-      gender: "",
-      applicationDate: "",
+      country: "",
+      county: "",
+      sex: "",
+      dateOfBirth: "",
+    },
+    onSubmit: () => {
+      postReportData();
     },
   });
 
-  //? Handle Card Type Change
-  const handleCardTypeChange = (_event, newValue) => {
-    formikReportsForm.setFieldValue("cardType", newValue);
-  };
-
-  //? Handle Application Type Change
-  const handleApplicationTypeChange = (_event, newValue) => {
-    formikReportsForm.setFieldValue("applicationType", newValue);
+  //? Handle Country Change
+  const handleCountryChange = (_e, newValue) => {
+    const { label } = newValue || {};
+    formikReportsForm.setFieldValue("country", label);
   };
 
   //? Handle County Change
   const handleCountyChange = (_event, newValue) => {
     //? Destructure newValue
-    const { countyName } = newValue;
-    formikReportsForm.setFieldValue("countyName", countyName);
+    const { countyName } = newValue || "";
+    formikReportsForm.setFieldValue("county", countyName);
   };
 
-  //? Handle Gender Change
-  const handleGenderChange = (_event, newValue) => {
-    formikReportsForm.setFieldValue("gender", newValue);
+  //? Handle Sex Change
+  const handleSexChange = (_event, newValue) => {
+    formikReportsForm.setFieldValue("sex", newValue);
   };
 
-  //? Handle Application Date Change
-  const handleApplicationDateChange = (newValue) => {
-    formikReportsForm.setFieldValue("applicationDate", newValue);
+  //? Handle DoB Change
+  const handleDoBChange = (newValue) => {
+    formikReportsForm.setFieldValue("dateOfBirth", newValue);
   };
 
-  //? Handle Generate Reports
-  const handleGenerateReports = async () => {
-    await reportsRefetch();
-    setEnabled(true);
+  //? Handle Submit Form
+  const handleSubmitForm = async (e) => {
+    if (Object.keys(ReportData).length === 0) {
+      Error_Alert("Please enter at least one search field!");
+      return;
+    }
+    e.preventDefault();
+    formikReportsForm.handleSubmit();
   };
 
   //? Handle Reset Form
   const handleResetForm = () => {
     formikReportsForm.resetForm();
-    setGenerateReports([]);
-    setEnabled(false);
+    setReportResults([]);
   };
+
+  //? Report Data Object
+  const ReportData = {};
+  if (formikReportsForm.values.country !== "") {
+    ReportData.country = formikReportsForm.values.country;
+  }
+  if (formikReportsForm.values.county !== "") {
+    ReportData.county = formikReportsForm.values.county;
+  }
+  if (formikReportsForm.values.sex !== "") {
+    ReportData.sex = formikReportsForm.values.sex;
+  }
+  if (formikReportsForm.values.dateOfBirth !== "") {
+    ReportData.dateOfBirth = formikReportsForm.values.dateOfBirth;
+  }
+
+  console.log(ReportData);
 
   //? Search Data
   const searchData = formikReportsForm.values;
 
-  //? Handle Reports Filters
-  const ReportsFilters =
-    reportsData?.filter(
-      (report) =>
-        (report?.cardType === searchData.cardType &&
-          searchData.cardType !== "") ||
-        (report?.applicationType === searchData.applicationType &&
-          searchData.applicationType !== "") ||
-        (report?.countyName === searchData.countyName &&
-          searchData.countyName !== "") ||
-        (report?.gender === searchData.gender && searchData.gender !== "") ||
-        (report?.applicationDate ===
-          dayjs(searchData.applicationDate).format("MM/DD/YYYY") &&
-          searchData.applicationDate !== "")
-    ) ?? [];
+  //? useQueryClient
+  const queryClient = useQueryClient();
 
-  //? Fetching Data Effect
-  useEffect(() => {
-    if (enabled) {
-      setGenerateReports(ReportsFilters);
-    }
-  }, [enabled]);
+  const Mutation = useMutation({
+    mutationFn: (newData) => PostReport(`${postReportURL}`, newData),
+    onSuccess: (data) => {
+      if (data) {
+        console.log("Report Data: ", data);
+        //? Applicant Filters
+        const ApplicantFilters =
+          data?.applicantReports?.filter(
+            (applicant) =>
+              (applicant?.applicantCountry === searchData.country &&
+                searchData.country !== "") ||
+              (applicant?.applicantCounty === searchData.county &&
+                searchData.county !== "") ||
+              (applicant?.applicantSex === searchData.sex &&
+                searchData.sex !== "") ||
+              (dayjs(applicant?.applicantDateOfBirth).format("MM/DD/YYYY") ===
+                dayjs(searchData.dateOfBirth).format("MM/DD/YYYY") &&
+                searchData.dateOfBirth !== "")
+          ) ?? [];
+        setReportResults(ApplicantFilters);
+        queryClient.invalidateQueries({
+          queryKey: ["applicantsData"],
+        });
+      }
+      return data;
+    },
+    onError: (error) => {
+      if (error) {
+        console.log("Error: ", error);
+      }
+      return error;
+    },
+  });
 
   //? Loading Effect
   useEffect(() => {
-    if (reportsLoading) {
+    if (Mutation.isPending) {
       setLoading(true);
     } else {
       setLoading(false);
     }
-  }, [reportsLoading]);
+  }, [Mutation]);
+
+  //? Post Report Data
+  const postReportData = async () => {
+    Mutation.mutate(ReportData);
+  };
 
   return (
     <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
@@ -214,46 +205,55 @@ const MainReportsGrid = () => {
               sx={{ display: { xs: "block", lg: "flex" }, gap: "1rem", mt: 1 }}
             >
               <FormControl fullWidth sx={{ mb: 1 }}>
-                <Typography sx={{ mb: 2 }}>Card Type</Typography>
+                <Typography sx={{ mb: 2 }}>Country</Typography>
                 <Autocomplete
-                  id="cardType"
-                  value={formikReportsForm.values.cardType}
-                  onChange={handleCardTypeChange}
-                  options={Card_Types ?? []}
+                  id="country"
+                  value={formikReportsForm.values.country}
+                  onChange={handleCountryChange}
+                  options={Country_Lists ?? []}
+                  filterSelectedOptions={true}
+                  isOptionEqualToValue={(option, value) =>
+                    option?.label === value?.label
+                  }
                   autoHighlight
-                  renderInput={(params) => (
-                    <TextField placeholder="Select card type..." {...params} />
+                  getOptionLabel={(option) => option?.label || option}
+                  renderOption={(props, option) => (
+                    <Box
+                      component="li"
+                      sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+                      {...props}
+                      key={option?.code}
+                    >
+                      <img
+                        loading="lazy"
+                        width="20"
+                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                        alt="Country Flag"
+                      />
+                      {option?.label} {option?.code} +{option?.phone}
+                    </Box>
                   )}
-                />
-              </FormControl>
-              <FormControl fullWidth>
-                <Typography sx={{ mb: 2 }}>Application Type</Typography>
-                <Autocomplete
-                  id="applicationType"
-                  value={formikReportsForm.values.applicationType}
-                  onChange={handleApplicationTypeChange}
-                  options={Application_Types ?? []}
-                  autoHighlight
                   renderInput={(params) => (
                     <TextField
-                      placeholder="Select application type..."
                       {...params}
+                      placeholder="Select country..."
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: "country",
+                      }}
                     />
                   )}
                 />
               </FormControl>
-            </Box>
-            <Box
-              sx={{ display: { xs: "block", lg: "flex" }, gap: "1rem", mt: 1 }}
-            >
               <FormControl fullWidth sx={{ mb: 1 }}>
                 <Typography sx={{ mb: 2 }}>County</Typography>
                 <Autocomplete
-                  id="countyName"
-                  value={formikReportsForm.values.countyName}
+                  id="county"
+                  value={formikReportsForm.values.county}
                   onChange={handleCountyChange}
                   autoHighlight
-                  options={Counties ?? []}
+                  options={County_Lists ?? []}
                   getOptionLabel={(option) => option?.countyName || option}
                   renderOption={(props, option) => {
                     const { key, ...optionProps } = props;
@@ -281,49 +281,50 @@ const MainReportsGrid = () => {
                   )}
                 />
               </FormControl>
+            </Box>
+            <Box
+              sx={{ display: { xs: "block", lg: "flex" }, gap: "1rem", mt: 1 }}
+            >
               <FormControl fullWidth>
-                <Typography sx={{ mb: 2 }}>Gender</Typography>
+                <Typography sx={{ mb: 2 }}>Sex</Typography>
                 <Autocomplete
-                  id="gender"
-                  value={formikReportsForm.values.gender}
-                  onChange={handleGenderChange}
-                  options={Genders ?? []}
+                  id="sex"
+                  value={formikReportsForm.values.sex}
+                  onChange={handleSexChange}
+                  options={["Male", "Female"] ?? []}
                   autoHighlight
                   renderInput={(params) => (
-                    <TextField placeholder="Select gender..." {...params} />
+                    <TextField placeholder="Select sex..." {...params} />
                   )}
                 />
               </FormControl>
-            </Box>
-            {/* <Box sx={{ mt: 1 }}>
               <FormControl fullWidth sx={{ mb: 1 }}>
-                <Typography sx={{ mb: 2 }}>Application Date</Typography>
+                <Typography sx={{ mb: 2 }}>DoB</Typography>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateRangePicker
-                    value={dayjs(formikReportsForm.values.applicationDate)}
-                    onChange={handleApplicationDateChange}
-                    localeText={{ start: "From", end: "To" }}
+                  <DatePicker
+                    disableFuture
+                    value={dayjs(formikReportsForm.values.dateOfBirth)}
+                    onChange={handleDoBChange}
                   />
                 </LocalizationProvider>
               </FormControl>
-            </Box> */}
+            </Box>
             <Box sx={{ mt: 1 }}>
               <LoadingButton
-                disabled={true}
                 variant="contained"
                 fullWidth
                 size="large"
                 loading={loading}
                 loadingIndicator={<ButtonLoader />}
-                onClick={() => handleGenerateReports()}
+                onClick={handleSubmitForm}
                 loadingPosition="end"
-                endIcon={<FaSearch size={20} color="#d4bf79" />}
-                sx={{ mt: 3, mb: 2, color: "#d4bf79" }}
+                endIcon={<FaSearch size={20} color="#fff" />}
+                sx={{ mt: 3, mb: 2, color: "#fff" }}
               >
                 {loading ? (
-                  <span style={{ color: "#d4bf79" }}>Searching</span>
+                  <span style={{ color: "#fff" }}>Generating</span>
                 ) : (
-                  <spa>Search</spa>
+                  <span>Generate</span>
                 )}
               </LoadingButton>
             </Box>
@@ -340,13 +341,7 @@ const MainReportsGrid = () => {
           </Paper>
         </Grid>
         <Grid size={{ xs: 12, lg: 12 }}>
-          <ReportsTable
-            reportsLoading={reportsLoading}
-            reportsError={reportsError}
-            reportsRefetch={reportsRefetch}
-            reportsRefetching={reportsRefetching}
-            generateReports={generateReports}
-          />
+          <ReportsTable reportResults={reportResults} />
         </Grid>
       </Grid>
       <Copyright sx={{ my: 4 }} />

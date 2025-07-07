@@ -137,6 +137,8 @@ const registerNewApplicant = async (
       applicantFather: true,
       applicantMother: true,
       attestation: true,
+      appointments: true,
+      payments: true,
     },
   });
 
@@ -150,6 +152,8 @@ const getAllApplicants = async () => {
       applicantFather: true,
       applicantMother: true,
       attestation: true,
+      appointments: true,
+      payments: true,
     },
   });
   if (!applicants) {
@@ -167,6 +171,8 @@ const getApplicantById = async (id) => {
       applicantFather: true,
       applicantMother: true,
       attestation: true,
+      appointments: true,
+      payments: true,
     },
   });
   if (!applicant) {
@@ -194,6 +200,8 @@ const updateApplicantById = async (
       applicantFather: true,
       applicantMother: true,
       attestation: true,
+      appointments: true,
+      payments: true,
     },
   });
   if (!updateApplicant) {
@@ -211,6 +219,8 @@ const deleteApplicantById = async (id) => {
       applicantFather: true,
       applicantMother: true,
       attestation: true,
+      appointments: true,
+      payments: true,
     },
   });
   if (!deleteApplicant) {
@@ -220,10 +230,39 @@ const deleteApplicantById = async (id) => {
   return deleteApplicant;
 };
 
+//? Generate Applicant Reports
+const generateApplicantReports = async (country, county, sex, dateOfBirth) => {
+  const applicantReports = await prisma.applicant.findMany({
+    where: {
+      OR: [
+        { applicantCountry: country },
+        { applicantCounty: county },
+        { applicantSex: sex },
+        {
+          applicantDateOfBirth: dayjs(dateOfBirth).format("MM/DD/YYYY").trim(),
+        },
+      ],
+    },
+    include: {
+      applicantFather: true,
+      applicantMother: true,
+      attestation: true,
+      appointments: true,
+      payments: true,
+    },
+  });
+  if (applicantReports.length === 0) {
+    throw new Error("No applicant(s) found!");
+  }
+
+  return applicantReports;
+};
+
 module.exports = {
   registerNewApplicant,
   getAllApplicants,
   getApplicantById,
   updateApplicantById,
   deleteApplicantById,
+  generateApplicantReports,
 };

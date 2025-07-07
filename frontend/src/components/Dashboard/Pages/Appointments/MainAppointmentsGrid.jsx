@@ -22,7 +22,7 @@ const MainAppointmentsGrid = () => {
         variant="h6"
         sx={{ mt: { xs: 3, md: 0 }, mb: 2 }}
       >
-        Applicants
+        Appointments
       </Typography>
       <Grid
         container

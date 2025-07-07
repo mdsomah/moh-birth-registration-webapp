@@ -8,6 +8,7 @@ const {
   getApplicantById,
   updateApplicantById,
   deleteApplicantById,
+  generateApplicantReports,
 } = require("../services/applicantsService");
 
 //? Register New Applicant
@@ -182,6 +183,8 @@ const UpdateApplicantById = asyncHandler(async (req, res, next) => {
     );
     return res.status(200).json({
       success: true,
+      isAuthenticated: false,
+      method: req.method,
       message: "Applicant updated successfully!",
       updateApplicant: updateApplicant,
     });
@@ -201,6 +204,8 @@ const DeleteApplicantById = asyncHandler(async (req, res, next) => {
     const deleteApplicant = await deleteApplicantById(id);
     return res.status(200).json({
       success: true,
+      isAuthenticated: false,
+      method: req.method,
       message: "Applicant deleted successfully!",
       deleteApplicant: deleteApplicant,
     });
@@ -210,10 +215,37 @@ const DeleteApplicantById = asyncHandler(async (req, res, next) => {
   }
 });
 
+//? Generate Applicant Reports
+const GenerateApplicantReports = asyncHandler(async (req, res, next) => {
+  //? Destructure req.body
+  const { country, county, sex, dateOfBirth } = req.body;
+
+  try {
+    Logger.info("Generating Applicant Reports: Status success!");
+    const applicantReports = await generateApplicantReports(
+      country,
+      county,
+      sex,
+      dateOfBirth
+    );
+    return res.status(200).json({
+      success: true,
+      isAuthenticated: false,
+      method: req.method,
+      message: "Report generated successfully!",
+      applicantReports: applicantReports,
+    });
+  } catch (err) {
+    Logger.error("Generating Applicant Reports: Status failed!");
+    return next(HTTPErrors(500, `${err}`));
+  }
+});
+
 module.exports = {
   RegisterNewApplicant,
   GetAllApplicants,
   GetApplicantById,
   UpdateApplicantById,
   DeleteApplicantById,
+  GenerateApplicantReports,
 };

@@ -154,55 +154,23 @@ const PaymentsTable = () => {
   const columns = useMemo(
     () => [
       {
-        accessorFn: (row) => `${row?.applicantFirstName}`,
-        id: "applicantFirstName",
-        header: "Full Name",
-        size: 180,
-        Cell: ({ row }) => (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-            }}
-          >
-            <Avatar
-              alt={`${row?.original?.applicantFirstName} Photo`}
-              src={`/uploads/${row?.original?.applicantPhoto}`}
-              sx={{
-                width: 50,
-                height: 50,
-              }}
-              slotProps={{
-                img: { loading: "lazy" },
-              }}
-            />
-            <span>
-              {row?.original?.applicantFirstName}{" "}
-              {row?.original?.applicantMiddleName}{" "}
-              {row?.original?.applicantLastName}
-            </span>
-          </Box>
-        ),
-      },
-      {
-        accessorKey: "applicantDateOfBirth",
-        header: "DoB",
+        accessorKey: "paymentType",
+        header: "Payment Type",
         size: 140,
       },
       {
-        accessorKey: "applicantContactNumber",
-        header: "Phone",
+        accessorKey: "currency",
+        header: "Currency",
         size: 140,
       },
       {
-        accessorKey: "applicantMother.motherName",
-        header: "Mother Name",
+        accessorKey: "amountPay",
+        header: "Amount Pay",
         size: 140,
       },
       {
-        accessorKey: "applicantFather.fatherName",
-        header: "Father Name",
+        accessorKey: "paymentDate",
+        header: "Payment Date",
         size: 140,
       },
     ],
@@ -284,7 +252,7 @@ const PaymentsTable = () => {
             }}
           >
             {/* Start Desktop & LaptopView */}
-            {isDesktopOrLaptop && (
+            {/* {isDesktopOrLaptop && (
               <Button
                 variant="contained"
                 size="large"
@@ -292,14 +260,14 @@ const PaymentsTable = () => {
                 onClick={() => handleOpenAddPayment()}
                 endIcon={<IoMdPersonAdd />}
               >
-                Add Appointment
+                Add Payment
               </Button>
-            )}
+            )} */}
             {/*End Desktop & Laptop View */}
 
             {/* Start Table & Mobile View */}
-            {isTabletOrMobile && (
-              <Tooltip arrow placement="bottom" title="Add User">
+            {/* {isTabletOrMobile && (
+              <Tooltip arrow placement="bottom" title="Add Payment">
                 <IconButton
                   sx={{ bgcolor: "#000", color: "#d4bf79" }}
                   onClick={() => handleOpenAddPayment()}
@@ -307,7 +275,7 @@ const PaymentsTable = () => {
                   <IoMdPersonAdd />
                 </IconButton>
               </Tooltip>
-            )}
+            )} */}
             {/*End Table & Mobile View */}
             <Tooltip arrow placement="bottom" title="Refresh Data">
               <IconButton onClick={() => paymentsRefetch()}>

@@ -154,55 +154,18 @@ const AppointmentsTable = () => {
   const columns = useMemo(
     () => [
       {
-        accessorFn: (row) => `${row?.applicantFirstName}`,
-        id: "applicantFirstName",
-        header: "Full Name",
-        size: 180,
-        Cell: ({ row }) => (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "1rem",
-            }}
-          >
-            <Avatar
-              alt={`${row?.original?.applicantFirstName} Photo`}
-              src={`/uploads/${row?.original?.applicantPhoto}`}
-              sx={{
-                width: 50,
-                height: 50,
-              }}
-              slotProps={{
-                img: { loading: "lazy" },
-              }}
-            />
-            <span>
-              {row?.original?.applicantFirstName}{" "}
-              {row?.original?.applicantMiddleName}{" "}
-              {row?.original?.applicantLastName}
-            </span>
-          </Box>
-        ),
-      },
-      {
-        accessorKey: "applicantDateOfBirth",
-        header: "DoB",
+        accessorKey: "appointmentDate",
+        header: "Appointment Date",
         size: 140,
       },
       {
-        accessorKey: "applicantContactNumber",
-        header: "Phone",
+        accessorKey: "appointmentTime",
+        header: "Appointment Time",
         size: 140,
       },
       {
-        accessorKey: "applicantMother.motherName",
-        header: "Mother Name",
-        size: 140,
-      },
-      {
-        accessorKey: "applicantFather.fatherName",
-        header: "Father Name",
+        accessorKey: "reasonForAppointment",
+        header: "Reason",
         size: 140,
       },
     ],
@@ -284,7 +247,7 @@ const AppointmentsTable = () => {
             }}
           >
             {/* Start Desktop & LaptopView */}
-            {isDesktopOrLaptop && (
+            {/* {isDesktopOrLaptop && (
               <Button
                 variant="contained"
                 size="large"
@@ -294,12 +257,12 @@ const AppointmentsTable = () => {
               >
                 Add Appointment
               </Button>
-            )}
+            )} */}
             {/*End Desktop & Laptop View */}
 
             {/* Start Table & Mobile View */}
-            {isTabletOrMobile && (
-              <Tooltip arrow placement="bottom" title="Add User">
+            {/* {isTabletOrMobile && (
+              <Tooltip arrow placement="bottom" title="Add Appointment">
                 <IconButton
                   sx={{ bgcolor: "#000", color: "#d4bf79" }}
                   onClick={() => handleOpenAddAppointment()}
@@ -307,7 +270,7 @@ const AppointmentsTable = () => {
                   <IoMdPersonAdd />
                 </IconButton>
               </Tooltip>
-            )}
+            )} */}
             {/*End Table & Mobile View */}
             <Tooltip arrow placement="bottom" title="Refresh Data">
               <IconButton onClick={() => appointmentsRefetch()}>

@@ -57,34 +57,28 @@ const ReportsTable = (props) => {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
   //? Destructure props
-  const {
-    reportsLoading,
-    reportsError,
-    reportsRefetch,
-    reportsRefetching,
-    generateReports,
-  } = props;
+  const { reportResults } = props;
 
   //? Data Definition
   const data = useMemo(
     () =>
-      generateReports?.sort((a, b) => {
+      reportResults?.sort((a, b) => {
         if (a.createdAt > b.createdAt) return -1;
         if (a.createdAt < b.createdAt) return 1;
         return 0;
       }) ?? [],
-    [generateReports]
+    [reportResults]
   );
 
   //? Columns Definition
   const columns = useMemo(
     () => [
       {
-        accessorFn: (row) => `${row?.displayName}`,
-        id: "displayName",
+        accessorFn: (row) => `${row?.applicantFirstName}`,
+        id: "applicantFirstName",
         header: "Full Name",
         size: 180,
-        Cell: ({ renderedCellValue, row }) => (
+        Cell: ({ row }) => (
           <Box
             sx={{
               display: "flex",
@@ -93,8 +87,8 @@ const ReportsTable = (props) => {
             }}
           >
             <Avatar
-              alt={`${row?.original?.displayName} Photo`}
-              src={`${row?.original?.photo}`}
+              alt={`${row?.original?.applicantFirstName} Photo`}
+              src={`/uploads/${row?.original?.applicantPhoto}`}
               sx={{
                 width: 50,
                 height: 50,
@@ -103,33 +97,32 @@ const ReportsTable = (props) => {
                 img: { loading: "lazy" },
               }}
             />
-            <span>{renderedCellValue}</span>
+            <span>
+              {row?.original?.applicantFirstName}{" "}
+              {row?.original?.applicantMiddleName}{" "}
+              {row?.original?.applicantLastName}
+            </span>
           </Box>
         ),
       },
       {
-        accessorKey: "cardType",
-        header: "Card Type",
+        accessorKey: "applicantDateOfBirth",
+        header: "DoB",
         size: 140,
       },
       {
-        accessorKey: "applicationType",
-        header: "Application Type",
+        accessorKey: "applicantContactNumber",
+        header: "Phone",
         size: 140,
       },
       {
-        accessorKey: "countyName",
-        header: "County",
+        accessorKey: "applicantMother.motherName",
+        header: "Mother Name",
         size: 140,
       },
       {
-        accessorKey: "gender",
-        header: "Gender",
-        size: 140,
-      },
-      {
-        accessorKey: "applicationDate",
-        header: "Application Date",
+        accessorKey: "applicantFather.fatherName",
+        header: "Father Name",
         size: 140,
       },
     ],
@@ -167,34 +160,10 @@ const ReportsTable = (props) => {
     (rows) => {
       const columnsHeader = ExcelColumnsHeader.map((column) => column.header);
       const rowsData = rows.map((row) => ({
-        ninNumber: row?.original?.ninNumber,
-        lastName: row?.original?.lastName,
-        firstName: row?.original?.firstName,
-        middleName: row?.original?.middleName,
-        displayName: row?.original?.displayName,
-        height: row?.original?.height,
-        signature: row?.original?.signature,
-        photo: row?.original?.photo,
-        applicantStatus: row?.original?.applicantStatus,
-        email: row?.original?.email,
-        mobileNumberOne: row?.original?.mobileNumberOne,
-        mobileNumberTwo: row?.original?.mobileNumberTwo,
-        dateOfBirth: row?.original?.dateOfBirth,
-        sex: row?.original?.sex,
-        enrollmentDate: row?.original?.enrollmentDate,
-        enrollmentId: row?.original?.enrollmentId,
-        street: row?.original?.address?.street,
-        townOrVillage: row?.original?.address?.townOrVillage,
-        city: row?.original?.address?.city,
-        county: row?.original?.address?.county,
-        votingCenter: row?.original?.address?.votingCenter,
-        nationality: row?.original?.address?.nationality,
-        placeOfBirth: row?.original?.address?.placeOfBirth,
-        fatherName: row?.original?.otherDetails?.fatherName,
-        motherName: row?.original?.otherDetails?.motherName,
-        fatherNationality: row?.original?.otherDetails?.fatherNationality,
-        motherNationality: row?.original?.otherDetails?.motherNationality,
-        maritalStatus: row?.original?.otherDetails?.maritalStatus,
+        formNumber: row?.original?.formNumber,
+        applicantFirstName: row?.original?.applicantFirstName,
+        applicantMiddleName: row?.original?.applicantMiddleName,
+        applicantLastName: row?.original?.applicantLastName,
       }));
 
       const worksheet = XLSX.utils.json_to_sheet(rowsData);
@@ -202,7 +171,7 @@ const ReportsTable = (props) => {
       XLSX.utils.book_append_sheet(workbook, worksheet, "Applicants Export");
       XLSX.utils.sheet_add_aoa(worksheet, [columnsHeader], { origin: "A1" });
       const max_width = rowsData.reduce(
-        (w, r) => Math.max(w, r.ninNumber?.length),
+        (w, r) => Math.max(w, r.formNumber?.length),
         10
       );
       worksheet["!cols"] = [{ wch: max_width }];
@@ -223,34 +192,10 @@ const ReportsTable = (props) => {
     (rows) => {
       const columnsHeader = ExcelColumnsHeader.map((column) => column.header);
       const rowsData = rows.map((row) => ({
-        ninNumber: row?.original?.ninNumber,
-        lastName: row?.original?.lastName,
-        firstName: row?.original?.firstName,
-        middleName: row?.original?.middleName,
-        displayName: row?.original?.displayName,
-        height: row?.original?.height,
-        signature: row?.original?.signature,
-        photo: row?.original?.photo,
-        applicantStatus: row?.original?.applicantStatus,
-        email: row?.original?.email,
-        mobileNumberOne: row?.original?.mobileNumberOne,
-        mobileNumberTwo: row?.original?.mobileNumberTwo,
-        dateOfBirth: row?.original?.dateOfBirth,
-        sex: row?.original?.sex,
-        enrollmentDate: row?.original?.enrollmentDate,
-        enrollmentId: row?.original?.enrollmentId,
-        street: row?.original?.address?.street,
-        townOrVillage: row?.original?.address?.townOrVillage,
-        city: row?.original?.address?.city,
-        county: row?.original?.address?.county,
-        votingCenter: row?.original?.address?.votingCenter,
-        nationality: row?.original?.address?.nationality,
-        placeOfBirth: row?.original?.address?.placeOfBirth,
-        fatherName: row?.original?.otherDetails?.fatherName,
-        motherName: row?.original?.otherDetails?.motherName,
-        fatherNationality: row?.original?.otherDetails?.fatherNationality,
-        motherNationality: row?.original?.otherDetails?.motherNationality,
-        maritalStatus: row?.original?.otherDetails?.maritalStatus,
+        formNumber: row?.original?.formNumber,
+        applicantFirstName: row?.original?.applicantFirstName,
+        applicantMiddleName: row?.original?.applicantMiddleName,
+        applicantLastName: row?.original?.applicantLastName,
       }));
 
       const worksheet = XLSX.utils.json_to_sheet(rowsData);
@@ -258,7 +203,7 @@ const ReportsTable = (props) => {
       XLSX.utils.book_append_sheet(workbook, worksheet, "Applicants Export");
       XLSX.utils.sheet_add_aoa(worksheet, [columnsHeader], { origin: "A1" });
       const max_width = rowsData.reduce(
-        (w, r) => Math.max(w, r.ninNumber?.length),
+        (w, r) => Math.max(w, r.formNumber?.length),
         10
       );
       worksheet["!cols"] = [{ wch: max_width }];
@@ -282,13 +227,10 @@ const ReportsTable = (props) => {
       pdfDoc.text("Applicants Export", 15, 10);
       const tableData = rows.map((row) =>
         Object.values({
-          ninNumber: row?.original?.ninNumber,
-          lastName: row?.original?.lastName,
-          firstName: row?.original?.firstName,
-          middleName: row?.original?.middleName,
-          displayName: row?.original?.displayName,
-          height: row?.original?.height,
-          applicantStatus: row?.original?.applicantStatus,
+          formNumber: row?.original?.formNumber,
+          applicantFirstName: row?.original?.applicantFirstName,
+          applicantMiddleName: row?.original?.applicantMiddleName,
+          applicantLastName: row?.original?.applicantLastName,
         })
       );
 
@@ -312,13 +254,10 @@ const ReportsTable = (props) => {
       pdfDoc.text("Applicants Export", 15, 10);
       const tableData = rows.map((row) =>
         Object.values({
-          ninNumber: row?.original?.ninNumber,
-          lastName: row?.original?.lastName,
-          firstName: row?.original?.firstName,
-          middleName: row?.original?.middleName,
-          displayName: row?.original?.displayName,
-          height: row?.original?.height,
-          applicantStatus: row?.original?.applicantStatus,
+          formNumber: row?.original?.formNumber,
+          applicantFirstName: row?.original?.applicantFirstName,
+          applicantMiddleName: row?.original?.applicantMiddleName,
+          applicantLastName: row?.original?.applicantLastName,
         })
       );
 
@@ -367,7 +306,7 @@ const ReportsTable = (props) => {
               new TableCell({
                 children: [
                   new Paragraph({
-                    text: row?.original?.ninNumber,
+                    text: row?.original?.formNumber,
                   }),
                 ],
                 verticalAlign: VerticalAlign.CENTER,
@@ -379,7 +318,7 @@ const ReportsTable = (props) => {
               new TableCell({
                 children: [
                   new Paragraph({
-                    text: row?.original?.lastName,
+                    text: row?.original?.applicantFirstName,
                   }),
                 ],
                 verticalAlign: VerticalAlign.CENTER,
@@ -391,7 +330,7 @@ const ReportsTable = (props) => {
               new TableCell({
                 children: [
                   new Paragraph({
-                    text: row?.original?.firstName,
+                    text: row?.original?.applicantMiddleName,
                   }),
                 ],
                 verticalAlign: VerticalAlign.CENTER,
@@ -403,43 +342,7 @@ const ReportsTable = (props) => {
               new TableCell({
                 children: [
                   new Paragraph({
-                    text: row?.original?.middleName,
-                  }),
-                ],
-                verticalAlign: VerticalAlign.CENTER,
-                width: {
-                  size: 3505,
-                  type: WidthType.DXA,
-                },
-              }),
-              new TableCell({
-                children: [
-                  new Paragraph({
-                    text: row?.original?.displayName,
-                  }),
-                ],
-                verticalAlign: VerticalAlign.CENTER,
-                width: {
-                  size: 3505,
-                  type: WidthType.DXA,
-                },
-              }),
-              new TableCell({
-                children: [
-                  new Paragraph({
-                    text: row?.original?.height,
-                  }),
-                ],
-                verticalAlign: VerticalAlign.CENTER,
-                width: {
-                  size: 3505,
-                  type: WidthType.DXA,
-                },
-              }),
-              new TableCell({
-                children: [
-                  new Paragraph({
-                    text: row?.original?.applicantStatus,
+                    text: row?.original?.applicantLastName,
                   }),
                 ],
                 verticalAlign: VerticalAlign.CENTER,
@@ -705,12 +608,12 @@ const ReportsTable = (props) => {
       variant: "outlined",
     },
     muiToolbarAlertBannerProps: () => {
-      return reportsError
-        ? {
-            color: "error",
-            children: "Error Loading Data!",
-          }
-        : undefined;
+      // return reportsError
+      //   ? {
+      //       color: "error",
+      //       children: "Error Loading Data!",
+      //     }
+      //   : undefined;
     },
     renderTopToolbarCustomActions: ({ table }) => {
       return (
@@ -877,19 +780,19 @@ const ReportsTable = (props) => {
             </Menu>
             {/* End Export Selected Rows */}
             <Tooltip arrow placement="bottom" title="Refresh Data">
-              <IconButton onClick={() => reportsRefetch()}>
+              {/* <IconButton onClick={() => reportsRefetch()}>
                 <LuRefreshCw color="#acb5c3" size={20} />
-              </IconButton>
+              </IconButton> */}
             </Tooltip>
           </Box>
         </>
       );
     },
-    state: {
-      isLoading: reportsLoading,
-      showAlertBanner: reportsError,
-      showProgressBars: reportsLoading ? reportsLoading : reportsRefetching,
-    },
+    // state: {
+    //   isLoading: reportsLoading,
+    //   showAlertBanner: reportsError,
+    //   showProgressBars: reportsLoading ? reportsLoading : reportsRefetching,
+    // },
   });
 
   return (

@@ -3,6 +3,7 @@ const Yup = require("yup");
 //? Validate Generate Report Schema
 const validateGenerateReportSchema = Yup.object()
   .shape({
+    nationalIDNumber: Yup.string().required("Appointment date required!"),
     appointmentDate: Yup.string().required("Appointment date required!"),
     appointmentTime: Yup.string().required("Appointment time required!"),
     reasonForAppointment: Yup.number().required(

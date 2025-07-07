@@ -10,6 +10,7 @@ const FILE_SIZE = 1024 * 1024 * 25;
 //? Validate Add Applicant Schema
 const validateAddApplicantSchema = Yup.object()
   .shape({
+    ninNumber: Yup.string().notRequired(),
     applicantPhoto: Yup.mixed()
       .required("Please select a photo!")
       .test(

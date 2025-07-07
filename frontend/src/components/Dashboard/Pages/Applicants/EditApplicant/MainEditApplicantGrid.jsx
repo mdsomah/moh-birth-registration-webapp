@@ -3101,9 +3101,9 @@ const MainEditApplicantGrid = () => {
                   </Tooltip>
                 </Typography>
                 <FormControl fullWidth>
-                  <EditApplicantSignature
+                  {/* <EditApplicantSignature
                     formikEditApplicantForm={formikEditApplicantForm}
-                  />
+                  /> */}
                   {formikEditApplicantForm.values.applicantSignature !== "" && (
                     <Box sx={{ mt: 1 }}>
                       <img

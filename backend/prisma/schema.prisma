@@ -77,6 +77,7 @@ model RememberToken {
 //? Applicant Model
 model Applicant {
   id                     String           @id @default(dbgenerated("nanoid()")) @db.VarChar(22)
+  ninNumber              String
   applicantPhoto         String
   formNumber             String?          @default("")
   applicantSex           String

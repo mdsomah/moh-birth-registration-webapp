@@ -62,6 +62,7 @@ const FILE_SIZE = 1024 * 1024 * 25;
 //? Validate Add Applicant Schema
 const validateAddApplicantSchema = Yup.object()
   .shape({
+    ninNumber: Yup.string().notRequired(),
     applicantPhoto: Yup.mixed()
       .required("Please select a photo!")
       .test(
@@ -226,6 +227,7 @@ const MainAddApplicantGrid = () => {
   //? Formik Applicant Form
   const formikApplicantForm = useFormik({
     initialValues: {
+      ninNumber: "",
       applicantPhoto: "",
       formNumber: "MOH-8467254679",
       applicantSex: "",
@@ -315,6 +317,7 @@ const MainAddApplicantGrid = () => {
 
   //? Applicant Data
   const ApplicantData = {
+    ninNumber: formikApplicantForm.values.ninNumber,
     applicantPhoto: formikApplicantForm.values.applicantPhoto,
     formNumber: formikApplicantForm.values.formNumber,
     applicantSex: formikApplicantForm.values.applicantSex,
@@ -407,6 +410,7 @@ const MainAddApplicantGrid = () => {
   const addNewApplicant = async () => {
     //? Destructure ApplicantData
     const {
+      ninNumber,
       applicantPhoto,
       formNumber,
       applicantSex,
@@ -461,6 +465,7 @@ const MainAddApplicantGrid = () => {
 
     //? Create FormData
     const formData = new FormData();
+    formData.append("ninNumber", ninNumber);
     formData.append("applicantPhoto", applicantPhoto);
     formData.append("formNumber", formNumber);
     formData.append("applicantSex", applicantSex);

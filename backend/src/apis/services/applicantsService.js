@@ -8,6 +8,7 @@ const Form_Number = () => nanoidFormNumber();
 
 //? Register New Applicant
 const registerNewApplicant = async (
+  ninNumber,
   applicantPhoto,
   formNumber,
   applicantSex,
@@ -61,6 +62,7 @@ const registerNewApplicant = async (
 ) => {
   const newApplicant = await prisma.applicant.create({
     data: {
+      ninNumber: ninNumber.trim(),
       applicantPhoto: applicantPhoto.trim(),
       formNumber:
         formNumber === "" ? `MOH-${Form_Number()}` : formNumber.trim(),
@@ -231,10 +233,17 @@ const deleteApplicantById = async (id) => {
 };
 
 //? Generate Applicant Reports
-const generateApplicantReports = async (country, county, sex, dateOfBirth) => {
+const generateApplicantReports = async (
+  nationalIDNumber,
+  country,
+  county,
+  sex,
+  dateOfBirth
+) => {
   const applicantReports = await prisma.applicant.findMany({
     where: {
       OR: [
+        { ninNumber: nationalIDNumber },
         { applicantCountry: country },
         { applicantCounty: county },
         { applicantSex: sex },

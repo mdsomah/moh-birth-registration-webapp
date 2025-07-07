@@ -15,6 +15,7 @@ const {
 const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
   const {
+    ninNumber,
     formNumber,
     applicantSex,
     dateOfApplication,
@@ -73,6 +74,7 @@ const RegisterNewApplicant = asyncHandler(async (req, res, next) => {
   try {
     Logger.info("Registering New Applicant: Status success!");
     const newApplicant = await registerNewApplicant(
+      ninNumber,
       applicantPhoto,
       formNumber,
       applicantSex,
@@ -218,11 +220,12 @@ const DeleteApplicantById = asyncHandler(async (req, res, next) => {
 //? Generate Applicant Reports
 const GenerateApplicantReports = asyncHandler(async (req, res, next) => {
   //? Destructure req.body
-  const { country, county, sex, dateOfBirth } = req.body;
+  const { nationalIDNumber, country, county, sex, dateOfBirth } = req.body;
 
   try {
     Logger.info("Generating Applicant Reports: Status success!");
     const applicantReports = await generateApplicantReports(
+      nationalIDNumber,
       country,
       county,
       sex,

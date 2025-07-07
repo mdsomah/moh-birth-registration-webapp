@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -38,6 +39,7 @@ import AddUploadApplicantPhoto from "../PhotosUpload/AddPhotosUpload/AddUploadAp
 import AddUploadGuardianPhoto from "../PhotosUpload/AddPhotosUpload/AddUploadGuardianPhoto/AddUploadGuardianPhoto";
 import AddApplicantSignature from "../SignatureDialog/AddApplicantSignature";
 import ButtonLoader from "../../../../ButtonLoader/ButtonLoader";
+import { removeApplicant } from "../../../../../app/slices/querySlice";
 
 //? React Responsive Media Queries
 import { useMediaQuery } from "react-responsive";
@@ -190,6 +192,24 @@ const MainAddApplicantGrid = () => {
   //? Tablet or Mobile Responsive Media Queries
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
+  //? useDispatch
+  const dispatch = useDispatch();
+
+  const {
+    query: [
+      {
+        NINNumber,
+        PhotoBase64,
+        GenderName,
+        FirstName,
+        MiddleName,
+        Surname,
+        DateOfBirth,
+        SignatureBase64,
+      },
+    ],
+  } = useSelector((state) => state.queryApplicant);
+
   //? useNavigate
   const navigate = useNavigate();
 
@@ -224,17 +244,30 @@ const MainAddApplicantGrid = () => {
     setOpenGuardianPhoto(false);
   }, []);
 
+  //? Applicant Query Object
+  const ApplicantQueryOBJ = {
+    ninNumber: () => NINNumber,
+    applicantPhoto: () => PhotoBase64,
+    formNumber: () => NINNumber,
+    applicantSex: () => GenderName,
+    applicantFirstName: () => FirstName,
+    applicantMiddleName: () => MiddleName,
+    applicantLastName: () => Surname,
+    applicantDateOfBirth: () => DateOfBirth,
+    applicantSignature: () => SignatureBase64,
+  };
+
   //? Formik Applicant Form
   const formikApplicantForm = useFormik({
     initialValues: {
-      ninNumber: "",
-      applicantPhoto: "",
-      formNumber: "MOH-8467254679",
-      applicantSex: "",
-      dateOfApplication: "",
-      applicantFirstName: "",
-      applicantMiddleName: "",
-      applicantLastName: "",
+      ninNumber: `${ApplicantQueryOBJ.ninNumber()}`,
+      applicantPhoto: `${ApplicantQueryOBJ.applicantPhoto()}`,
+      formNumber: `MOH-${ApplicantQueryOBJ.formNumber()}`,
+      applicantSex: `${ApplicantQueryOBJ.applicantSex()}`,
+      dateOfApplication: dayjs(new Date()),
+      applicantFirstName: `${ApplicantQueryOBJ.applicantFirstName()}`,
+      applicantMiddleName: `${ApplicantQueryOBJ.applicantMiddleName()}`,
+      applicantLastName: `${ApplicantQueryOBJ.applicantLastName()}`,
       applicantFacility: "",
       applicantTownOrCity: "",
       applicantCounty: "",
@@ -264,7 +297,7 @@ const MainAddApplicantGrid = () => {
       isMotherLiving: "",
       motherPresentAddress: "",
       motherTelephoneNumber: "",
-      applicantSignature: "",
+      applicantSignature: `${ApplicantQueryOBJ.applicantSignature()}`,
       applicantContactNumber: "",
       fullName: "",
       city: "",
@@ -608,19 +641,19 @@ const MainAddApplicantGrid = () => {
                     <Autocomplete
                       id="applicantSex"
                       clearOnEscape
-                      value={formikApplicantForm.values.applicantSex}
-                      onBlur={formikApplicantForm.handleBlur}
-                      onChange={(_event, newValue) => {
-                        formikApplicantForm.setFieldValue(
-                          "applicantSex",
-                          newValue
-                        );
-                      }}
-                      error={
-                        formikApplicantForm.touched.applicantSex &&
-                        Boolean(formikApplicantForm.errors.applicantSex)
-                      }
-                      options={["Male", "Female"]}
+                      value={formikApplicantForm.values.applicantSex.toLocaleUpperCase()}
+                      // onBlur={formikApplicantForm.handleBlur}
+                      // onChange={(_event, newValue) => {
+                      //   formikApplicantForm.setFieldValue(
+                      //     "applicantSex",
+                      //     newValue
+                      //   );
+                      // }}
+                      // error={
+                      //   formikApplicantForm.touched.applicantSex &&
+                      //   Boolean(formikApplicantForm.errors.applicantSex)
+                      // }
+                      options={["MALE", "FEMALE"]}
                       renderInput={(params) => (
                         <TextField {...params} placeholder="Select sex..." />
                       )}
@@ -719,12 +752,12 @@ const MainAddApplicantGrid = () => {
                       name="applicantFirstName"
                       type="text"
                       value={formikApplicantForm.values.applicantFirstName}
-                      onChange={formikApplicantForm.handleChange}
-                      onBlur={formikApplicantForm.handleBlur}
-                      error={
-                        formikApplicantForm.touched.applicantFirstName &&
-                        Boolean(formikApplicantForm.errors.applicantFirstName)
-                      }
+                      // onChange={formikApplicantForm.handleChange}
+                      // onBlur={formikApplicantForm.handleBlur}
+                      // error={
+                      //   formikApplicantForm.touched.applicantFirstName &&
+                      //   Boolean(formikApplicantForm.errors.applicantFirstName)
+                      // }
                       placeholder="Enter first name..."
                     />
                     <Typography
@@ -746,7 +779,7 @@ const MainAddApplicantGrid = () => {
                       name="applicantMiddleName"
                       type="text"
                       value={formikApplicantForm.values.applicantMiddleName}
-                      onChange={formikApplicantForm.handleChange}
+                      // onChange={formikApplicantForm.handleChange}
                       placeholder="Enter middle name..."
                     />
                   </FormControl>
@@ -782,12 +815,12 @@ const MainAddApplicantGrid = () => {
                       name="applicantLastName"
                       type="text"
                       value={formikApplicantForm.values.applicantLastName}
-                      onChange={formikApplicantForm.handleChange}
-                      onBlur={formikApplicantForm.handleBlur}
-                      error={
-                        formikApplicantForm.touched.applicantLastName &&
-                        Boolean(formikApplicantForm.errors.applicantLastName)
-                      }
+                      // onChange={formikApplicantForm.handleChange}
+                      // onBlur={formikApplicantForm.handleBlur}
+                      // error={
+                      //   formikApplicantForm.touched.applicantLastName &&
+                      //   Boolean(formikApplicantForm.errors.applicantLastName)
+                      // }
                       placeholder="Enter last name..."
                     />
                     <Typography
@@ -828,7 +861,7 @@ const MainAddApplicantGrid = () => {
                       id="applicantFacility"
                       name="applicantFacility"
                       type="text"
-                      value={formikApplicantForm.values.applicantFacility}
+                      value={formikApplicantForm.values.applicantFacility.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -877,7 +910,7 @@ const MainAddApplicantGrid = () => {
                       id="applicantTownOrCity"
                       name="applicantTownOrCity"
                       type="text"
-                      value={formikApplicantForm.values.applicantTownOrCity}
+                      value={formikApplicantForm.values.applicantTownOrCity.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -924,7 +957,7 @@ const MainAddApplicantGrid = () => {
                       id="applicantCounty"
                       name="applicantCounty"
                       type="text"
-                      value={formikApplicantForm.values.applicantCounty}
+                      value={formikApplicantForm.values.applicantCounty.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -970,7 +1003,7 @@ const MainAddApplicantGrid = () => {
                   <FormControl fullWidth sx={{ mt: 2 }}>
                     <Autocomplete
                       id="applicantCountry"
-                      value={formikApplicantForm.values.applicantCountry}
+                      value={formikApplicantForm.values.applicantCountry.toLocaleUpperCase()}
                       onChange={handleApplicantCountryChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1123,7 +1156,7 @@ const MainAddApplicantGrid = () => {
                       id="fatherName"
                       name="fatherName"
                       type="text"
-                      value={formikApplicantForm.values.fatherName}
+                      value={formikApplicantForm.values.fatherName.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1170,7 +1203,7 @@ const MainAddApplicantGrid = () => {
                       id="fatherNationality"
                       name="fatherNationality"
                       type="text"
-                      value={formikApplicantForm.values.fatherNationality}
+                      value={formikApplicantForm.values.fatherNationality.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1266,7 +1299,7 @@ const MainAddApplicantGrid = () => {
                       id="fatherTownOrCity"
                       name="fatherTownOrCity"
                       type="text"
-                      value={formikApplicantForm.values.fatherTownOrCity}
+                      value={formikApplicantForm.values.fatherTownOrCity.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1315,7 +1348,7 @@ const MainAddApplicantGrid = () => {
                       id="fatherCounty"
                       name="fatherCounty"
                       type="text"
-                      value={formikApplicantForm.values.fatherCounty}
+                      value={formikApplicantForm.values.fatherCounty.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1359,7 +1392,7 @@ const MainAddApplicantGrid = () => {
                   <FormControl fullWidth sx={{ mt: 2 }}>
                     <Autocomplete
                       id="fatherCountry"
-                      value={formikApplicantForm.values.fatherCountry}
+                      value={formikApplicantForm.values.fatherCountry.toLocaleUpperCase()}
                       onChange={handleFatherCountryChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1441,7 +1474,7 @@ const MainAddApplicantGrid = () => {
                       id="fatherCountyOfOrigin"
                       name="fatherCountyOfOrigin"
                       type="text"
-                      value={formikApplicantForm.values.fatherCountyOfOrigin}
+                      value={formikApplicantForm.values.fatherCountyOfOrigin.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1488,7 +1521,7 @@ const MainAddApplicantGrid = () => {
                       id="fatherOccupation"
                       name="fatherOccupation"
                       type="text"
-                      value={formikApplicantForm.values.fatherOccupation}
+                      value={formikApplicantForm.values.fatherOccupation.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1621,9 +1654,7 @@ const MainAddApplicantGrid = () => {
                           id="fatherPresentAddress"
                           name="fatherPresentAddress"
                           type="text"
-                          value={
-                            formikApplicantForm.values.fatherPresentAddress
-                          }
+                          value={formikApplicantForm.values.fatherPresentAddress.toLocaleUpperCase()}
                           onChange={formikApplicantForm.handleChange}
                           onBlur={formikApplicantForm.handleBlur}
                           error={
@@ -1727,7 +1758,7 @@ const MainAddApplicantGrid = () => {
                       id="motherName"
                       name="motherName"
                       type="text"
-                      value={formikApplicantForm.values.motherName}
+                      value={formikApplicantForm.values.motherName.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1774,7 +1805,7 @@ const MainAddApplicantGrid = () => {
                       id="motherNationality"
                       name="motherNationality"
                       type="text"
-                      value={formikApplicantForm.values.motherNationality}
+                      value={formikApplicantForm.values.motherNationality.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1870,7 +1901,7 @@ const MainAddApplicantGrid = () => {
                       id="motherTownOrCity"
                       name="motherTownOrCity"
                       type="text"
-                      value={formikApplicantForm.values.motherTownOrCity}
+                      value={formikApplicantForm.values.motherTownOrCity.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1919,7 +1950,7 @@ const MainAddApplicantGrid = () => {
                       id="motherCounty"
                       name="motherCounty"
                       type="text"
-                      value={formikApplicantForm.values.motherCounty}
+                      value={formikApplicantForm.values.motherCounty.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -1963,7 +1994,7 @@ const MainAddApplicantGrid = () => {
                   <FormControl fullWidth sx={{ mt: 2 }}>
                     <Autocomplete
                       id="motherCountry"
-                      value={formikApplicantForm.values.motherCountry}
+                      value={formikApplicantForm.values.motherCountry.toLocaleUpperCase()}
                       onChange={handleMotherCountryChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2045,7 +2076,7 @@ const MainAddApplicantGrid = () => {
                       id="motherCountyOfOrigin"
                       name="motherCountyOfOrigin"
                       type="text"
-                      value={formikApplicantForm.values.motherCountyOfOrigin}
+                      value={formikApplicantForm.values.motherCountyOfOrigin.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2092,7 +2123,7 @@ const MainAddApplicantGrid = () => {
                       id="motherOccupation"
                       name="motherOccupation"
                       type="text"
-                      value={formikApplicantForm.values.motherOccupation}
+                      value={formikApplicantForm.values.motherOccupation.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2225,9 +2256,7 @@ const MainAddApplicantGrid = () => {
                           id="motherPresentAddress"
                           name="motherPresentAddress"
                           type="text"
-                          value={
-                            formikApplicantForm.values.motherPresentAddress
-                          }
+                          value={formikApplicantForm.values.motherPresentAddress.toLocaleUpperCase()}
                           onChange={formikApplicantForm.handleChange}
                           onBlur={formikApplicantForm.handleBlur}
                           error={
@@ -2369,7 +2398,7 @@ const MainAddApplicantGrid = () => {
                       id="fullName"
                       name="fullName"
                       type="text"
-                      value={formikApplicantForm.values.fullName}
+                      value={formikApplicantForm.values.fullName.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2418,7 +2447,7 @@ const MainAddApplicantGrid = () => {
                       id="city"
                       name="city"
                       type="text"
-                      value={formikApplicantForm.values.city}
+                      value={formikApplicantForm.values.city.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2465,7 +2494,7 @@ const MainAddApplicantGrid = () => {
                       id="county"
                       name="county"
                       type="text"
-                      value={formikApplicantForm.values.county}
+                      value={formikApplicantForm.values.county.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2514,7 +2543,7 @@ const MainAddApplicantGrid = () => {
                       id="motherFullName"
                       name="motherFullName"
                       type="text"
-                      value={formikApplicantForm.values.motherFullName}
+                      value={formikApplicantForm.values.motherFullName.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2561,7 +2590,7 @@ const MainAddApplicantGrid = () => {
                       id="fatherFullName"
                       name="fatherFullName"
                       type="text"
-                      value={formikApplicantForm.values.fatherFullName}
+                      value={formikApplicantForm.values.fatherFullName.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2658,7 +2687,7 @@ const MainAddApplicantGrid = () => {
                       id="cityOrTown"
                       name="cityOrTown"
                       type="text"
-                      value={formikApplicantForm.values.cityOrTown}
+                      value={formikApplicantForm.values.cityOrTown.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2707,7 +2736,7 @@ const MainAddApplicantGrid = () => {
                       id="name"
                       name="name"
                       type="text"
-                      value={formikApplicantForm.values.name}
+                      value={formikApplicantForm.values.name.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2754,7 +2783,7 @@ const MainAddApplicantGrid = () => {
                       id="address"
                       name="address"
                       type="text"
-                      value={formikApplicantForm.values.address}
+                      value={formikApplicantForm.values.address.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2803,7 +2832,7 @@ const MainAddApplicantGrid = () => {
                       id="relationship"
                       name="relationship"
                       type="text"
-                      value={formikApplicantForm.values.relationship}
+                      value={formikApplicantForm.values.relationship.toLocaleUpperCase()}
                       onChange={formikApplicantForm.handleChange}
                       onBlur={formikApplicantForm.handleBlur}
                       error={
@@ -2898,7 +2927,8 @@ const MainAddApplicantGrid = () => {
                     >
                       <Avatar
                         alt={formikApplicantForm.values.applicantFirstName}
-                        src={formikApplicantForm.values.applicantPhoto.preview}
+                        src={`data:image/jpeg;base64,${formikApplicantForm.values.applicantPhoto}`}
+                        // src={formikApplicantForm.values.applicantPhoto.preview}
                         variant="square"
                         sx={{
                           width: 130,
@@ -3010,9 +3040,12 @@ const MainAddApplicantGrid = () => {
                   {formikApplicantForm.values.applicantSignature !== "" && (
                     <Box sx={{ mt: 1 }}>
                       <img
-                        width={60}
-                        height={60}
-                        src={formikApplicantForm.values.applicantSignature}
+                        width={200}
+                        height={150}
+                        // width={60}
+                        // height={60}
+                        src={`data:image/jpeg;base64,${formikApplicantForm.values.applicantSignature}`}
+                        // src={formikApplicantForm.values.applicantSignature}
                         alt="Applicant Signature"
                       />
                     </Box>
@@ -3152,6 +3185,7 @@ const MainAddApplicantGrid = () => {
               endIcon={<MdCancel size={20} />}
               onClick={() => {
                 handleCloseAddApplicant();
+                dispatch(removeApplicant());
               }}
             >
               Cancel

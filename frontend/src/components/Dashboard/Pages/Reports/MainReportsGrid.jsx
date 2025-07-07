@@ -62,6 +62,7 @@ const MainReportsGrid = () => {
   //? Formik Reports Form
   const formikReportsForm = useFormik({
     initialValues: {
+      nationalIDNumber: "",
       country: "",
       county: "",
       sex: "",
@@ -113,6 +114,9 @@ const MainReportsGrid = () => {
 
   //? Report Data Object
   const ReportData = {};
+  if (formikReportsForm.values.nationalIDNumber !== "") {
+    ReportData.nationalIDNumber = formikReportsForm.values.nationalIDNumber;
+  }
   if (formikReportsForm.values.country !== "") {
     ReportData.country = formikReportsForm.values.country;
   }
@@ -143,6 +147,8 @@ const MainReportsGrid = () => {
         const ApplicantFilters =
           data?.applicantReports?.filter(
             (applicant) =>
+              (applicant?.ninNumber === searchData.nationalIDNumber &&
+                searchData.nationalIDNumber !== "") ||
               (applicant?.applicantCountry === searchData.country &&
                 searchData.country !== "") ||
               (applicant?.applicantCounty === searchData.county &&
@@ -201,6 +207,20 @@ const MainReportsGrid = () => {
       >
         <Grid size={{ xs: 12, lg: 7 }}>
           <Paper sx={{ p: 3 }}>
+            <Box sx={{ mt: 1 }}>
+              <FormControl fullWidth sx={{ mb: 1 }}>
+                <Typography>National ID Number</Typography>
+                <TextField
+                  margin="normal"
+                  id="nationalIDNumber"
+                  name="nationalIDNumber"
+                  type="text"
+                  value={formikReportsForm.values.nationalIDNumber}
+                  onChange={formikReportsForm.handleChange}
+                  placeholder="Enter national id number..."
+                />
+              </FormControl>
+            </Box>
             <Box
               sx={{ display: { xs: "block", lg: "flex" }, gap: "1rem", mt: 1 }}
             >

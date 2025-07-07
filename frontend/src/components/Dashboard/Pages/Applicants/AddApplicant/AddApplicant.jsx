@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import { alpha } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -6,6 +7,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import AppNavbar from "../../Dashboard/components/AppNavbar";
 import Header from "../../Dashboard/components/Header";
+import ValidateNewApplicantContent from "./ValidateNewApplicantContent";
 import MainAddApplicantGrid from "./MainAddApplicantGrid";
 import SideMenu from "../../Dashboard/components/SideMenu";
 import AppTheme from "../../Dashboard/shared-theme/AppTheme";
@@ -27,6 +29,8 @@ const xThemeComponents = {
 };
 
 const AddApplicant = (props) => {
+  const { query } = useSelector((state) => state.queryApplicant);
+
   return (
     <React.Fragment>
       <Helmet>
@@ -60,7 +64,8 @@ const AddApplicant = (props) => {
               }}
             >
               <Header />
-              <MainAddApplicantGrid />
+              {query === null && <ValidateNewApplicantContent />}
+              {query !== null && <MainAddApplicantGrid />}
             </Stack>
           </Box>
         </Box>

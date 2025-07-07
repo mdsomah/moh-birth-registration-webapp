@@ -32,63 +32,63 @@ import sinoeFlag from "../../../../../images/Counties-Flags/Flag_of_Sinoe_County
 const data = [
   {
     label: "Bomi",
-    value: 1366,
+    value: 0,
   },
   {
     label: "Bong",
-    value: 4056,
+    value: 0,
   },
   {
     label: "Gbarpolu",
-    value: 1066,
+    value: 0,
   },
   {
     label: "Grand Bassa",
-    value: 3400,
+    value: 0,
   },
   {
     label: "Grand Cape Mount",
-    value: 2206,
+    value: 0,
   },
   {
     label: "Grand Gedeh",
-    value: 1194,
+    value: 0,
   },
   {
     label: "Grand Kru",
-    value: 955,
+    value: 0,
   },
   {
     label: "Lofa",
-    value: 2765,
+    value: 0,
   },
   {
     label: "Margibi",
-    value: 5683,
+    value: 0,
   },
   {
     label: "Maryland",
-    value: 1698,
+    value: 0,
   },
   {
     label: "Montserrado",
-    value: 70239,
+    value: 0,
   },
   {
     label: "Nimba",
-    value: 4493,
+    value: 0,
   },
   {
     label: "River Gee",
-    value: 1545,
+    value: 0,
   },
   {
     label: "Rivercess",
-    value: 946,
+    value: 0,
   },
   {
     label: "Sinoe",
-    value: 1549,
+    value: 0,
   },
 ];
 
@@ -96,96 +96,96 @@ const data = [
 const Counties = [
   {
     countyName: "Bomi",
-    value: 1366,
+    value: 0,
     countyFlag: `${bomiFlag}`,
     // color: "#A020F0",
     color: "hsl(220, 25%, 65%)",
   },
   {
     countyName: "Bong",
-    value: 4056,
+    value: 0,
     countyFlag: `${bongFlag}`,
     // color: "#FFA500",
     color: "hsl(220, 25%, 45%)",
   },
   {
     countyName: "Gbarpolu",
-    value: 1066,
+    value: 0,
     countyFlag: `${gbarpoluFlag}`,
     // color: "#FFFF00",
     color: "hsl(220, 25%, 30%)",
   },
   {
     countyName: "Grand Bassa",
-    value: 3400,
+    value: 0,
     countyFlag: `${grandBassFlag}`,
     // color: "#00008B",
     color: "hsl(220, 25%, 20%)",
   },
   {
     countyName: "Grand Cape Mount",
-    value: 2206,
+    value: 0,
     countyFlag: `${grandCapeMountFlag}`,
     // color: "#00FF00",
     color: "hsl(220, 25%, 20%)",
   },
   {
     countyName: "Grand Gedeh",
-    value: 1194,
+    value: 0,
     countyFlag: `${grandGedehFlag}`,
     color: "hsl(220, 25%, 20%)",
   },
   {
     countyName: "Grand Kru",
-    value: 955,
+    value: 0,
     countyFlag: `${grandKruFlag}`,
     color: "hsl(220, 25%, 20%)",
   },
   {
     countyName: "Lofa",
-    value: 2765,
+    value: 0,
     countyFlag: `${lofaFlag}`,
     color: "hsl(220, 25%, 20%)",
   },
   {
     countyName: "Margibi",
-    value: 5683,
+    value: 0,
     countyFlag: `${margibiFlag}`,
     color: "hsl(220, 25%, 20%)",
   },
   {
     countyName: "Maryland",
-    value: 1698,
+    value: 0,
     countyFlag: `${marylandFlag}`,
     color: "hsl(220, 25%, 20%)",
   },
   {
     countyName: "Montserrado",
-    value: 70239,
+    value: 0,
     countyFlag: `${montserradoFlag}`,
     color: "hsl(220, 25%, 20%)",
   },
   {
     countyName: "Nimba",
-    value: 4493,
+    value: 0,
     countyFlag: `${nimbaFlag}`,
     color: "hsl(220, 25%, 20%)",
   },
   {
     countyName: "River Gee",
-    value: 1545,
+    value: 0,
     countyFlag: `${rivergeeFlag}`,
     color: "hsl(220, 25%, 20%)",
   },
   {
     countyName: "Rivercess",
-    value: 946,
+    value: 0,
     countyFlag: `${rivercessFlag}`,
     color: "hsl(220, 25%, 20%)",
   },
   {
     countyName: "Sinoe",
-    value: 1549,
+    value: 0,
     countyFlag: `${sinoeFlag}`,
     color: "hsl(220, 25%, 20%)",
   },
@@ -263,7 +263,7 @@ const ChartUserByCountry = (props) => {
   // const { applicantsLoading, applicantsData } = props;
 
   //? Total Enrollment By County
-  const totalEnrollmentByCounty = 704742;
+  const totalEnrollmentByCounty = 0;
   // const totalEnrollmentByCounty = applicantsLoading
   //   ? 0
   //   : applicantsData?.length;

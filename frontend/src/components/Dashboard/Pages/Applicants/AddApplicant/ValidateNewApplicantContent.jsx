@@ -11,6 +11,7 @@ import {
   Button,
   IconButton,
   Tooltip,
+  Grid,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { BsFillInfoCircleFill } from "react-icons/bs";
@@ -157,92 +158,102 @@ const ValidateNewApplicantContent = () => {
   }, [formikValidateApplicantForm]);
 
   return (
-    <Paper sx={{ width: 500, ml: "auto", mr: "auto", pt: 3, pb: 3 }}>
-      <Box
+    <Grid size={{ xs: 12, lg: 6 }}>
+      <Paper
         sx={{
-          my: 1.8,
-          mx: 4,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          width: { md: "50%", lg: "50%" },
+          ml: { md: "auto", lg: "auto" },
+          mr: { md: "auto", lg: "auto" },
+          pt: 3,
+          pb: 3,
         }}
       >
-        <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
-          Validate Applicant?
-        </Typography>
-        <Typography sx={{ mt: 2 }}>
-          <span style={{ color: "#4169E1" }}>
-            Enter applicant National Identification Number (NIN) to validate.
-          </span>
-        </Typography>
-        <Box component="form" noValidate autoComplete="off">
-          <FormControl variant="outlined" fullWidth>
-            <Typography>
-              National ID Number
-              <span>
-                <LuAsterisk size={10} color="#C41E3A" />
-              </span>
-              <Tooltip title="This field required!" placement="bottom" arrow>
-                <IconButton
-                  sx={{
-                    cursor: "default",
-                    position: "relative",
-                    bottom: 2,
-                  }}
-                >
-                  <BsFillInfoCircleFill size={14} color="#acb5c3" />
-                </IconButton>
-              </Tooltip>
-            </Typography>
-            <TextField
-              margin="normal"
-              id="NIN"
-              name="NIN"
-              type="text"
-              placeholder="Enter NIN..."
-              value={formikValidateApplicantForm.values.NIN}
-              onChange={formikValidateApplicantForm.handleChange}
-              onBlur={formikValidateApplicantForm.handleBlur}
-              error={
-                formikValidateApplicantForm.touched.NIN &&
-                Boolean(formikValidateApplicantForm.errors.NIN)
-              }
-            />
-            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-              {formikValidateApplicantForm.touched.NIN &&
-                formikValidateApplicantForm.errors.NIN}
-            </Typography>
-          </FormControl>
-          <LoadingButton
-            fullWidth
-            variant="contained"
-            size="large"
-            loading={loading}
-            loadingIndicator={<ButtonLoader />}
-            loadingPosition="end"
-            endIcon={<IoMdCheckmarkCircleOutline size={20} color="#fff" />}
-            sx={{ mt: 3, mb: 2, bgcolor: "buttonBGColor.main" }}
-            onClick={handleSubmitForm}
-          >
-            {loading ? (
-              <span style={{ color: "#fff" }}>Validating</span>
-            ) : (
-              <span>Validate</span>
-            )}
-          </LoadingButton>
-          <Box sx={{ mt: 1 }}>
-            <Button
+        <Box
+          sx={{
+            my: 1.8,
+            mx: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
+            Validate Applicant?
+          </Typography>
+          <Typography sx={{ mt: 2 }}>
+            <span style={{ color: "#4169E1" }}>
+              Enter applicant National Identification Number (NIN) to validate.
+            </span>
+          </Typography>
+          <Box component="form" noValidate autoComplete="off">
+            <FormControl variant="outlined" fullWidth>
+              <Typography>
+                National ID Number
+                <span>
+                  <LuAsterisk size={10} color="#C41E3A" />
+                </span>
+                <Tooltip title="This field required!" placement="bottom" arrow>
+                  <IconButton
+                    sx={{
+                      cursor: "default",
+                      position: "relative",
+                      bottom: 2,
+                    }}
+                  >
+                    <BsFillInfoCircleFill size={14} color="#acb5c3" />
+                  </IconButton>
+                </Tooltip>
+              </Typography>
+              <TextField
+                margin="normal"
+                id="NIN"
+                name="NIN"
+                type="text"
+                placeholder="Enter NIN..."
+                value={formikValidateApplicantForm.values.NIN}
+                onChange={formikValidateApplicantForm.handleChange}
+                onBlur={formikValidateApplicantForm.handleBlur}
+                error={
+                  formikValidateApplicantForm.touched.NIN &&
+                  Boolean(formikValidateApplicantForm.errors.NIN)
+                }
+              />
+              <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+                {formikValidateApplicantForm.touched.NIN &&
+                  formikValidateApplicantForm.errors.NIN}
+              </Typography>
+            </FormControl>
+            <LoadingButton
               fullWidth
-              variant="outlined"
+              variant="contained"
               size="large"
-              onClick={handleResetForm}
+              loading={loading}
+              loadingIndicator={<ButtonLoader />}
+              loadingPosition="end"
+              endIcon={<IoMdCheckmarkCircleOutline size={20} color="#fff" />}
+              sx={{ mt: 3, mb: 2, bgcolor: "buttonBGColor.main" }}
+              onClick={handleSubmitForm}
             >
-              Reset
-            </Button>
+              {loading ? (
+                <span style={{ color: "#fff" }}>Validating</span>
+              ) : (
+                <span>Validate</span>
+              )}
+            </LoadingButton>
+            <Box sx={{ mt: 1 }}>
+              <Button
+                fullWidth
+                variant="outlined"
+                size="large"
+                onClick={handleResetForm}
+              >
+                Reset
+              </Button>
+            </Box>
           </Box>
         </Box>
-      </Box>
-    </Paper>
+      </Paper>
+    </Grid>
   );
 };
 

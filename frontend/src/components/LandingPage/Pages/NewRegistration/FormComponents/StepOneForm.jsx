@@ -66,7 +66,7 @@ const StepOneForm = (props) => {
             id="applicantFirstName"
             name="applicantFirstName"
             type="text"
-            value={formik.values.applicantFirstName}
+            value={formik.values.applicantFirstName.toUpperCase()}
             // onChange={formik.handleChange}
             // onBlur={formik.handleBlur}
             // error={
@@ -89,7 +89,7 @@ const StepOneForm = (props) => {
             id="applicantMiddleName"
             name="applicantMiddleName"
             type="text"
-            value={formik.values.applicantMiddleName}
+            value={formik.values.applicantMiddleName.toUpperCase()}
             // onChange={formik.handleChange}
             placeholder="Enter middle name..."
           />
@@ -119,7 +119,7 @@ const StepOneForm = (props) => {
             id="applicantLastName"
             name="applicantLastName"
             type="text"
-            value={formik.values.applicantLastName}
+            value={formik.values.applicantLastName.toUpperCase()}
             // onChange={formik.handleChange}
             // onBlur={formik.handleBlur}
             // error={
@@ -158,7 +158,7 @@ const StepOneForm = (props) => {
             id="applicantFacility"
             name="applicantFacility"
             type="text"
-            value={formik.values.applicantFacility}
+            value={formik.values.applicantFacility.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -197,7 +197,7 @@ const StepOneForm = (props) => {
             id="applicantTownOrCity"
             name="applicantTownOrCity"
             type="text"
-            value={formik.values.applicantTownOrCity}
+            value={formik.values.applicantTownOrCity.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -236,7 +236,7 @@ const StepOneForm = (props) => {
             id="applicantCounty"
             name="applicantCounty"
             type="text"
-            value={formik.values.applicantCounty}
+            value={formik.values.applicantCounty.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -271,7 +271,7 @@ const StepOneForm = (props) => {
         <FormControl fullWidth sx={{ mt: 2 }}>
           <Autocomplete
             id="applicantCountry"
-            value={formik.values.applicantCountry}
+            value={formik.values.applicantCountry.toUpperCase()}
             onChange={handleStepOneCountryChange}
             onBlur={formik.handleBlur}
             error={

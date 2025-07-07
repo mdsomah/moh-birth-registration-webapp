@@ -71,15 +71,15 @@ const Header = () => {
                   Home
                 </Button>
               </URLLink>
-              <URLLink
+              {/* <URLLink
                 to="/track-application-status"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <Button variant="text" color="info" size="small">
                   Track Application
                 </Button>
-              </URLLink>
-              <URLLink
+              </URLLink> */}
+              {/* <URLLink
                 to="/schedule-appointment"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
@@ -91,8 +91,8 @@ const Header = () => {
                 >
                   Schedule Appointment
                 </Button>
-              </URLLink>
-              <URLLink
+              </URLLink> */}
+              {/* <URLLink
                 to="/make-payment"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
@@ -104,7 +104,7 @@ const Header = () => {
                 >
                   Make Payment
                 </Button>
-              </URLLink>
+              </URLLink> */}
             </Box>
           </Box>
           <Box
@@ -158,23 +158,51 @@ const Header = () => {
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
-                <MenuItem>Features</MenuItem>
-                <MenuItem>Testimonials</MenuItem>
-                <MenuItem>Highlights</MenuItem>
-                <MenuItem>Pricing</MenuItem>
-                <MenuItem>FAQ</MenuItem>
-                <MenuItem>Blog</MenuItem>
+                <URLLink
+                  to="/"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <MenuItem>Home</MenuItem>
+                </URLLink>
+                {/* <URLLink
+                  to="/track-application-status"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <MenuItem>Track Application</MenuItem>
+                </URLLink> */}
+                {/* <URLLink
+                  to="/schedule-appointment"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <MenuItem>Schedule Appointment</MenuItem>
+                </URLLink> */}
+                {/* <URLLink
+                  to="/make-payment"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <MenuItem>Make Payment</MenuItem>
+                </URLLink> */}
                 <Divider sx={{ my: 3 }} />
-                <MenuItem>
-                  <Button color="primary" variant="contained" fullWidth>
-                    Sign up
-                  </Button>
-                </MenuItem>
-                <MenuItem>
-                  <Button color="primary" variant="outlined" fullWidth>
-                    Sign in
-                  </Button>
-                </MenuItem>
+                <URLLink
+                  to="/sign-in"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <MenuItem>
+                    <Button color="primary" variant="outlined" fullWidth>
+                      Sign In
+                    </Button>
+                  </MenuItem>
+                </URLLink>
+                <URLLink
+                  to="/validate-new-applicant"
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <MenuItem>
+                    <Button color="primary" variant="contained" fullWidth>
+                      Register
+                    </Button>
+                  </MenuItem>
+                </URLLink>
               </Box>
             </Drawer>
           </Box>

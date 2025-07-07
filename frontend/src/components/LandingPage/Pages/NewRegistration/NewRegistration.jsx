@@ -90,6 +90,7 @@ const FILE_SIZE = 1024 * 1024 * 25;
 //? Validate Step One Form Schema
 const validateStepOneFormSchema = Yup.object()
   .shape({
+    ninNumber: Yup.string().notRequired(),
     applicantPhoto: Yup.mixed()
       .required("Please select a photo!")
       .test(
@@ -461,6 +462,7 @@ const NewRegistration = () => {
 
   //? Applicant Query Object
   const ApplicantQueryOBJ = {
+    ninNumber: () => NINNumber,
     applicantPhoto: () => PhotoBase64,
     formNumber: () => NINNumber,
     applicantSex: () => GenderName,
@@ -472,6 +474,7 @@ const NewRegistration = () => {
 
   //? Step One Initial Values
   const StepOneInitialValues = {
+    ninNumber: `${ApplicantQueryOBJ.ninNumber()}`,
     applicantPhoto: "",
     formNumber: `${ApplicantQueryOBJ.formNumber()}`,
     applicantSex: `${ApplicantQueryOBJ.applicantSex()}`,
@@ -626,6 +629,7 @@ const NewRegistration = () => {
 
   //? Applicant Data
   const ApplicantData = {
+    ninNumber: formikStepOneForm.values.ninNumber,
     applicantPhoto: formikStepOneForm.values.applicantPhoto,
     formNumber: formikStepOneForm.values.formNumber,
     applicantSex: formikStepOneForm.values.applicantSex,
@@ -722,6 +726,7 @@ const NewRegistration = () => {
   const registerNewApplicant = async () => {
     //? Destructure ApplicantData
     const {
+      ninNumber,
       applicantPhoto,
       formNumber,
       applicantSex,
@@ -776,6 +781,7 @@ const NewRegistration = () => {
 
     //? Create FormData
     const formData = new FormData();
+    formData.append("ninNumber", ninNumber);
     formData.append("applicantPhoto", applicantPhoto);
     formData.append("formNumber", formNumber);
     formData.append("applicantSex", applicantSex);
@@ -1028,7 +1034,7 @@ const NewRegistration = () => {
                         name="applicantSex"
                         label="Sex:"
                         variant="standard"
-                        value={formikStepOneForm.values.applicantSex}
+                        value={formikStepOneForm.values.applicantSex.toUpperCase()}
                       />
                       {/* <Autocomplete
                         id="applicantSex"
@@ -1117,13 +1123,7 @@ const NewRegistration = () => {
                   </Step>
                 ))}
               </Stepper>
-              <Box
-                // component="form"
-                // noValidate
-                // autoComplete="on"
-                // encType="multipart/form-data"
-                sx={{ mt: 4 }}
-              >
+              <Box sx={{ mt: 4 }}>
                 {getStepContent(activeStep)}
                 <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
                   {activeStep !== 0 && (

@@ -261,7 +261,7 @@ const MainAddApplicantGrid = () => {
   const formikApplicantForm = useFormik({
     initialValues: {
       ninNumber: `${ApplicantQueryOBJ.ninNumber()}`,
-      applicantPhoto: `${ApplicantQueryOBJ.applicantPhoto()}`,
+      applicantPhoto: "",
       formNumber: `MOH-${ApplicantQueryOBJ.formNumber()}`,
       applicantSex: `${ApplicantQueryOBJ.applicantSex()}`,
       dateOfApplication: dayjs(new Date()),
@@ -272,7 +272,9 @@ const MainAddApplicantGrid = () => {
       applicantTownOrCity: "",
       applicantCounty: "",
       applicantCountry: "",
-      applicantDateOfBirth: "",
+      applicantDateOfBirth: dayjs(
+        ApplicantQueryOBJ.applicantDateOfBirth()
+      ).format("MM/DD/YYYY"),
       fatherName: "",
       fatherNationality: "",
       fatherAge: "",
@@ -297,7 +299,7 @@ const MainAddApplicantGrid = () => {
       isMotherLiving: "",
       motherPresentAddress: "",
       motherTelephoneNumber: "",
-      applicantSignature: `${ApplicantQueryOBJ.applicantSignature()}`,
+      applicantSignature: "",
       applicantContactNumber: "",
       fullName: "",
       city: "",
@@ -416,6 +418,7 @@ const MainAddApplicantGrid = () => {
       if (data) {
         handleCloseAddApplicant();
         handleResetForm();
+        dispatch(removeApplicant());
         queryClient.invalidateQueries({
           queryKey: ["applicantsData"],
         });
@@ -1084,19 +1087,19 @@ const MainAddApplicantGrid = () => {
                         value={dayjs(
                           formikApplicantForm.values.applicantDateOfBirth
                         )}
-                        onChange={(newValue) => {
-                          formikApplicantForm.setFieldValue(
-                            "applicantDateOfBirth",
-                            newValue
-                          );
-                        }}
-                        onBlur={formikApplicantForm.handleBlur}
-                        error={
-                          formikApplicantForm.touched.applicantDateOfBirth &&
-                          Boolean(
-                            formikApplicantForm.errors.applicantDateOfBirth
-                          )
-                        }
+                        // onChange={(newValue) => {
+                        //   formikApplicantForm.setFieldValue(
+                        //     "applicantDateOfBirth",
+                        //     newValue
+                        //   );
+                        // }}
+                        // onBlur={formikApplicantForm.handleBlur}
+                        // error={
+                        //   formikApplicantForm.touched.applicantDateOfBirth &&
+                        //   Boolean(
+                        //     formikApplicantForm.errors.applicantDateOfBirth
+                        //   )
+                        // }
                       />
                     </LocalizationProvider>
                     <Typography
@@ -2927,8 +2930,8 @@ const MainAddApplicantGrid = () => {
                     >
                       <Avatar
                         alt={formikApplicantForm.values.applicantFirstName}
-                        src={`data:image/jpeg;base64,${formikApplicantForm.values.applicantPhoto}`}
-                        // src={formikApplicantForm.values.applicantPhoto.preview}
+                        // src={`data:image/jpeg;base64,${formikApplicantForm.values.applicantPhoto}`}
+                        src={formikApplicantForm.values.applicantPhoto.preview}
                         variant="square"
                         sx={{
                           width: 130,
@@ -3040,12 +3043,12 @@ const MainAddApplicantGrid = () => {
                   {formikApplicantForm.values.applicantSignature !== "" && (
                     <Box sx={{ mt: 1 }}>
                       <img
-                        width={200}
-                        height={150}
-                        // width={60}
-                        // height={60}
-                        src={`data:image/jpeg;base64,${formikApplicantForm.values.applicantSignature}`}
-                        // src={formikApplicantForm.values.applicantSignature}
+                        // width={200}
+                        // height={150}
+                        width={60}
+                        height={60}
+                        // src={`data:image/jpeg;base64,${formikApplicantForm.values.applicantSignature}`}
+                        src={formikApplicantForm.values.applicantSignature}
                         alt="Applicant Signature"
                       />
                     </Box>

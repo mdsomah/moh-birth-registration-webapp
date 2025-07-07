@@ -16,6 +16,7 @@ import {
   Link,
   InputAdornment,
   OutlinedInput,
+  Grid,
 } from "@mui/material";
 // import { LoadingButton } from "@mui/lab";
 import { BsFillInfoCircleFill } from "react-icons/bs";
@@ -188,154 +189,167 @@ const SigninContent = () => {
   }, [formikUserLoginForm]);
 
   return (
-    <Paper sx={{ width: 500, ml: "auto", mr: "auto", pt: 3, pb: 3 }}>
-      <Box
+    <Grid size={{ xs: 12, lg: 6 }}>
+      <Paper
         sx={{
-          my: 1.8,
-          mx: 4,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          width: { md: "400%", lg: "40%" },
+          ml: { md: "auto", lg: "auto" },
+          mr: { md: "auto", lg: "auto" },
+          pt: 3,
+          pb: 3,
         }}
       >
-        <URLLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
-          <img src={MOHLogo} alt="MOH Logo" width="100" />
-        </URLLink>
-        <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
-          Sign In
-        </Typography>
         <Box
-          component="form"
-          onSubmit={handleSubmitForm}
-          noValidate
-          autoComplete="off"
+          sx={{
+            my: 1.8,
+            mx: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
-          <FormControl variant="outlined" fullWidth>
-            <Typography>
-              Username / Email
-              <span>
-                <LuAsterisk size={10} color="#C41E3A" />
-              </span>
-              <Tooltip title="This field required!" placement="bottom" arrow>
-                <IconButton
-                  sx={{
-                    cursor: "default",
-                    position: "relative",
-                    bottom: 2,
-                  }}
-                >
-                  <BsFillInfoCircleFill size={14} color="#acb5c3" />
-                </IconButton>
-              </Tooltip>
-            </Typography>
-            <TextField
-              margin="normal"
-              id="Username"
-              name="Username"
-              type="text"
-              placeholder="Enter username or email address..."
-              value={formikUserLoginForm.values.Username}
-              onChange={formikUserLoginForm.handleChange}
-              onBlur={formikUserLoginForm.handleBlur}
-              error={
-                formikUserLoginForm.touched.Username &&
-                Boolean(formikUserLoginForm.errors.Username)
-              }
-            />
-            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-              {formikUserLoginForm.touched.Username &&
-                formikUserLoginForm.errors.Username}
-            </Typography>
-          </FormControl>
-          <FormControl variant="outlined" fullWidth>
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography sx={{ mb: 2 }}>
-                Password
+          <URLLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
+            <img src={MOHLogo} alt="MOH Logo" width="100" />
+          </URLLink>
+          <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
+            Sign In
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmitForm}
+            noValidate
+            autoComplete="off"
+          >
+            <FormControl variant="outlined" fullWidth>
+              <Typography>
+                Username / Email
                 <span>
                   <LuAsterisk size={10} color="#C41E3A" />
                 </span>
-              </Typography>
-              <Link
-                component="button"
-                type="button"
-                onClick={handleClickOpen}
-                variant="body2"
-                sx={{ alignSelf: "baseline" }}
-              >
-                Forgot your password?
-              </Link>
-            </Box>
-            <OutlinedInput
-              id="Password"
-              name="Password"
-              type={showPassword ? "text" : "password"}
-              endAdornment={
-                <InputAdornment position="end">
+                <Tooltip title="This field required!" placement="bottom" arrow>
                   <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
+                    sx={{
+                      cursor: "default",
+                      position: "relative",
+                      bottom: 2,
+                    }}
                   >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                    <BsFillInfoCircleFill size={14} color="#acb5c3" />
                   </IconButton>
-                </InputAdornment>
-              }
-              placeholder="Enter password..."
-              value={formikUserLoginForm.values.Password}
-              onChange={formikUserLoginForm.handleChange}
-              onBlur={formikUserLoginForm.handleBlur}
-              error={
-                formikUserLoginForm.touched.Password &&
-                Boolean(formikUserLoginForm.errors.Password)
-              }
-            />
-            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-              {formikUserLoginForm.touched.Password &&
-                formikUserLoginForm.errors.Password}
-            </Typography>
-          </FormControl>
-          <FormControlLabel
-            id="rememberMe"
-            name="rememberMe"
-            control={
-              <Checkbox
-                checked={formikUserLoginForm.values.rememberMe}
+                </Tooltip>
+              </Typography>
+              <TextField
+                margin="normal"
+                id="Username"
+                name="Username"
+                type="text"
+                placeholder="Enter username or email address..."
+                value={formikUserLoginForm.values.Username}
                 onChange={formikUserLoginForm.handleChange}
-                color="primary"
+                onBlur={formikUserLoginForm.handleBlur}
+                error={
+                  formikUserLoginForm.touched.Username &&
+                  Boolean(formikUserLoginForm.errors.Username)
+                }
               />
-            }
-            label="Remember me on this device"
-          />
-          <ForgotPassword open={open} handleClose={handleClose} />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            size="large"
-            loading={loading}
-            loadingIndicator={<ButtonLoader />}
-            loadingPosition="end"
-            endIcon={<IoMdSend size={20} color="#fff" />}
-            sx={{ mt: 3, mb: 2, color: "#fff" }}
-          >
-            {loading ? (
-              <span style={{ color: "#fff" }}>Signing In</span>
-            ) : (
-              <span>Sign In</span>
-            )}
-          </Button>
-          <URLLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
+              <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+                {formikUserLoginForm.touched.Username &&
+                  formikUserLoginForm.errors.Username}
+              </Typography>
+            </FormControl>
+            <FormControl variant="outlined" fullWidth>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography sx={{ mb: 2 }}>
+                  Password
+                  <span>
+                    <LuAsterisk size={10} color="#C41E3A" />
+                  </span>
+                </Typography>
+                <Link
+                  component="button"
+                  type="button"
+                  onClick={handleClickOpen}
+                  variant="body2"
+                  sx={{ alignSelf: "baseline" }}
+                >
+                  Forgot your password?
+                </Link>
+              </Box>
+              <OutlinedInput
+                id="Password"
+                name="Password"
+                type={showPassword ? "text" : "password"}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                placeholder="Enter password..."
+                value={formikUserLoginForm.values.Password}
+                onChange={formikUserLoginForm.handleChange}
+                onBlur={formikUserLoginForm.handleBlur}
+                error={
+                  formikUserLoginForm.touched.Password &&
+                  Boolean(formikUserLoginForm.errors.Password)
+                }
+              />
+              <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+                {formikUserLoginForm.touched.Password &&
+                  formikUserLoginForm.errors.Password}
+              </Typography>
+            </FormControl>
+            <FormControlLabel
+              id="rememberMe"
+              name="rememberMe"
+              control={
+                <Checkbox
+                  checked={formikUserLoginForm.values.rememberMe}
+                  onChange={formikUserLoginForm.handleChange}
+                  color="primary"
+                />
+              }
+              label="Remember me on this device"
+            />
+            <ForgotPassword open={open} handleClose={handleClose} />
             <Button
-              sx={{ p: 1, mt: 1, color: "#4169E1" }}
-              startIcon={<FaArrowLeft size={20} color="#4169E1" />}
+              type="submit"
+              fullWidth
+              variant="contained"
+              size="large"
+              loading={loading}
+              loadingIndicator={<ButtonLoader />}
+              loadingPosition="end"
+              endIcon={<IoMdSend size={20} color="#fff" />}
+              sx={{ mt: 3, mb: 2, color: "#fff" }}
             >
-              Back To Home
+              {loading ? (
+                <span style={{ color: "#fff" }}>Signing In</span>
+              ) : (
+                <span>Sign In</span>
+              )}
             </Button>
-          </URLLink>
+            <URLLink
+              to="/"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <Button
+                sx={{ p: 1, mt: 1, color: "#4169E1" }}
+                startIcon={<FaArrowLeft size={20} color="#4169E1" />}
+              >
+                Back To Home
+              </Button>
+            </URLLink>
+          </Box>
         </Box>
-      </Box>
-    </Paper>
+      </Paper>
+    </Grid>
   );
 };
 

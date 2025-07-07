@@ -150,7 +150,7 @@ const FinalStepForm = (props) => {
             id="fullName"
             name="fullName"
             type="text"
-            value={formik.values.fullName}
+            value={formik.values.fullName.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.fullName && Boolean(formik.errors.fullName)}
@@ -185,7 +185,7 @@ const FinalStepForm = (props) => {
             id="city"
             name="city"
             type="text"
-            value={formik.values.city}
+            value={formik.values.city.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.city && Boolean(formik.errors.city)}
@@ -220,7 +220,7 @@ const FinalStepForm = (props) => {
             id="county"
             name="county"
             type="text"
-            value={formik.values.county}
+            value={formik.values.county.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.county && Boolean(formik.errors.county)}
@@ -255,7 +255,7 @@ const FinalStepForm = (props) => {
             id="motherFullName"
             name="motherFullName"
             type="text"
-            value={formik.values.motherFullName}
+            value={formik.values.motherFullName.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -293,7 +293,7 @@ const FinalStepForm = (props) => {
             id="fatherFullName"
             name="fatherFullName"
             type="text"
-            value={formik.values.fatherFullName}
+            value={formik.values.fatherFullName.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -367,7 +367,7 @@ const FinalStepForm = (props) => {
             id="cityOrTown"
             name="cityOrTown"
             type="text"
-            value={formik.values.cityOrTown}
+            value={formik.values.cityOrTown.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -404,7 +404,7 @@ const FinalStepForm = (props) => {
             id="name"
             name="name"
             type="text"
-            value={formik.values.name}
+            value={formik.values.name.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.name && Boolean(formik.errors.name)}
@@ -439,7 +439,7 @@ const FinalStepForm = (props) => {
             id="address"
             name="address"
             type="text"
-            value={formik.values.address}
+            value={formik.values.address.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.address && Boolean(formik.errors.address)}
@@ -474,7 +474,7 @@ const FinalStepForm = (props) => {
             id="relationship"
             name="relationship"
             type="text"
-            value={formik.values.relationship}
+            value={formik.values.relationship.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={

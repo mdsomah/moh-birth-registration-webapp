@@ -10,19 +10,19 @@ const FILE_SIZE = 1024 * 1024 * 25;
 //? Validate Register Applicant Schema
 const validateRegisterApplicantSchema = Yup.object()
   .shape({
-    applicantPhoto: Yup.mixed()
-      .required("Please select a photo!")
-      .test(
-        "fileFormat",
-        "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
-        (value) =>
-          !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
-      )
-      .test(
-        "fileSize",
-        "File is too large! Supported size: (2MB)",
-        (value) => !value || (value && value.size <= FILE_SIZE)
-      ),
+    // applicantPhoto: Yup.mixed()
+    //   .required("Please select a photo!")
+    //   .test(
+    //     "fileFormat",
+    //     "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
+    //     (value) =>
+    //       !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
+    //   )
+    //   .test(
+    //     "fileSize",
+    //     "File is too large! Supported size: (2MB)",
+    //     (value) => !value || (value && value.size <= FILE_SIZE)
+    //   ),
     formNumber: Yup.string().notRequired(),
     applicantSex: Yup.mixed()
       .required("Please select one!")
@@ -117,19 +117,19 @@ const validateRegisterApplicantSchema = Yup.object()
     contactNumber: Yup.string()
       .phone(null, "Please enter a valid phone number!")
       .required("Contact number required!"),
-    parentOrGuardianPhoto: Yup.mixed()
-      .required("Please select a photo!")
-      .test(
-        "fileFormat",
-        "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
-        (value) =>
-          !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
-      )
-      .test(
-        "fileSize",
-        "File is too large! Supported size: (2MB)",
-        (value) => !value || (value && value.size <= FILE_SIZE)
-      ),
+    // parentOrGuardianPhoto: Yup.mixed()
+    //   .required("Please select a photo!")
+    //   .test(
+    //     "fileFormat",
+    //     "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
+    //     (value) =>
+    //       !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
+    //   )
+    //   .test(
+    //     "fileSize",
+    //     "File is too large! Supported size: (2MB)",
+    //     (value) => !value || (value && value.size <= FILE_SIZE)
+    //   ),
   })
   .required();
 

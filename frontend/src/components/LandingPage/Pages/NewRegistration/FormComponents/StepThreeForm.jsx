@@ -72,7 +72,7 @@ const StepThreeForm = (props) => {
             id="motherName"
             name="motherName"
             type="text"
-            value={formik.values.motherName}
+            value={formik.values.motherName.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -109,7 +109,7 @@ const StepThreeForm = (props) => {
             id="motherNationality"
             name="motherNationality"
             type="text"
-            value={formik.values.motherNationality}
+            value={formik.values.motherNationality.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -183,7 +183,7 @@ const StepThreeForm = (props) => {
             id="motherTownOrCity"
             name="motherTownOrCity"
             type="text"
-            value={formik.values.motherTownOrCity}
+            value={formik.values.motherTownOrCity.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -221,7 +221,7 @@ const StepThreeForm = (props) => {
             id="motherCounty"
             name="motherCounty"
             type="text"
-            value={formik.values.motherCounty}
+            value={formik.values.motherCounty.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -255,7 +255,7 @@ const StepThreeForm = (props) => {
         <FormControl fullWidth sx={{ mt: 2 }}>
           <Autocomplete
             id="motherCountry"
-            value={formik.values.motherCountry}
+            value={formik.values.motherCountry.toUpperCase()}
             onChange={handleStepThreeCountryChange}
             onBlur={formik.handleBlur}
             error={
@@ -326,7 +326,7 @@ const StepThreeForm = (props) => {
             id="motherCountyOfOrigin"
             name="motherCountyOfOrigin"
             type="text"
-            value={formik.values.motherCountyOfOrigin}
+            value={formik.values.motherCountyOfOrigin.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -365,7 +365,7 @@ const StepThreeForm = (props) => {
             id="motherOccupation"
             name="motherOccupation"
             type="text"
-            value={formik.values.motherOccupation}
+            value={formik.values.motherOccupation.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -442,75 +442,75 @@ const StepThreeForm = (props) => {
         </FormControl>
       </Grid>
       {formik.values.isMotherLiving === "YES" && (
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Typography>
-            Mother's Present Address
-            <span>
-              <LuAsterisk size={10} color="#C41E3A" />
-            </span>
-            <Tooltip title="This field is required!" placement="bottom" arrow>
-              <IconButton
-                sx={{
-                  cursor: "default",
-                  position: "relative",
-                  bottom: 2,
-                }}
-              >
-                <BsFillInfoCircleFill size={14} color="#acb5c3" />
-              </IconButton>
-            </Tooltip>
-          </Typography>
-          <FormControl fullWidth>
-            <TextField
-              margin="normal"
-              id="motherPresentAddress"
-              name="motherPresentAddress"
-              type="text"
-              value={formik.values.motherPresentAddress}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.motherPresentAddress &&
-                Boolean(formik.errors.motherPresentAddress)
-              }
-              placeholder="Enter mother's present address..."
-            />
-            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-              {formik.touched.motherPresentAddress &&
-                formik.errors.motherPresentAddress}
+        <>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Typography>
+              Mother's Present Address
+              <span>
+                <LuAsterisk size={10} color="#C41E3A" />
+              </span>
+              <Tooltip title="This field is required!" placement="bottom" arrow>
+                <IconButton
+                  sx={{
+                    cursor: "default",
+                    position: "relative",
+                    bottom: 2,
+                  }}
+                >
+                  <BsFillInfoCircleFill size={14} color="#acb5c3" />
+                </IconButton>
+              </Tooltip>
             </Typography>
-          </FormControl>
-        </Grid>
-      )}
-      {formik.values.isMotherLiving === "YES" && (
-        <Grid item xs={12} sm={12} md={12} lg={12}>
-          <Typography>
-            Mother's Telephone Number
-            <span>
-              <LuAsterisk size={10} color="#C41E3A" />
-            </span>
-            <Tooltip title="This field is required!" placement="bottom" arrow>
-              <IconButton
-                sx={{
-                  cursor: "default",
-                  position: "relative",
-                  bottom: 2,
-                }}
-              >
-                <BsFillInfoCircleFill size={14} color="#acb5c3" />
-              </IconButton>
-            </Tooltip>
-          </Typography>
-          <FormControl fullWidth>
-            <FormControl sx={{ width: "100%" }}>
-              <StepThreePhoneInputField formik={formik} />
+            <FormControl fullWidth>
+              <TextField
+                margin="normal"
+                id="motherPresentAddress"
+                name="motherPresentAddress"
+                type="text"
+                value={formik.values.motherPresentAddress.toUpperCase()}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.motherPresentAddress &&
+                  Boolean(formik.errors.motherPresentAddress)
+                }
+                placeholder="Enter mother's present address..."
+              />
               <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-                {formik.touched.motherTelephoneNumber &&
-                  formik.errors.motherTelephoneNumber}
+                {formik.touched.motherPresentAddress &&
+                  formik.errors.motherPresentAddress}
               </Typography>
             </FormControl>
-          </FormControl>
-        </Grid>
+          </Grid>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Typography>
+              Mother's Telephone Number
+              <span>
+                <LuAsterisk size={10} color="#C41E3A" />
+              </span>
+              <Tooltip title="This field is required!" placement="bottom" arrow>
+                <IconButton
+                  sx={{
+                    cursor: "default",
+                    position: "relative",
+                    bottom: 2,
+                  }}
+                >
+                  <BsFillInfoCircleFill size={14} color="#acb5c3" />
+                </IconButton>
+              </Tooltip>
+            </Typography>
+            <FormControl fullWidth>
+              <FormControl sx={{ width: "100%" }}>
+                <StepThreePhoneInputField formik={formik} />
+                <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+                  {formik.touched.motherTelephoneNumber &&
+                    formik.errors.motherTelephoneNumber}
+                </Typography>
+              </FormControl>
+            </FormControl>
+          </Grid>
+        </>
       )}
       <ScrollToTop />
     </React.Fragment>

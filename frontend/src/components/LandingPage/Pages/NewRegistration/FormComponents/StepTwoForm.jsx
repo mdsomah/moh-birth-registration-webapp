@@ -71,7 +71,7 @@ const StepTwoForm = (props) => {
             id="fatherName"
             name="fatherName"
             type="text"
-            value={formik.values.fatherName}
+            value={formik.values.fatherName.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -108,7 +108,7 @@ const StepTwoForm = (props) => {
             id="fatherNationality"
             name="fatherNationality"
             type="text"
-            value={formik.values.fatherNationality}
+            value={formik.values.fatherNationality.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -182,7 +182,7 @@ const StepTwoForm = (props) => {
             id="fatherTownOrCity"
             name="fatherTownOrCity"
             type="text"
-            value={formik.values.fatherTownOrCity}
+            value={formik.values.fatherTownOrCity.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -220,7 +220,7 @@ const StepTwoForm = (props) => {
             id="fatherCounty"
             name="fatherCounty"
             type="text"
-            value={formik.values.fatherCounty}
+            value={formik.values.fatherCounty.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -254,7 +254,7 @@ const StepTwoForm = (props) => {
         <FormControl fullWidth sx={{ mt: 2 }}>
           <Autocomplete
             id="fatherCountry"
-            value={formik.values.fatherCountry}
+            value={formik.values.fatherCountry.toUpperCase()}
             onChange={handleStepTwoCountryChange}
             onBlur={formik.handleBlur}
             error={
@@ -325,7 +325,7 @@ const StepTwoForm = (props) => {
             id="fatherCountyOfOrigin"
             name="fatherCountyOfOrigin"
             type="text"
-            value={formik.values.fatherCountyOfOrigin}
+            value={formik.values.fatherCountyOfOrigin.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -364,7 +364,7 @@ const StepTwoForm = (props) => {
             id="fatherOccupation"
             name="fatherOccupation"
             type="text"
-            value={formik.values.fatherOccupation}
+            value={formik.values.fatherOccupation.toUpperCase()}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
@@ -466,7 +466,7 @@ const StepTwoForm = (props) => {
                 id="fatherPresentAddress"
                 name="fatherPresentAddress"
                 type="text"
-                value={formik.values.fatherPresentAddress}
+                value={formik.values.fatherPresentAddress.toUpperCase()}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={

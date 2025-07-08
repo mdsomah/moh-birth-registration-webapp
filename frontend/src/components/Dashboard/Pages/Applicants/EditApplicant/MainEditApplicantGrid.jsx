@@ -68,6 +68,9 @@ const validateEditApplicantSchema = Yup.object()
   })
   .required();
 
+//? Meme Types
+const MemeTypes = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
+
 const MainEditApplicantGrid = () => {
   //? Tablet or Mobile Responsive Media Queries
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
@@ -3047,19 +3050,41 @@ const MainEditApplicantGrid = () => {
                 Applicant Photo
               </Typography>
               <Box sx={{ mt: 4, textAlign: "center" }}>
-                <Avatar
-                  alt={formikEditApplicantForm.values.applicantFirstName}
-                  src={`/uploads/${formikEditApplicantForm.values.applicantPhoto}`}
-                  variant="square"
-                  sx={{
-                    width: 130,
-                    height: 130,
-                    display: "inline-block",
-                  }}
-                  slotProps={{
-                    img: { loading: "lazy" },
-                  }}
-                />
+                {MemeTypes.includes(
+                  formikEditApplicantForm.values.applicantPhoto
+                ) && (
+                  <Avatar
+                    alt={formikEditApplicantForm.values.applicantFirstName}
+                    src={`/uploads/${formikEditApplicantForm.values.applicantPhoto}`}
+                    variant="square"
+                    sx={{
+                      width: 130,
+                      height: 130,
+                      display: "inline-block",
+                    }}
+                    slotProps={{
+                      img: { loading: "lazy" },
+                    }}
+                  />
+                )}
+
+                {!MemeTypes.includes(
+                  formikEditApplicantForm.values.applicantPhoto
+                ) && (
+                  <Avatar
+                    alt={formikEditApplicantForm.values.applicantFirstName}
+                    src={`data:image/jpeg;base64,${formikEditApplicantForm.values.applicantPhoto}`}
+                    variant="square"
+                    sx={{
+                      width: 130,
+                      height: 130,
+                      display: "inline-block",
+                    }}
+                    slotProps={{
+                      img: { loading: "lazy" },
+                    }}
+                  />
+                )}
               </Box>
             </Box>
           </Paper>
@@ -3104,12 +3129,28 @@ const MainEditApplicantGrid = () => {
                   {/* <EditApplicantSignature
                     formikEditApplicantForm={formikEditApplicantForm}
                   /> */}
-                  {formikEditApplicantForm.values.applicantSignature !== "" && (
+                  {MemeTypes.includes(
+                    formikEditApplicantForm.values.applicantSignature
+                  ) && (
                     <Box sx={{ mt: 1 }}>
                       <img
                         width={60}
                         height={60}
                         src={formikEditApplicantForm.values.applicantSignature}
+                        alt={`${formikEditApplicantForm.values.applicantFirstName} Signature`}
+                      />
+                    </Box>
+                  )}
+
+                  {!MemeTypes.includes(
+                    formikEditApplicantForm.values.applicantSignature
+                  ) && (
+                    <Box sx={{ mt: 1, textAlign: "center" }}>
+                      <img
+                        style={{ display: "inline-block" }}
+                        width={200}
+                        height={150}
+                        src={`data:image/jpeg;base64,${formikEditApplicantForm.values.applicantSignature}`}
                         alt={`${formikEditApplicantForm.values.applicantFirstName} Signature`}
                       />
                     </Box>

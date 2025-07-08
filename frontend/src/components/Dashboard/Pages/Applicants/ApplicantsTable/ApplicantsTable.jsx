@@ -40,6 +40,15 @@ const deleteApplicantURL = "/applicants";
 export let Row_Data;
 export let Close_Menu;
 
+//? Meme Types
+const MemeTypesJPEG = ".jpeg";
+const MemeTypesJPG = ".jpeg";
+const MemeTypesPNG = ".jpeg";
+const MemeTypesJIFF = ".jpeg";
+
+const MemeTypes =
+  MemeTypesJPEG || MemeTypesJPG || MemeTypesPNG || MemeTypesJIFF;
+
 const ApplicantsTable = () => {
   //? Desktop or Laptop Responsive Media Queries
   const isDesktopOrLaptop = useMediaQuery({
@@ -166,17 +175,33 @@ const ApplicantsTable = () => {
               gap: "1rem",
             }}
           >
-            <Avatar
-              alt={`${row?.original?.applicantFirstName} Photo`}
-              src={`/uploads/${row?.original?.applicantPhoto}`}
-              sx={{
-                width: 50,
-                height: 50,
-              }}
-              slotProps={{
-                img: { loading: "lazy" },
-              }}
-            />
+            {row?.original?.applicantPhoto.includes(".jpg") && (
+              <Avatar
+                alt={`${row?.original?.applicantFirstName} Photo`}
+                src={`/uploads/${row?.original?.applicantPhoto}`}
+                sx={{
+                  width: 50,
+                  height: 50,
+                }}
+                slotProps={{
+                  img: { loading: "lazy" },
+                }}
+              />
+            )}
+
+            {!row?.original?.applicantPhoto.includes(".jpg") && (
+              <Avatar
+                alt={`${row?.original?.applicantFirstName} Photo`}
+                src={`data:image/jpeg;base64,${row?.original?.applicantPhoto}`}
+                sx={{
+                  width: 50,
+                  height: 50,
+                }}
+                slotProps={{
+                  img: { loading: "lazy" },
+                }}
+              />
+            )}
             <span>
               {row?.original?.applicantFirstName}{" "}
               {row?.original?.applicantMiddleName}{" "}

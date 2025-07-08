@@ -56,28 +56,31 @@ import PostApplicant from "../../../../../apis/PostApplicant";
 const postApplicantURL = "/applicants/add-new-applicant";
 
 //? Photo upload formats
-const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
+// const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
 
 //? Photo upload size
-const FILE_SIZE = 1024 * 1024 * 25;
+// const FILE_SIZE = 1024 * 1024 * 25;
+
+//? Meme Types
+const MemeTypes = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
 
 //? Validate Add Applicant Schema
 const validateAddApplicantSchema = Yup.object()
   .shape({
     ninNumber: Yup.string().notRequired(),
-    applicantPhoto: Yup.mixed()
-      .required("Please select a photo!")
-      .test(
-        "fileFormat",
-        "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
-        (value) =>
-          !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
-      )
-      .test(
-        "fileSize",
-        "File is too large! Supported size: (2MB)",
-        (value) => !value || (value && value.size <= FILE_SIZE)
-      ),
+    // applicantPhoto: Yup.mixed()
+    //   .required("Please select a photo!")
+    //   .test(
+    //     "fileFormat",
+    //     "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
+    //     (value) =>
+    //       !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
+    //   )
+    //   .test(
+    //     "fileSize",
+    //     "File is too large! Supported size: (2MB)",
+    //     (value) => !value || (value && value.size <= FILE_SIZE)
+    //   ),
     formNumber: Yup.string().notRequired(),
     applicantSex: Yup.mixed()
       .required("Please select sex!")
@@ -172,19 +175,19 @@ const validateAddApplicantSchema = Yup.object()
     contactNumber: Yup.string()
       .phone(null, "Please enter a valid phone number!")
       .required("Contact number required!"),
-    parentOrGuardianPhoto: Yup.mixed()
-      .required("Please select a photo!")
-      .test(
-        "fileFormat",
-        "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
-        (value) =>
-          !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
-      )
-      .test(
-        "fileSize",
-        "File is too large! Supported size: (2MB)",
-        (value) => !value || (value && value.size <= FILE_SIZE)
-      ),
+    // parentOrGuardianPhoto: Yup.mixed()
+    //   .required("Please select a photo!")
+    //   .test(
+    //     "fileFormat",
+    //     "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
+    //     (value) =>
+    //       !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
+    //   )
+    //   .test(
+    //     "fileSize",
+    //     "File is too large! Supported size: (2MB)",
+    //     (value) => !value || (value && value.size <= FILE_SIZE)
+    //   ),
   })
   .required();
 
@@ -217,7 +220,7 @@ const MainAddApplicantGrid = () => {
   const [loading, setLoading] = useState(false);
 
   const handleCloseAddApplicant = () => {
-    navigate("/all-applicants", { replace: true });
+    navigate("/all-applicants/add", { replace: true });
   };
 
   //? Applicant Photo State
@@ -261,7 +264,7 @@ const MainAddApplicantGrid = () => {
   const formikApplicantForm = useFormik({
     initialValues: {
       ninNumber: `${ApplicantQueryOBJ.ninNumber()}`,
-      applicantPhoto: "",
+      applicantPhoto: `${ApplicantQueryOBJ.applicantPhoto()}`,
       formNumber: `MOH-${ApplicantQueryOBJ.formNumber()}`,
       applicantSex: `${ApplicantQueryOBJ.applicantSex()}`,
       dateOfApplication: dayjs(new Date()),
@@ -299,7 +302,7 @@ const MainAddApplicantGrid = () => {
       isMotherLiving: "",
       motherPresentAddress: "",
       motherTelephoneNumber: "",
-      applicantSignature: "",
+      applicantSignature: `${ApplicantQueryOBJ.applicantSignature()}`,
       applicantContactNumber: "",
       fullName: "",
       city: "",
@@ -416,7 +419,8 @@ const MainAddApplicantGrid = () => {
     mutationFn: (newData) => PostApplicant(`${postApplicantURL}`, newData),
     onSuccess: (data) => {
       if (data) {
-        handleCloseAddApplicant();
+        navigate("/all-applicants", { replace: true });
+        // handleCloseAddApplicant();
         handleResetForm();
         dispatch(removeApplicant());
         queryClient.invalidateQueries({
@@ -2912,38 +2916,78 @@ const MainAddApplicantGrid = () => {
                 Applicant Photo
               </Typography>
               <Box sx={{ mt: 4 }}>
-                {formikApplicantForm.values.applicantPhoto !== "" && (
-                  <Box>
-                    <Badge
-                      overlap="circular"
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                      }}
-                      badgeContent={
-                        <Tooltip title="Upload Photo" placement="right" arrow>
-                          <IconButton onClick={handleOpenApplicantPhoto}>
-                            <FaCamera size={30} />
-                          </IconButton>
-                        </Tooltip>
-                      }
-                    >
-                      <Avatar
-                        alt={formikApplicantForm.values.applicantFirstName}
-                        // src={`data:image/jpeg;base64,${formikApplicantForm.values.applicantPhoto}`}
-                        src={formikApplicantForm.values.applicantPhoto.preview}
-                        variant="square"
-                        sx={{
-                          width: 130,
-                          height: 130,
+                {MemeTypes.includes(
+                  formikApplicantForm.values.applicantPhoto.type
+                ) &&
+                  formikApplicantForm.values.applicantPhoto !== "" && (
+                    <Box>
+                      <Badge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
                         }}
-                        slotProps={{
-                          img: { loading: "lazy" },
+                        badgeContent={
+                          <Tooltip title="Upload Photo" placement="right" arrow>
+                            <IconButton onClick={handleOpenApplicantPhoto}>
+                              <FaCamera size={30} />
+                            </IconButton>
+                          </Tooltip>
+                        }
+                      >
+                        <Avatar
+                          alt={formikApplicantForm.values.applicantFirstName}
+                          src={
+                            formikApplicantForm.values.applicantPhoto.preview
+                          }
+                          variant="square"
+                          sx={{
+                            width: 130,
+                            height: 130,
+                          }}
+                          slotProps={{
+                            img: { loading: "lazy" },
+                          }}
+                        />
+                      </Badge>
+                    </Box>
+                  )}
+
+                {!formikApplicantForm.values.applicantPhoto.type &&
+                  !MemeTypes.includes(
+                    formikApplicantForm.values.applicantPhoto
+                  ) &&
+                  formikApplicantForm.values.applicantPhoto !== "" && (
+                    <Box>
+                      <Badge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
                         }}
-                      />
-                    </Badge>
-                  </Box>
-                )}
+                        badgeContent={
+                          <Tooltip title="Upload Photo" placement="right" arrow>
+                            <IconButton onClick={handleOpenApplicantPhoto}>
+                              <FaCamera size={30} />
+                            </IconButton>
+                          </Tooltip>
+                        }
+                      >
+                        <Avatar
+                          alt={formikApplicantForm.values.applicantFirstName}
+                          src={`data:image/jpeg;base64,${formikApplicantForm.values.applicantPhoto}`}
+                          variant="square"
+                          sx={{
+                            width: 130,
+                            height: 130,
+                          }}
+                          slotProps={{
+                            img: { loading: "lazy" },
+                          }}
+                        />
+                      </Badge>
+                    </Box>
+                  )}
 
                 {formikApplicantForm.values.applicantPhoto === "" && (
                   <Box>
@@ -3043,16 +3087,14 @@ const MainAddApplicantGrid = () => {
                   {formikApplicantForm.values.applicantSignature !== "" && (
                     <Box sx={{ mt: 1 }}>
                       <img
-                        // width={200}
-                        // height={150}
                         width={60}
                         height={60}
-                        // src={`data:image/jpeg;base64,${formikApplicantForm.values.applicantSignature}`}
                         src={formikApplicantForm.values.applicantSignature}
-                        alt="Applicant Signature"
+                        alt={`${formikApplicantForm.values.applicantFirstName} Signature`}
                       />
                     </Box>
                   )}
+
                   <Typography
                     variant="inherit"
                     color="error.main"

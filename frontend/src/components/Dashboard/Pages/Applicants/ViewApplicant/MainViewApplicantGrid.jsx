@@ -47,6 +47,9 @@ import GetSingleData from "../../../../../apis/GetSingleData";
 //? Endpoints
 const getApplicantURL = "/applicants";
 
+//? Meme Types
+const MemeTypes = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
+
 const MainViewApplicantGrid = () => {
   //? Tablet or Mobile Responsive Media Queries
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
@@ -2236,19 +2239,41 @@ const MainViewApplicantGrid = () => {
                 Applicant Photo
               </Typography>
               <Box sx={{ mt: 4, textAlign: "center" }}>
-                <Avatar
-                  alt={formikViewApplicantForm.values.applicantFirstName}
-                  src={`/uploads/${formikViewApplicantForm.values.applicantPhoto}`}
-                  variant="square"
-                  sx={{
-                    width: 130,
-                    height: 130,
-                    display: "inline-block",
-                  }}
-                  slotProps={{
-                    img: { loading: "lazy" },
-                  }}
-                />
+                {MemeTypes.includes(
+                  formikViewApplicantForm.values.applicantPhoto
+                ) && (
+                  <Avatar
+                    alt={formikViewApplicantForm.values.applicantFirstName}
+                    src={`/uploads/${formikViewApplicantForm.values.applicantPhoto}`}
+                    variant="square"
+                    sx={{
+                      width: 130,
+                      height: 130,
+                      display: "inline-block",
+                    }}
+                    slotProps={{
+                      img: { loading: "lazy" },
+                    }}
+                  />
+                )}
+
+                {!MemeTypes.includes(
+                  formikViewApplicantForm.values.applicantPhoto
+                ) && (
+                  <Avatar
+                    alt={formikViewApplicantForm.values.applicantFirstName}
+                    src={`data:image/jpeg;base64,${formikViewApplicantForm.values.applicantPhoto}`}
+                    variant="square"
+                    sx={{
+                      width: 130,
+                      height: 130,
+                      display: "inline-block",
+                    }}
+                    slotProps={{
+                      img: { loading: "lazy" },
+                    }}
+                  />
+                )}
               </Box>
             </Box>
           </Paper>
@@ -2290,13 +2315,29 @@ const MainViewApplicantGrid = () => {
                   </Tooltip>
                 </Typography>
                 <FormControl fullWidth>
-                  {formikViewApplicantForm.values.applicantSignature !== "" && (
+                  {MemeTypes.includes(
+                    formikViewApplicantForm.values.applicantSignature
+                  ) && (
                     <Box sx={{ mt: 1 }}>
                       <img
                         width={60}
                         height={60}
-                        src={formikViewApplicantForm.values.applicantSignature}
                         alt={`${formikViewApplicantForm.values.applicantFirstName} Signature`}
+                        src={formikViewApplicantForm.values.applicantSignature}
+                      />
+                    </Box>
+                  )}
+
+                  {!MemeTypes.includes(
+                    formikViewApplicantForm.values.applicantSignature
+                  ) && (
+                    <Box sx={{ mt: 1, textAlign: "center" }}>
+                      <img
+                        style={{ display: "inline-block" }}
+                        width={200}
+                        height={150}
+                        alt={`${formikViewApplicantForm.values.applicantFirstName} Signature`}
+                        src={`data:image/jpeg;base64,${formikViewApplicantForm.values.applicantSignature}`}
                       />
                     </Box>
                   )}

@@ -889,7 +889,7 @@ const NewRegistration = () => {
         <Grid
           component="form"
           noValidate
-          autoComplete="on"
+          autoComplete="off"
           encType="multipart/form-data"
           container
           spacing={2}

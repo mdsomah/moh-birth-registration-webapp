@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import PropTypes, { object } from "prop-types";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -82,28 +83,31 @@ import { Avatar, TextField, Toolbar, Typography } from "@mui/material";
 const postApplicantURL = "/applicants/register-new-applicant";
 
 //? Photo upload formats
-const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
+// const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
 
 //? Photo upload size
-const FILE_SIZE = 1024 * 1024 * 25;
+// const FILE_SIZE = 1024 * 1024 * 25;
+
+//? Meme Types
+const MemeTypes = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
 
 //? Validate Step One Form Schema
 const validateStepOneFormSchema = Yup.object()
   .shape({
     ninNumber: Yup.string().notRequired(),
-    applicantPhoto: Yup.mixed()
-      .required("Please select a photo!")
-      .test(
-        "fileFormat",
-        "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
-        (value) =>
-          !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
-      )
-      .test(
-        "fileSize",
-        "File is too large! Supported size: (2MB)",
-        (value) => !value || (value && value.size <= FILE_SIZE)
-      ),
+    // applicantPhoto: Yup.mixed()
+    //   .required("Please select a photo!")
+    //   .test(
+    //     "fileFormat",
+    //     "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
+    //     (value) =>
+    //       !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
+    //   )
+    //   .test(
+    //     "fileSize",
+    //     "File is too large! Supported size: (2MB)",
+    //     (value) => !value || (value && value.size <= FILE_SIZE)
+    //   ),
     formNumber: Yup.string().notRequired(),
     applicantSex: Yup.mixed()
       .required("Please select one!")
@@ -210,19 +214,19 @@ const validateFinalStepFormSchema = Yup.object()
     contactNumber: Yup.string()
       .phone(null, "Please enter a valid phone number!")
       .required("Contact number required!"),
-    parentOrGuardianPhoto: Yup.mixed()
-      .required("Please select a photo!")
-      .test(
-        "fileFormat",
-        "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
-        (value) =>
-          !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
-      )
-      .test(
-        "fileSize",
-        "File is too large! Supported size: (2MB)",
-        (value) => !value || (value && value.size <= FILE_SIZE)
-      ),
+    // parentOrGuardianPhoto: Yup.mixed()
+    //   .required("Please select a photo!")
+    //   .test(
+    //     "fileFormat",
+    //     "File type not supported! Supported types: (.jpeg, .jpg, .png or .jif)",
+    //     (value) =>
+    //       !value || ((value) => value && SUPPORTED_FORMATS.includes(value.type))
+    //   )
+    //   .test(
+    //     "fileSize",
+    //     "File is too large! Supported size: (2MB)",
+    //     (value) => !value || (value && value.size <= FILE_SIZE)
+    //   ),
   })
   .required();
 
@@ -432,6 +436,7 @@ const NewRegistration = () => {
         MiddleName,
         Surname,
         DateOfBirth,
+        SignatureBase64,
       },
     ],
   } = useSelector((state) => state.queryApplicant);
@@ -445,8 +450,16 @@ const NewRegistration = () => {
   ];
   const isLastStep = activeStep === steps.length - 1;
 
+  //? useNavigate
+  const navigate = useNavigate();
+
   //? Loading State
   const [loading, setLoading] = useState(false);
+
+  //? Handle Close New Registration
+  const handleCloseNewRegistration = () => {
+    navigate("/validate-new-applicant", { replace: true });
+  };
 
   //? Applicant Photo Edit State
   const [openApplicantPhoto, setOpenApplicantPhoto] = useState(false);
@@ -470,13 +483,14 @@ const NewRegistration = () => {
     applicantMiddleName: () => MiddleName,
     applicantLastName: () => Surname,
     applicantDateOfBirth: () => DateOfBirth,
+    applicantSignature: () => SignatureBase64,
   };
 
   //? Step One Initial Values
   const StepOneInitialValues = {
     ninNumber: `${ApplicantQueryOBJ.ninNumber()}`,
-    applicantPhoto: "",
-    formNumber: `${ApplicantQueryOBJ.formNumber()}`,
+    applicantPhoto: `${ApplicantQueryOBJ.applicantPhoto()}`,
+    formNumber: `MOH-${ApplicantQueryOBJ.formNumber()}`,
     applicantSex: `${ApplicantQueryOBJ.applicantSex()}`,
     dateOfApplication: dayjs(new Date()),
     applicantFirstName: `${ApplicantQueryOBJ.applicantFirstName()}`,
@@ -556,7 +570,7 @@ const NewRegistration = () => {
 
   //? Final Step Initial Values
   const FinalStepInitialValues = {
-    applicantSignature: "",
+    applicantSignature: `${ApplicantQueryOBJ.applicantSignature()}`,
     applicantContactNumber: "",
     fullName: "",
     city: "",
@@ -583,8 +597,8 @@ const NewRegistration = () => {
     },
   });
 
-  //? Handle Submit
-  const handleSubmit = (e) => {
+  //? Handle Submit Form
+  const handleSubmitForm = (e) => {
     e.preventDefault();
     switch (activeStep) {
       case 0:
@@ -604,6 +618,12 @@ const NewRegistration = () => {
     }
   };
 
+  //? Handle Reset Form
+  const handleResetForm = (e) => {
+    e.preventDefault();
+    formikFinalStepForm.handleReset();
+  };
+
   const handleNext = () => {
     setActiveStep(activeStep + 1);
   };
@@ -621,7 +641,12 @@ const NewRegistration = () => {
       case 2:
         return <StepThreeForm formik={formikStepThreeForm} />;
       case 3:
-        return <FinalStepForm formik={formikFinalStepForm} />;
+        return (
+          <FinalStepForm
+            formik={formikFinalStepForm}
+            ApplicantQueryOBJ={ApplicantQueryOBJ}
+          />
+        );
       default:
         throw new Error("Unknown form step!");
     }
@@ -692,13 +717,15 @@ const NewRegistration = () => {
   const Mutation = useMutation({
     mutationFn: (newData) => PostApplicant(`${postApplicantURL}`, newData),
     onSuccess: (data) => {
-      if (isLastStep && data) {
+      if (isLastStep && data && data.success === true) {
         dispatch(setIsCompleted(true));
         dispatch(removeStepOneForm());
         dispatch(removeStepTwoForm());
         dispatch(removeStepThreeForm());
         dispatch(removeFinalStepForm());
         dispatch(removeApplicant());
+        handleResetForm();
+        handleCloseNewRegistration();
         queryClient.invalidateQueries({
           queryKey: ["applicantsData"],
         });
@@ -859,13 +886,28 @@ const NewRegistration = () => {
       </Helmet>
       <ThemeProvider theme={responsiveTheme}>
         {/* <Toolbar /> */}
-        <Container maxWidth="md" sx={{ mt: 3, mb: 3 }}>
+        <Grid
+          component="form"
+          noValidate
+          autoComplete="on"
+          encType="multipart/form-data"
+          container
+          spacing={2}
+          // columns={12}
+          sx={{ mb: (theme) => theme.spacing(2) }}
+        >
           <Paper
             component="form"
             noValidate
             autoComplete="on"
             encType="multipart/form-data"
-            sx={{ padding: 5, bgcolor: "#fff" }}
+            sx={{
+              padding: 5,
+              bgcolor: "#fff",
+              width: { md: "70%", lg: "70%" },
+              ml: { md: "auto", lg: "auto" },
+              mr: { md: "auto", lg: "auto" },
+            }}
             elevation={4}
           >
             <CssBaseline />
@@ -941,38 +983,87 @@ const NewRegistration = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  {formikStepOneForm.values.applicantPhoto !== "" && (
-                    <Box>
-                      <Badge
-                        overlap="circular"
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                        badgeContent={
-                          <Tooltip title="Upload Photo" placement="right" arrow>
-                            <IconButton onClick={handleOpenApplicantPhoto}>
-                              <FaCamera size={30} />
-                            </IconButton>
-                          </Tooltip>
-                        }
-                      >
-                        <Avatar
-                          alt={formikStepTwoForm.values.applicantFirstName}
-                          // src={`data:image/jpeg;base64,${stepOneForm.applicantPhoto.preview}`}
-                          src={formikStepOneForm.values.applicantPhoto.preview}
-                          variant="square"
-                          sx={{
-                            width: 130,
-                            height: 130,
+                  {MemeTypes.includes(
+                    formikStepOneForm.values.applicantPhoto.type
+                  ) &&
+                    formikStepOneForm.values.applicantPhoto !== "" && (
+                      <Box>
+                        <Badge
+                          overlap="circular"
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right",
                           }}
-                          slotProps={{
-                            img: { loading: "lazy" },
+                          badgeContent={
+                            <Tooltip
+                              title="Upload Photo"
+                              placement="right"
+                              arrow
+                            >
+                              <IconButton onClick={handleOpenApplicantPhoto}>
+                                <FaCamera size={30} />
+                              </IconButton>
+                            </Tooltip>
+                          }
+                        >
+                          <Avatar
+                            alt={`${formikStepTwoForm.values.applicantFirstName} Photo`}
+                            // src={`data:image/jpeg;base64,${stepOneForm.applicantPhoto.preview}`}
+                            src={
+                              formikStepOneForm.values.applicantPhoto.preview
+                            }
+                            variant="square"
+                            sx={{
+                              width: 130,
+                              height: 130,
+                            }}
+                            slotProps={{
+                              img: { loading: "lazy" },
+                            }}
+                          />
+                        </Badge>
+                      </Box>
+                    )}
+
+                  {!formikStepOneForm.values.applicantPhoto.type &&
+                    !MemeTypes.includes(
+                      formikStepOneForm.values.applicantPhoto
+                    ) &&
+                    formikStepOneForm.values.applicantPhoto !== "" && (
+                      <Box>
+                        <Badge
+                          overlap="circular"
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right",
                           }}
-                        />
-                      </Badge>
-                    </Box>
-                  )}
+                          badgeContent={
+                            <Tooltip
+                              title="Upload Photo"
+                              placement="right"
+                              arrow
+                            >
+                              <IconButton onClick={handleOpenApplicantPhoto}>
+                                <FaCamera size={30} />
+                              </IconButton>
+                            </Tooltip>
+                          }
+                        >
+                          <Avatar
+                            alt={`${formikStepTwoForm.values.applicantFirstName} Photo`}
+                            src={`data:image/jpeg;base64,${formikStepOneForm.values.applicantPhoto}`}
+                            variant="square"
+                            sx={{
+                              width: 130,
+                              height: 130,
+                            }}
+                            slotProps={{
+                              img: { loading: "lazy" },
+                            }}
+                          />
+                        </Badge>
+                      </Box>
+                    )}
 
                   {formikStepOneForm.values.applicantPhoto === "" && (
                     <Box>
@@ -1028,7 +1119,7 @@ const NewRegistration = () => {
                     <Typography sx={{ color: "#000", fontWeight: "bold" }}>
                       Form No: {formikStepOneForm.values.formNumber}
                     </Typography>
-                    <Box>
+                    <Box sx={{ width: 100 }}>
                       <TextField
                         id="applicantSex"
                         name="applicantSex"
@@ -1070,7 +1161,7 @@ const NewRegistration = () => {
                           formikStepOneForm.errors.applicantSex}
                       </Typography> */}
                     </Box>
-                    <Box sx={{ width: 160, mt: 1 }}>
+                    <Box sx={{ width: 173, mt: 1 }}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           disablePast
@@ -1145,7 +1236,7 @@ const NewRegistration = () => {
                       loadingPosition="end"
                       endIcon={<SendIcon />}
                       sx={{ mt: 3, ml: 1, bgcolor: "primary.main" }}
-                      onClick={handleSubmit}
+                      onClick={handleSubmitForm}
                     >
                       {loading ? (
                         <span style={{ color: "#fff" }}>Submitting</span>
@@ -1158,7 +1249,7 @@ const NewRegistration = () => {
                       variant="contained"
                       size="large"
                       sx={{ mt: 3, ml: 1, bgcolor: "primary.main" }}
-                      onClick={handleSubmit}
+                      onClick={handleSubmitForm}
                     >
                       Next
                     </Button>
@@ -1170,7 +1261,7 @@ const NewRegistration = () => {
               </Box>
             </Stack>
           </Paper>
-        </Container>
+        </Grid>
       </ThemeProvider>
       <ScrollToTop />
 

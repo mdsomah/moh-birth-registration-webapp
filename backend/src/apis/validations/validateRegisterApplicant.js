@@ -2,14 +2,15 @@ const Yup = require("yup");
 require("yup-phone-lite");
 
 //? Photo upload formats
-const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
+// const SUPPORTED_FORMATS = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
 
 //? Photo upload size
-const FILE_SIZE = 1024 * 1024 * 25;
+// const FILE_SIZE = 1024 * 1024 * 25;
 
 //? Validate Register Applicant Schema
 const validateRegisterApplicantSchema = Yup.object()
   .shape({
+    ninNumber: Yup.string().notRequired(),
     // applicantPhoto: Yup.mixed()
     //   .required("Please select a photo!")
     //   .test(

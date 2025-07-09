@@ -29,9 +29,12 @@ import UploadGuardianPhoto from "../UploadGuardianPhoto/UploadGuardianPhoto";
 //? Scroll to top of react route/page change
 import ScrollToTop from "../../../../ScrollToTop/ScrollToTop";
 
+//? Meme Types
+const MemeTypes = ["image/jpeg", "image/jpg", "image/png", "image/jif"];
+
 const FinalStepForm = (props) => {
   //? Destructure props
-  const { formik } = props;
+  const { formik, ApplicantQueryOBJ } = props;
 
   //? Guardian Photo State
   const [openGuardianPhoto, setOpenGuardianPhoto] = useState(false);
@@ -58,11 +61,17 @@ const FinalStepForm = (props) => {
   return (
     <React.Fragment>
       <Typography
-        sx={{ mb: 3, textAlign: "center", fontSize: 18, fontWeight: 700 }}
+        sx={{
+          mb: 3,
+          textAlign: "center",
+          textTransform: "uppercase",
+          fontSize: 18,
+          fontWeight: 700,
+        }}
       >
         ATTESTATION
       </Typography>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
+      <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
         <Typography>
           Applicant Signature
           <span>
@@ -82,12 +91,23 @@ const FinalStepForm = (props) => {
         </Typography>
         <FormControl fullWidth>
           <ApplicantSignature formik={formik} />
-          {formik.values.applicantSignature !== "" && (
+          {ApplicantQueryOBJ.applicantSignature() === null && (
             <Box sx={{ mt: 1 }}>
               <img
                 width={60}
                 height={60}
                 src={formik.values.applicantSignature}
+                alt="Applicant Signature"
+              />
+            </Box>
+          )}
+
+          {ApplicantQueryOBJ.applicantSignature() !== null && (
+            <Box sx={{ mt: 1 }}>
+              <img
+                width={200}
+                height={100}
+                src={`data:image/jpeg;base64,${formik.values.applicantSignature}`}
                 alt="Applicant Signature"
               />
             </Box>
@@ -98,422 +118,435 @@ const FinalStepForm = (props) => {
           </Typography>
         </FormControl>
       </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Contact Number
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <FormControl sx={{ width: "100%" }}>
-            <FinalStepPhoneInputField formik={formik} />
-            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-              {formik.touched.applicantContactNumber &&
-                formik.errors.applicantContactNumber}
-            </Typography>
+      <Box sx={{ display: { md: "flex", lg: "flex" }, gap: 2, mt: 3 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography>
+            Contact Number
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+          <FormControl fullWidth>
+            <FormControl sx={{ width: "100%" }}>
+              <FinalStepPhoneInputField formik={formik} />
+              <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+                {formik.touched.applicantContactNumber &&
+                  formik.errors.applicantContactNumber}
+              </Typography>
+            </FormControl>
           </FormControl>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Full Name
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="fullName"
-            name="fullName"
-            type="text"
-            value={formik.values.fullName.toUpperCase()}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.fullName && Boolean(formik.errors.fullName)}
-            placeholder="Enter full name..."
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.fullName && formik.errors.fullName}
+        </Grid>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography>
+            Full Name
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
           </Typography>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          City
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="city"
-            name="city"
-            type="text"
-            value={formik.values.city.toUpperCase()}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.city && Boolean(formik.errors.city)}
-            placeholder="Enter city..."
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.city && formik.errors.city}
-          </Typography>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          County
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="county"
-            name="county"
-            type="text"
-            value={formik.values.county.toUpperCase()}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.county && Boolean(formik.errors.county)}
-            placeholder="Enter county..."
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.county && formik.errors.county}
-          </Typography>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Mother Name
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="motherFullName"
-            name="motherFullName"
-            type="text"
-            value={formik.values.motherFullName.toUpperCase()}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.motherFullName &&
-              Boolean(formik.errors.motherFullName)
-            }
-            placeholder="Enter mother's full name..."
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.motherFullName && formik.errors.motherFullName}
-          </Typography>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Father Name
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="fatherFullName"
-            name="fatherFullName"
-            type="text"
-            value={formik.values.fatherFullName.toUpperCase()}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.fatherFullName &&
-              Boolean(formik.errors.fatherFullName)
-            }
-            placeholder="Enter father's full name..."
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.fatherFullName && formik.errors.fatherFullName}
-          </Typography>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Date
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              disablePast
-              disableFuture
-              value={dayjs(formik.values.date)}
-              onChange={(newValue) => {
-                formik.setFieldValue("date", newValue);
-              }}
+          <FormControl fullWidth>
+            <TextField
+              margin="normal"
+              id="fullName"
+              name="fullName"
+              type="text"
+              value={formik.values.fullName.toUpperCase()}
+              onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              error={formik.touched.date && Boolean(formik.errors.date)}
+              error={formik.touched.fullName && Boolean(formik.errors.fullName)}
+              placeholder="Enter full name..."
             />
-          </LocalizationProvider>
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.date && formik.errors.date}
-          </Typography>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          City/Town
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="cityOrTown"
-            name="cityOrTown"
-            type="text"
-            value={formik.values.cityOrTown.toUpperCase()}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.cityOrTown && Boolean(formik.errors.cityOrTown)
-            }
-            placeholder="Enter city/town"
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.cityOrTown && formik.errors.cityOrTown}
-          </Typography>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Name
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="name"
-            name="name"
-            type="text"
-            value={formik.values.name.toUpperCase()}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.name && Boolean(formik.errors.name)}
-            placeholder="Enter name..."
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.name && formik.errors.name}
-          </Typography>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Address
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="address"
-            name="address"
-            type="text"
-            value={formik.values.address.toUpperCase()}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.address && Boolean(formik.errors.address)}
-            placeholder="Enter address..."
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.address && formik.errors.address}
-          </Typography>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Relationship
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <TextField
-            margin="normal"
-            id="relationship"
-            name="relationship"
-            type="text"
-            value={formik.values.relationship.toUpperCase()}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.relationship && Boolean(formik.errors.relationship)
-            }
-            placeholder="Enter relationship..."
-          />
-          <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-            {formik.touched.relationship && formik.errors.relationship}
-          </Typography>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={12} md={12} lg={12}>
-        <Typography>
-          Contact
-          <span>
-            <LuAsterisk size={10} color="#C41E3A" />
-          </span>
-          <Tooltip title="This field is required!" placement="bottom" arrow>
-            <IconButton
-              sx={{
-                cursor: "default",
-                position: "relative",
-                bottom: 2,
-              }}
-            >
-              <BsFillInfoCircleFill size={14} color="#acb5c3" />
-            </IconButton>
-          </Tooltip>
-        </Typography>
-        <FormControl fullWidth>
-          <FormControl sx={{ width: "100%" }}>
-            <FinalStepContactPhoneInputField formik={formik} />
             <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
-              {formik.touched.contactNumber && formik.errors.contactNumber}
+              {formik.touched.fullName && formik.errors.fullName}
             </Typography>
           </FormControl>
-        </FormControl>
-      </Grid>
+        </Grid>
+      </Box>
+      <Box sx={{ display: { md: "flex", lg: "flex" }, gap: 2, mt: 3 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography>
+            City
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+          <FormControl fullWidth>
+            <TextField
+              margin="normal"
+              id="city"
+              name="city"
+              type="text"
+              value={formik.values.city.toUpperCase()}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.city && Boolean(formik.errors.city)}
+              placeholder="Enter city..."
+            />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.city && formik.errors.city}
+            </Typography>
+          </FormControl>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography>
+            County
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+          <FormControl fullWidth>
+            <TextField
+              margin="normal"
+              id="county"
+              name="county"
+              type="text"
+              value={formik.values.county.toUpperCase()}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.county && Boolean(formik.errors.county)}
+              placeholder="Enter county..."
+            />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.county && formik.errors.county}
+            </Typography>
+          </FormControl>
+        </Grid>
+      </Box>
+      <Box sx={{ display: { md: "flex", lg: "flex" }, gap: 2, mt: 3 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography>
+            Mother Name
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+          <FormControl fullWidth>
+            <TextField
+              margin="normal"
+              id="motherFullName"
+              name="motherFullName"
+              type="text"
+              value={formik.values.motherFullName.toUpperCase()}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.motherFullName &&
+                Boolean(formik.errors.motherFullName)
+              }
+              placeholder="Enter mother's full name..."
+            />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.motherFullName && formik.errors.motherFullName}
+            </Typography>
+          </FormControl>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography>
+            Father Name
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+          <FormControl fullWidth>
+            <TextField
+              margin="normal"
+              id="fatherFullName"
+              name="fatherFullName"
+              type="text"
+              value={formik.values.fatherFullName.toUpperCase()}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.fatherFullName &&
+                Boolean(formik.errors.fatherFullName)
+              }
+              placeholder="Enter father's full name..."
+            />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.fatherFullName && formik.errors.fatherFullName}
+            </Typography>
+          </FormControl>
+        </Grid>
+      </Box>
+      <Box sx={{ display: { md: "flex", lg: "flex" }, gap: 2, mt: 3 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography sx={{ mb: 2 }}>
+            Date
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+          <FormControl fullWidth>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                disablePast
+                disableFuture
+                value={dayjs(formik.values.date)}
+                onChange={(newValue) => {
+                  formik.setFieldValue("date", newValue);
+                }}
+                onBlur={formik.handleBlur}
+                error={formik.touched.date && Boolean(formik.errors.date)}
+              />
+            </LocalizationProvider>
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.date && formik.errors.date}
+            </Typography>
+          </FormControl>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography>
+            City/Town
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+          <FormControl fullWidth>
+            <TextField
+              margin="normal"
+              id="cityOrTown"
+              name="cityOrTown"
+              type="text"
+              value={formik.values.cityOrTown.toUpperCase()}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.cityOrTown && Boolean(formik.errors.cityOrTown)
+              }
+              placeholder="Enter city/town"
+            />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.cityOrTown && formik.errors.cityOrTown}
+            </Typography>
+          </FormControl>
+        </Grid>
+      </Box>
+      <Box sx={{ display: { md: "flex", lg: "flex" }, gap: 2, mt: 3 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography>
+            Name
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+          <FormControl fullWidth>
+            <TextField
+              margin="normal"
+              id="name"
+              name="name"
+              type="text"
+              value={formik.values.name.toUpperCase()}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.name && Boolean(formik.errors.name)}
+              placeholder="Enter name..."
+            />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.name && formik.errors.name}
+            </Typography>
+          </FormControl>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography>
+            Address
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+          <FormControl fullWidth>
+            <TextField
+              margin="normal"
+              id="address"
+              name="address"
+              type="text"
+              value={formik.values.address.toUpperCase()}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.address && Boolean(formik.errors.address)}
+              placeholder="Enter address..."
+            />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.address && formik.errors.address}
+            </Typography>
+          </FormControl>
+        </Grid>
+      </Box>
+      <Box sx={{ display: { md: "flex", lg: "flex" }, gap: 2, mt: 3 }}>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography>
+            Relationship
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+          <FormControl fullWidth>
+            <TextField
+              margin="normal"
+              id="relationship"
+              name="relationship"
+              type="text"
+              value={formik.values.relationship.toUpperCase()}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.relationship &&
+                Boolean(formik.errors.relationship)
+              }
+              placeholder="Enter relationship..."
+            />
+            <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+              {formik.touched.relationship && formik.errors.relationship}
+            </Typography>
+          </FormControl>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 12, md: 6, lg: 6 }}>
+          <Typography>
+            Contact
+            <span>
+              <LuAsterisk size={10} color="#C41E3A" />
+            </span>
+            <Tooltip title="This field is required!" placement="bottom" arrow>
+              <IconButton
+                sx={{
+                  cursor: "default",
+                  position: "relative",
+                  bottom: 2,
+                }}
+              >
+                <BsFillInfoCircleFill size={14} color="#acb5c3" />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+          <FormControl fullWidth>
+            <FormControl sx={{ width: "100%" }}>
+              <FinalStepContactPhoneInputField formik={formik} />
+              <Typography variant="inherit" color="error.main" sx={{ mt: 1 }}>
+                {formik.touched.contactNumber && formik.errors.contactNumber}
+              </Typography>
+            </FormControl>
+          </FormControl>
+        </Grid>
+      </Box>
       {formik.values.parentOrGuardianPhoto !== "" && (
         <Box sx={{ mt: 3 }}>
           <Badge

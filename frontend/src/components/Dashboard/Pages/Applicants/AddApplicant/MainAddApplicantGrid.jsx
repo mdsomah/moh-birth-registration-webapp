@@ -418,11 +418,11 @@ const MainAddApplicantGrid = () => {
   const Mutation = useMutation({
     mutationFn: (newData) => PostApplicant(`${postApplicantURL}`, newData),
     onSuccess: (data) => {
-      if (data) {
-        navigate("/all-applicants", { replace: true });
+      if (data && data.success === true) {
         // handleCloseAddApplicant();
-        handleResetForm();
         dispatch(removeApplicant());
+        handleResetForm();
+        navigate("/all-applicants", { replace: true });
         queryClient.invalidateQueries({
           queryKey: ["applicantsData"],
         });
@@ -2936,7 +2936,7 @@ const MainAddApplicantGrid = () => {
                         }
                       >
                         <Avatar
-                          alt={formikApplicantForm.values.applicantFirstName}
+                          alt={`${formikApplicantForm.values.applicantFirstName} Photo`}
                           src={
                             formikApplicantForm.values.applicantPhoto.preview
                           }
@@ -3084,7 +3084,7 @@ const MainAddApplicantGrid = () => {
                   <AddApplicantSignature
                     formikApplicantForm={formikApplicantForm}
                   />
-                  {formikApplicantForm.values.applicantSignature !== "" && (
+                  {ApplicantQueryOBJ.applicantSignature() === null && (
                     <Box sx={{ mt: 1 }}>
                       <img
                         width={60}
@@ -3095,6 +3095,16 @@ const MainAddApplicantGrid = () => {
                     </Box>
                   )}
 
+                  {ApplicantQueryOBJ.applicantSignature() !== null && (
+                    <Box sx={{ mt: 1 }}>
+                      <img
+                        width={200}
+                        height={100}
+                        src={`data:image/jpeg;base64,${formikApplicantForm.values.applicantSignature}`}
+                        alt={`${formikApplicantForm.values.applicantFirstName} Signature`}
+                      />
+                    </Box>
+                  )}
                   <Typography
                     variant="inherit"
                     color="error.main"

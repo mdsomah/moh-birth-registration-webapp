@@ -624,6 +624,15 @@ const NewRegistration = () => {
     formikFinalStepForm.handleReset();
   };
 
+  const handleCancel = () => {
+    dispatch(setIsCompleted(false));
+    dispatch(removeStepOneForm());
+    dispatch(removeStepTwoForm());
+    dispatch(removeStepThreeForm());
+    dispatch(removeFinalStepForm());
+    dispatch(removeApplicant());
+  };
+
   const handleNext = () => {
     setActiveStep(activeStep + 1);
   };
@@ -1117,6 +1126,9 @@ const NewRegistration = () => {
                   )}
                   <Box>
                     <Typography sx={{ color: "#000", fontWeight: "bold" }}>
+                      NIN: {formikStepOneForm.values.ninNumber}
+                    </Typography>
+                    <Typography>
                       Form No: {formikStepOneForm.values.formNumber}
                     </Typography>
                     <Box sx={{ width: 100 }}>
@@ -1217,6 +1229,14 @@ const NewRegistration = () => {
               <Box sx={{ mt: 4 }}>
                 {getStepContent(activeStep)}
                 <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    sx={{ mt: 3, ml: 1, bgcolor: "#ccc" }}
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </Button>
                   {activeStep !== 0 && (
                     <Button
                       variant="contained"
